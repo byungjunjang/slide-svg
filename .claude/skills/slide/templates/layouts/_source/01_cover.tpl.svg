@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" width="1280" height="720" viewBox="0 0 1280 720">
+  <!-- Lecture Deck — 01 Cover (theme-parametric) -->
+  <!-- Theme tokens resolved at render time from references/theme-active.json -->
+
+  <!-- Page background -->
+  <rect width="1280" height="720" fill="{{TOKEN:colors.bg}}"/>
+
+  <!-- Accent rule (single editorial cue) -->
+  <rect x="56" y="140" width="80" height="3" fill="{{TOKEN:colors.accent}}"/>
+
+  <!-- Eyebrow / program label -->
+  <text x="56" y="180"
+        font-family="{{TOKEN:typography.font-chain}}"
+        font-size="{{TOKEN:typography.label.size}}" font-weight="{{TOKEN:typography.label.weight}}"
+        letter-spacing="{{TOKEN:typography.label.letter-spacing}}"
+        fill="{{TOKEN:colors.text-secondary}}">
+    {{EYEBROW}}
+  </text>
+
+  <!-- Primary title (Display) -->
+  <text x="56" y="340"
+        font-family="{{TOKEN:typography.font-chain}}"
+        font-size="{{TOKEN:typography.display.size}}" font-weight="{{TOKEN:typography.display.weight}}"
+        letter-spacing="{{TOKEN:typography.display.letter-spacing}}"
+        fill="{{TOKEN:colors.text}}">
+    {{TITLE}}
+  </text>
+
+  <!-- Optional secondary line (Display-sm, accent) -->
+  <text x="56" y="410"
+        font-family="{{TOKEN:typography.font-chain}}"
+        font-size="{{TOKEN:typography.display-sm.size}}" font-weight="{{TOKEN:typography.display-sm.weight}}"
+        letter-spacing="{{TOKEN:typography.display-sm.letter-spacing}}"
+        fill="{{TOKEN:colors.accent}}">
+    {{TITLE_ACCENT}}
+  </text>
+
+  <!-- Subtitle (Title) -->
+  <text x="56" y="470"
+        font-family="{{TOKEN:typography.font-chain}}"
+        font-size="{{TOKEN:typography.title.size}}" font-weight="{{TOKEN:typography.title.weight}}"
+        fill="{{TOKEN:colors.text}}">
+    {{SUBTITLE}}
+  </text>
+
+  <!-- Presenter / date line (Body) -->
+  <text x="56" y="656"
+        font-family="{{TOKEN:typography.font-chain}}"
+        font-size="{{TOKEN:typography.body.size}}" font-weight="{{TOKEN:typography.body.weight}}"
+        fill="{{TOKEN:colors.text-secondary}}">
+    {{PRESENTER}} · {{DATE}}
+  </text>
+
+  <!-- Thin divider at the bottom edge (structural) -->
+  <line x1="56" y1="672" x2="1224" y2="672" stroke="{{TOKEN:colors.border}}" stroke-width="{{TOKEN:stroke.divider}}"/>
+</svg>
