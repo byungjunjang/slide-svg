@@ -67,7 +67,6 @@ pip install -r .claude/skills/slide/requirements.txt
 - `PyMuPDF`, `mammoth`, `markdownify` 등 — 소스 자료(PDF/DOCX/HTML) 임포트용
 - `Pillow`, `numpy` — 이미지 처리
 - `jsonschema` — `/theme-init` 토큰 검증
-- `pytest` — 회귀 테스트용 (선택)
 
 ### 4단계. (선택) AI 이미지 생성용 백엔드
 
