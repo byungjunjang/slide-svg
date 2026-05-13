@@ -1,12 +1,18 @@
 #!/usr/bin/env python3
 """Validate slide_plan.json against Layer 1 R1-R5 + enum constraints.
 
+Three slide pipelines (slide-html, slide-svg, slide-pencil) share R1-R5 as the
+universal contract. slide-svg locks layout_family to a fixed 7-value enum
+(structure / insight / breakdown / compare / data / process / visual); see
+slide-pencil/validate_plan.py for the R6 (density prescription) extension.
+
 Usage:
     python3 validate_plan.py <path/to/slide_plan.json>
 
 Exit code:
     0 — all checks passed (warnings may be printed)
     1 — one or more hard rejects; the plan is not consumable by /slide
+    2 — usage error (bad path, invalid JSON)
 """
 
 from __future__ import annotations
@@ -336,6 +342,46 @@ def check_diagnostic_ratios(slides: list[dict[str, Any]], r: Report) -> None:
         r.warn("diagnostic — buried CTA: last 2 slides do not include a `cta` role.")
 
 
+def check_fact_check_log(plan: dict[str, Any], slides: list[dict[str, Any]], r: Report) -> None:
+    """fact_check_log audit (advisory).
+
+    - Decks ≥ 7 slides should have a non-empty fact_check_log.
+    - Unverified ratio > 40% raises a warning.
+    """
+    fcl = plan.get("fact_check_log")
+    n = len(slides)
+    if n >= 7 and (not isinstance(fcl, list) or len(fcl) == 0):
+        r.warn(
+            f"fact-check missing — deck has {n} slides (≥ 7) but fact_check_log is empty. "
+            f"Run Step 5.5 (WebSearch claim verification) or add an explicit "
+            f"'no fact-check needed' note in deck_meta."
+        )
+        return
+
+    if not isinstance(fcl, list) or not fcl:
+        return
+
+    status_count = {"verified": 0, "corrected": 0, "unverified": 0}
+    for i, entry in enumerate(fcl):
+        if not isinstance(entry, dict):
+            r.warn(f"fact_check_log[{i}] not an object")
+            continue
+        s = entry.get("status")
+        if s in status_count:
+            status_count[s] += 1
+        for required in ("claim", "slide_number", "status", "checked_at"):
+            if required not in entry:
+                r.warn(f"fact_check_log[{i}] missing required field {required!r}")
+    total = sum(status_count.values())
+    if total > 0:
+        unverified_ratio = status_count["unverified"] / total
+        if unverified_ratio > 0.4:
+            r.warn(
+                f"fact-check — {status_count['unverified']}/{total} claims unverified "
+                f"({unverified_ratio:.0%} > 40% threshold). Review HIGH-priority claims."
+            )
+
+
 def validate(plan_path: Path) -> Report:
     r = Report()
     try:
@@ -383,6 +429,7 @@ def validate(plan_path: Path) -> Report:
     check_r4_min_diversity(slides, r)
     check_r3_length(plan, slides, r)
     check_diagnostic_ratios(slides, r)
+    check_fact_check_log(plan, slides, r)
 
     return r
 

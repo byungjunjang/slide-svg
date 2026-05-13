@@ -182,7 +182,15 @@ test -f <project_path>/slide_plan.json && echo "PLAN_EXISTS" || echo "NO_PLAN"
 | `PLAN_EXISTS` | **Plan-Consuming** | The plan is the SSOT for content / structure. Strategist's job is to *transcribe* the plan + active-theme tokens into `design_spec.md`. Skip Eight Confirmations except for a one-screen active-theme lock confirmation. |
 | `NO_PLAN` | **Standalone** | Run the existing Eight Confirmations flow as documented below. No change to the legacy behavior. |
 
-> **Why dual-mode?** `/slide-plan` is OPTIONAL. Quick decks (< 8 slides, single source) work fine with the Standalone mode. Systematic decks (lectures, executive reports, multi-source) benefit from `/slide-plan` running first. See `.claude/skills/slide-plan/SKILL.md` §"When to invoke this skill" for the boundary.
+**Auto-trigger — if `NO_PLAN` BUT any of the following holds, switch to Plan-Consuming by invoking `/slide-plan` first:**
+
+1. User specified slide count and it is **≥ 10**
+2. User provided source files (xlsx / md / pdf / docx / pptx) anywhere in the project's `inputs/` or in conversation
+3. User brief contains an **attitude/expectation keyword** — `계획` / `철저` / `상세` / `꼼꼼` / `체계` / `완벽` / `정성` / `신중` / `제대로` / `완성도` / `퀄리티` / `고품질` / `thorough` / `detailed` / `comprehensive` / `polished` / `careful` / `deep`
+
+When auto-triggered, announce in one line and invoke `/slide-plan` before resuming Step 4. Explicit bypass keywords (`simple로`, `plan 없이`, `빠르게`, `간단히`, `quick`) suppress the trigger and force Standalone.
+
+> **Why dual-mode?** `/slide-plan` is OPTIONAL by design. Quick decks (< 8 slides, single source, no quality demand) work fine with Standalone. Systematic decks (lectures, executive reports, multi-source, or any explicit quality signal) benefit from `/slide-plan` running first. See `.claude/skills/slide-plan/SKILL.md` §"When to invoke this skill" for the boundary.
 
 #### Step 4.1: Plan-Consuming Mode
 
@@ -199,6 +207,18 @@ If a plan exists:
    Read <project_path>/slide_plan.json
    Read references/strategist.md          (active-theme lock — palette / type / icon / voice)
    Read templates/layouts/<theme>/DESIGN.md (preset's layout-family vocabulary)
+   ```
+
+   **MANDATORY plan fingerprint dump** — after reading, print the per-slide fingerprint so the plan is anchored in the prompt context. Skipping this step is the #1 cause of plan-drift regression (verified 2026-05-13 audit):
+   ```
+   slide #N:
+     family   = <recommended_layout_family>
+     role     = <slide_role>
+     core     = <core_message>
+     why_here = <why_here>
+     chart    = <chart_strategy>: <chart_takeaway>  (if any)
+     table    = <table_strategy>: <table_takeaway>  (if any)
+     evidence = <evidence_sources or content_constraints.evidence_to_use>
    ```
 
 3. **Render `design_spec.md` as a transcription** of plan + theme:
@@ -265,10 +285,129 @@ Before leaving Step 4, perform a self-check against Layer 1 quality rules. This 
 | **R2** (chart/table needs takeaway) | Every chart slide in design_spec.md §IX has a takeaway sentence next to the chart spec. Every table slide has a verdict / takeaway row. |
 | **R3** (length pressure) | If slide count > 20, document split / merge / defer candidates in §IX or in `slide_plan.json` `ordering_notes`. |
 | **R4** (no lazy repetition) | No 3+ consecutive slides use the same layout family without a written justification. Min 3 distinct layout families in the deck. |
+| **R6 density** (SVG line count floor) | Every content slide SVG (post Step 6) ≥ 80 lines; chart / matrix / dense table ≥ 120 lines; cover / section-divider / closing ≥ 40 lines. Plan-Consuming mode uses plan's `min_lines_estimate` when present, else default thresholds. |
 
 If any check fails, fix `design_spec.md` (Standalone) or roll back to `/slide-plan` (Plan-Consuming) and re-validate. **Plan-Consuming mode users:** `validate_plan.py` already enforced this — re-running it after any post-plan hand edit is recommended:
 ```bash
 python3 .claude/skills/slide-plan/scripts/validate_plan.py <project_path>/slide_plan.json
+```
+
+**B-density verification (both modes; run after Step 6 SVGs exist):**
+```bash
+python3 - <<'PY'
+import re,glob,json,sys
+from pathlib import Path
+project = Path(sys.argv[1] if len(sys.argv)>1 else '.').resolve()
+plan_files = list(project.glob('slide_plan.json'))
+plan = {}
+if plan_files:
+    data = json.loads(plan_files[0].read_text())
+    plan = {s.get('slide_number'): s for s in data.get('slides', [])}
+fails = []
+for f in sorted(project.glob('svg_output/*.svg')):
+    txt = f.read_text(); lines = txt.count('\n') + 1
+    m = re.search(r'(\d+)', f.stem); n = int(m.group(1)) if m else None
+    if n and n in plan and isinstance(plan[n].get('min_lines_estimate'), (int, float)):
+        thr = int(plan[n]['min_lines_estimate']); src = 'plan'
+    elif re.search(r'<(line|polyline|circle|rect)[^>]*data-(role|series)|<g[^>]*chart|<text[^>]*tbl-', txt):
+        thr = 120; src = 'simple-chart/dense'
+    elif re.search(r'(cover|section|closing)', f.stem, re.I):
+        thr = 40; src = 'simple-section/cover/closing'
+    else:
+        thr = 80; src = 'simple-general'
+    if lines < thr:
+        fails.append(f'{f.name}:lines={lines}<{thr}({src})')
+print('B-density FAIL:', fails) if fails else print('B-density: PASS')
+PY
+```
+
+**B-r2-simple + B-gm-simple + B-family-diversity-simple (Standalone mode hardening — plan 부재 시에도 활성):**
+```bash
+python3 - <<'PY'
+import re,glob,json,sys
+from pathlib import Path
+project = Path(sys.argv[1] if len(sys.argv)>1 else '.').resolve()
+plan_files = list(project.glob('slide_plan.json'))
+if plan_files:
+    print('B-r2-simple: SKIP (plan-mode 활성)')
+    print('B-gm-simple: SKIP (plan-mode 활성)')
+    print('B-family-diversity-simple: SKIP (plan-mode 활성)')
+else:
+    svgs = sorted(project.glob('svg_output/*.svg'))
+    # B-r2-simple: chart/dense visual 가진 SVG 옆에 takeaway 텍스트 (≥30자 텍스트 노드) 있어야 함
+    r2_fails = []
+    for f in svgs:
+        txt = f.read_text()
+        has_visual = bool(re.search(r'<polyline|<line[^>]*data-(role|series)|<g[^>]*chart|<text[^>]*tbl-', txt))
+        text_nodes = re.findall(r'<text[^>]*>([^<]+)</text>', txt)
+        has_takeaway = any(len(t.strip()) >= 30 for t in text_nodes)
+        if has_visual and not has_takeaway:
+            r2_fails.append(f'{f.name}: visual but no takeaway text (≥30 chars)')
+    print('B-r2-simple FAIL:', r2_fails) if r2_fails else print('B-r2-simple: PASS')
+    # B-gm-simple: 콘텐츠 SVG (cover/section/closing 제외)에 .gm 클래스 또는 governing message 텍스트 존재
+    gm_fails = []
+    for f in svgs:
+        stem = f.stem.lower()
+        if any(k in stem for k in ('cover', 'section', 'closing')):
+            continue
+        txt = f.read_text()
+        if not re.search(r'class="[^"]*gm[^"]*"|data-role="gm"', txt):
+            gm_fails.append(f'{f.name}: missing .gm marker')
+    print('B-gm-simple FAIL:', gm_fails) if gm_fails else print('B-gm-simple: PASS')
+    # B-family-diversity-simple: ≥6 SVG 데크는 distinct filename slug ≥ 3
+    if len(svgs) >= 6:
+        slugs = set()
+        for f in svgs:
+            m = re.match(r'\d+[-_]([a-z-]+)', f.stem)
+            if m: slugs.add(m.group(1))
+        if len(slugs) < 3:
+            print(f'B-family-diversity-simple FAIL: only {len(slugs)} distinct SVG slugs in {len(svgs)} files — possible lazy repetition')
+        else:
+            print(f'B-family-diversity-simple: PASS ({len(slugs)} distinct slugs)')
+    else:
+        print('B-family-diversity-simple: SKIP (< 6 slides)')
+PY
+```
+
+**B-plan-count + B-plan-fidelity (plan-consuming mode only; auto-SKIPs in Standalone):**
+```bash
+python3 - <<'PY'
+import re,glob,json,sys
+from pathlib import Path
+project = Path(sys.argv[1] if len(sys.argv)>1 else '.').resolve()
+plan_files = list(project.glob('slide_plan.json'))
+if not plan_files:
+    print('B-plan-count: SKIP (standalone mode)')
+    print('B-plan-fidelity: SKIP (standalone mode)')
+else:
+    data = json.loads(plan_files[0].read_text())
+    plan_slides = data.get('slides', [])
+    svg_files = sorted(project.glob('svg_output/*.svg'))
+    # B-plan-count: 슬라이드 수 일치
+    if len(plan_slides) != len(svg_files):
+        print(f'B-plan-count FAIL: plan={len(plan_slides)} vs SVG={len(svg_files)}')
+    else:
+        print(f'B-plan-count: PASS ({len(plan_slides)})')
+    # B-plan-fidelity: 슬라이드별 core_message 키워드가 SVG <text> 안에 존재 (heuristic)
+    fails = []
+    stopwords = {'있다','없다','한다','하는','되는','된다','대한','위한','수','것','이','그','저','등','및','또는',
+                 'that','this','with','from','have','will','they','your','their','about'}
+    for s in plan_slides:
+        n = s.get('slide_number')
+        matching = [f for f in svg_files if re.search(rf'(^|[^0-9])0*{n}([^0-9]|$)', f.stem)]
+        if not matching:
+            fails.append(f'slide #{n}: no matching SVG'); continue
+        svg = matching[0].read_text()
+        # Extract <text> content for keyword check
+        text_content = ' '.join(re.findall(r'<text[^>]*>(.*?)</text>', svg, re.DOTALL))
+        core = s.get('core_message', '')
+        keywords = set(re.findall(r'[가-힣]{2,}|[A-Za-z]{4,}', core)) - stopwords
+        if not keywords:
+            continue
+        if not any(k in text_content for k in keywords):
+            fails.append(f'slide #{n}: core_message keywords {sorted(keywords)[:5]} NOT in SVG text')
+    print('B-plan-fidelity FAIL:', fails) if fails else print('B-plan-fidelity: PASS')
+PY
 ```
 
 **✅ Checkpoint — Phase deliverables complete, auto-proceed to next step**:
@@ -292,11 +431,33 @@ python3 .claude/skills/slide-plan/scripts/validate_plan.py <project_path>/slide_
 Read `references/image-generator.md`
 
 1. Extract all images with status "pending generation" from the design spec
-2. Generate prompt document → `<project_path>/images/image_prompts.md`
-3. Generate images (CLI tool recommended):
+2. Generate prompt document → `<project_path>/images/image_prompts.md`. Every prompt MUST embed the Jangpm Deck Style Anchor (§🔒 of `image-generator.md`) as prefix, and the negative list as `Avoid: ...` suffix in the prompt body (codex-image has no separate negative-prompt arg).
+3. Generate images — pick backend per the rule below, then loop the chosen command once per slot (serial, 2–5 s spacing, confirm file exists before next):
+
+   **Backend selection** (per image, identical rule):
+   - `IMAGE_BACKEND` env set → **Method A** (`image_gen.py`, multi-backend)
+   - Otherwise (default, no API key) → **Method B** (`/codex-image`, OAuth)
+
+   **Method A — image_gen.py (multi-backend, API key required)**
    ```bash
-   python3 ${SKILL_DIR}/scripts/image_gen.py "prompt" --aspect_ratio 16:9 --image_size 1K -o <project_path>/images
+   python3 ${SKILL_DIR}/scripts/image_gen.py "<Jangpm anchor> <subject prompt> Avoid: <negative list>" \
+     --aspect_ratio 16:9 --image_size 1K \
+     --output <project_path>/images --filename <slot_name>
    ```
+
+   **Method B — codex-image (OAuth, default, no API key)**
+   ```bash
+   /codex-image --size <size> --quality high \
+     --out <project_path>/images --filename <slot_name> \
+     "<Jangpm anchor> <subject prompt> Avoid: <negative list>"
+   ```
+
+   Size mapping (gpt-image-2 only supports these three; no true 16:9):
+   - Hero / full-bleed 16:9 slot → `--size 1536x1024` (SVG `preserveAspectRatio="xMidYMid slice"` crops to 1280×720)
+   - Inline card 1:1 → `--size 1024x1024`
+   - Portrait card 3:4 → `--size 1024x1536`
+
+   See `references/image-generator.md` §4.3 Method 0 for the full codex-image recipe (sizes, negative handling, pacing).
 
 **✅ Checkpoint — Confirm all images are ready, proceed to Step 6**:
 ```markdown

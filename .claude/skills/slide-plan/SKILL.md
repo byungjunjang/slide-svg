@@ -233,6 +233,70 @@ For each slide, populate (minimum):
 }
 ```
 
+### Step 5.5: Fact-check (web search-based claim verification)
+
+**Activation:**
+- Auto-on for decks ≥ 7 slides
+- Forced ON when brief contains `사실 확인` / `출처 확인` / `fact check` / `verify`
+- Skipped for ≤ 6-slide decks without explicit trigger (overhead-aware)
+
+**What to verify (auto-extract claims):**
+
+From each slide's `core_message`, `audience_takeaway`, `chart_data` values, and `content_constraints.must_include`:
+
+| Priority | Pattern |
+|---|---|
+| HIGH | chart_data series values / must_include explicit numbers (counts, %, currency, units) |
+| HIGH | Events/announcements within the last 3 years |
+| HIGH | External person / organization attributions |
+| MEDIUM | Numbers / years embedded in core_message |
+| MEDIUM | Proper nouns (companies, products, people) |
+| LOW (SKIP) | General knowledge / definitions |
+
+Verify HIGH/MEDIUM only. Cap at 3 claims per slide to limit overhead.
+
+**Execution:**
+
+1. Load tools: `ToolSearch("select:WebSearch,WebFetch")`
+2. For each claim: `WebSearch("<claim text> source authoritative 2025 2026")`
+3. Pick 1–2 trustworthy sources (gov sites, official announcements, major outlets, Wikipedia). Use `WebFetch` for deep-check when ambiguous.
+4. Classify: `verified` / `corrected` / `unverified`
+
+**Plan integration:**
+
+- **verified** → add `{"source_id": "web_NN", "source_type": "web", "summary": "<URL+summary>", "relevance": "high", "usable_for": ["evidence"]}` to `content_inventory`; append `web_NN` to slide's `evidence_sources`
+- **corrected** → fix the claim in-place; record before/after in `fact_check_log`
+- **unverified** → soften the claim ("≈X" → "estimated X–Y"); append `"inference-unverified"` to `evidence_sources`
+
+**New root field `fact_check_log[]`:**
+
+```json
+"fact_check_log": [
+  {
+    "claim": "<text>",
+    "slide_number": N,
+    "priority": "HIGH" | "MEDIUM",
+    "status": "verified" | "corrected" | "unverified",
+    "source": "<URL or null>",
+    "original": "<original text>",
+    "corrected_to": "<fixed text or null>",
+    "checked_at": "YYYY-MM-DD"
+  }
+]
+```
+
+**User-visible summary (printed in Step 8 review):**
+
+```
+Fact-check: verified N / corrected M / unverified K
+unverified:
+  - slide #N: "<claim>" — no authoritative source
+corrected:
+  - slide #M: "<orig>" → "<fix>" (source: <URL>)
+```
+
+> Design intent: Non-blocking. If a failed claim is critical, the user uses a Step 8 stop keyword to request plan edits. Internal / unpublished data legitimately can't be verified, so we never block on fact-check.
+
 ### Step 6: Self-validate against Layer 1 (R1–R5)
 
 Run mental pass:
@@ -250,7 +314,7 @@ python3 .claude/skills/slide-plan/scripts/validate_plan.py output/<project>/slid
 
 The validator enforces R1–R5 + chart_strategy enum + slide_role enum + diagnostic ratios. Fix any reported errors and re-run.
 
-### Step 8: ⛔ BLOCKING — User review checkpoint
+### Step 8: User review checkpoint (soft notice — non-blocking by default)
 
 Present a markdown summary (one line per slide):
 
@@ -266,18 +330,22 @@ Present a markdown summary (one line per slide):
 | 2 | context | insight | ... | ... |
 ...
 
-이 plan으로 /slide 진행할까요? (수정사항이 있으면 말씀해주세요)
+체계적 모드 — Plan 작성 완료. 같은 턴 안에서 /slide로 진행합니다.
+수정이 필요하면 `다시` / `수정` / `멈춰` / `잠깐` / `wait` / `stop` 중 하나로 응답하세요.
 ```
 
-⛔ STOP. Wait for user confirmation. Do NOT auto-proceed to `/slide`.
+**진행 분기 (3개 슬라이드 파이프라인 공통):**
 
-If user confirms, suggest:
-```
-✅ Plan locked. 다음 단계:
-  /slide  ← output/<project>/slide_plan.json 자동 소비
-```
+| 사용자 다음 메시지 | 행동 |
+|---|---|
+| `다시` / `수정` / `멈춰` / `잠깐` / `wait` / `stop` / `다른` / 슬라이드 N번 수정 같은 명시적 변경 요청 | plan 수정 모드 — 해당 필드/슬라이드만 갱신 후 `validate_plan.py` 재실행 → summary 재출력 |
+| 그 외 (`/slide`, `OK`, `진행`, 응답 없음) | `/slide`로 즉시 진입 — plan 그대로 소비 |
 
-If user requests changes, edit `slide_plan.json` (re-validate) and re-present the summary.
+**원격 환경 (Slack / OpenClaw / Telegram 등):** BLOCKING 대기 금지. summary 출력 + 같은 턴에 `/slide` 자동 진입. 사용자가 다음 턴에서 stop keyword를 주면 그때 plan 수정 모드로.
+
+**로컬 + 명시적 BLOCKING 요청:** 사용자가 `--confirm-plan` / "확인하고 진행" 같이 명시한 경우에만 BLOCKING 유지.
+
+> 설계 의도: BLOCKING은 plan dropped(채택률 0%)의 주된 원인이었다. 기본을 auto-proceed로 두고, stop keyword를 명시적으로 안내한다.
 
 ---
 
