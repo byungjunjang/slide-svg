@@ -161,8 +161,6 @@ ls assets/icons/tabler-outline/ | grep <keyword>
 # 6b. claude.ai 번들 빌드 (output/slide-skill-claude-ai.zip)
 python3 .claude/skills/slide/scripts/package_for_claude_ai.py
 
-# 7. theme-init 파이프라인 회귀 테스트
-pytest tests/
 ```
 
 ## Troubleshooting
