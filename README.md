@@ -54,11 +54,15 @@ cd ~/Desktop/slide-svg
 
 ### 3단계. Python 의존성 설치
 
-Python 3.10 이상이 필요합니다.
+Python 3.10 이상이 필요합니다. 가상환경을 한 번 만들어 두면 시스템 파이썬을 더럽히지 않아 권장합니다.
 
 ```bash
-pip install -r .claude/skills/slide/requirements.txt
+python3 -m venv .venv
+source .venv/bin/activate          # Windows: .venv\Scripts\activate
+pip install -r requirements.txt
 ```
+
+> 루트의 `requirements.txt`는 단일 진실 원천(`.claude/skills/slide/requirements.txt`)을 가리키는 한 줄 래퍼입니다. 의존성 자체를 수정·추가할 때는 스킬 폴더 안쪽 파일을 고치세요.
 
 대부분의 스크립트는 표준 라이브러리만 사용하지만, 다음은 필수입니다:
 
