@@ -55,8 +55,7 @@ description: >
 | `${SKILL_DIR}/scripts/source_to_md/web_to_md.py` | Web page to Markdown |
 | `${SKILL_DIR}/scripts/source_to_md/web_to_md.cjs` | Node.js fallback for WeChat / TLS-blocked sites (use only if `curl_cffi` is unavailable; `web_to_md.py` now handles WeChat when `curl_cffi` is installed) |
 | `${SKILL_DIR}/scripts/project_manager.py` | Project init / validate / manage |
-| `${SKILL_DIR}/scripts/analyze_images.py` | Image analysis |
-| `${SKILL_DIR}/scripts/image_gen.py` | AI image generation (multi-provider) |
+| `${SKILL_DIR}/scripts/analyze_images.py` | Image analysis (size / aspect inspection — AI image generation is via `/codex-image`) |
 | `${SKILL_DIR}/scripts/svg_quality_checker.py` | SVG quality check |
 | `${SKILL_DIR}/scripts/total_md_split.py` | Speaker notes splitting |
 | `${SKILL_DIR}/scripts/finalize_svg.py` | SVG post-processing (unified entry) |
@@ -432,20 +431,8 @@ Read `references/image-generator.md`
 
 1. Extract all images with status "pending generation" from the design spec
 2. Generate prompt document → `<project_path>/images/image_prompts.md`. Every prompt MUST embed the Jangpm Deck Style Anchor (§🔒 of `image-generator.md`) as prefix, and the negative list as `Avoid: ...` suffix in the prompt body (codex-image has no separate negative-prompt arg).
-3. Generate images — pick backend per the rule below, then loop the chosen command once per slot (serial, 2–5 s spacing, confirm file exists before next):
+3. Generate images via `/codex-image` (Codex CLI OAuth → `gpt-image-2`, no API key needed). Loop once per slot — serial, 2–5 s spacing, confirm file exists before the next:
 
-   **Backend selection** (per image, identical rule):
-   - `IMAGE_BACKEND` env set → **Method A** (`image_gen.py`, multi-backend)
-   - Otherwise (default, no API key) → **Method B** (`/codex-image`, OAuth)
-
-   **Method A — image_gen.py (multi-backend, API key required)**
-   ```bash
-   python3 ${SKILL_DIR}/scripts/image_gen.py "<Jangpm anchor> <subject prompt> Avoid: <negative list>" \
-     --aspect_ratio 16:9 --image_size 1K \
-     --output <project_path>/images --filename <slot_name>
-   ```
-
-   **Method B — codex-image (OAuth, default, no API key)**
    ```bash
    /codex-image --size <size> --quality high \
      --out <project_path>/images --filename <slot_name> \
@@ -457,7 +444,7 @@ Read `references/image-generator.md`
    - Inline card 1:1 → `--size 1024x1024`
    - Portrait card 3:4 → `--size 1024x1536`
 
-   See `references/image-generator.md` §4.3 Method 0 for the full codex-image recipe (sizes, negative handling, pacing).
+   See `references/image-generator.md` for the full codex-image recipe (sizes, negative handling, pacing). If codex-image preflight fails (CLI missing or `codex login` expired), halt and prompt the user to fix it — do not silently skip slots.
 
 **✅ Checkpoint — Confirm all images are ready, proceed to Step 6**:
 ```markdown

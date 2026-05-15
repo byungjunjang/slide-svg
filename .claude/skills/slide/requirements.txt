@@ -65,8 +65,7 @@ nbconvert>=7.0.0
 # ─────────────────────────────────────────────────────────────
 # fix_image_aspect.py - Fix image aspect ratio (prevent stretching during PPT shape conversion)
 # fix_image_aspect.py - 修复图片宽高比（防止 PPT 转形状时拉伸）
-# gemini_watermark_remover.py - Remove watermarks from Gemini-generated images
-# gemini_watermark_remover.py - 去除 Gemini 生成图片的水印
+# analyze_images.py   - Inspect image size / aspect for layout planning
 Pillow>=9.0.0
 numpy>=1.20.0
 
@@ -84,12 +83,11 @@ beautifulsoup4>=4.12.0
 curl_cffi>=0.7.0
 
 # ─────────────────────────────────────────────────────────────
-# AI image generation tool / AI 图片生成工具 (skills/ppt-master/scripts/image_gen.py)
+# AI image generation
 # ─────────────────────────────────────────────────────────────
-# Gemini backend / Gemini 后端 (IMAGE_BACKEND=gemini)
-google-genai>=1.0.0
-# OpenAI-compatible backend / OpenAI 兼容后端 (IMAGE_BACKEND=openai)
-openai>=1.0.0
+# Handled by the bundled `/codex-image` skill (Codex CLI OAuth → gpt-image-2).
+# No Python SDK deps needed here — see .claude/skills/codex-image/README.md
+# for the Node-side `@openai/codex` installation.
 
 
 # ─────────────────────────────────────────────────────────────

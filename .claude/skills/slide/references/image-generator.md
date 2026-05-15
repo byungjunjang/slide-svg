@@ -148,6 +148,8 @@ Under the `slide` skill, the deck canvas is always 1280×720 (16:9). Image aspec
 | Inline card illustration | 1:1 | 1024×1024 |
 | Two-column left-right illustration | 3:4 or 4:3 | 1024×1365 or 1365×1024 |
 
+> **Note (Method 0 / codex-image path)**: gpt-image-2 has no true 16:9 size. 16:9 slots are generated at `1536×1024` and SVG `preserveAspectRatio="xMidYMid slice"` crops to 1280×720. See §4.3 Method 0 for the full size mapping.
+
 ### 2.6 Multi-Image Coherence Strategy
 
 When generating multiple images for a single deck, visual coherence is critical. Use a **Deck Style Anchor** — a shared prefix of 15-25 words prepended to every image prompt.
@@ -281,73 +283,35 @@ For each image with "Pending" status:
 
 > Prerequisite: Section 4.2 must be complete; `images/image_prompts.md` must exist
 
-#### Method 1: Unified CLI Tool (Recommended)
+#### Method A: codex-image (default and only first-party backend)
+
+`/slide` Step 5는 항상 `/codex-image`를 호출합니다. API 키 불필요 — Codex CLI OAuth(ChatGPT 로그인)가 `gpt-image-2`를 호출. 스킬 정의는 `.claude/skills/codex-image/SKILL.md`.
 
 ```bash
-python3 scripts/image_gen.py "your prompt" \
-  --aspect_ratio 16:9 --image_size 1K \
-  --output project/images --filename cover_bg
+/codex-image --size 1536x1024 --quality high \
+  --out <project_path>/images --filename cover_bg \
+  "Jangpm lecture deck illustration — minimal flat line-art, muted pastel tones aligned with #4633E3 indigo accent and #FAFAF9 off-white, transparent background, <subject>, color palette: warm off-white (#FAFAF9) background, muted pastel midtones harmonized with indigo-violet (#4633E3) single accent, neutral grays (#1A1A1A text, #6B7280 secondary). Avoid: text, watermark, logo, photograph, photorealistic, 3D render, gradient, glow, neon, vibrant colors, rainbow, dashboard UI, stock photo, shutterstock, low quality, blurry"
 ```
 
-**Parameters**:
+**Size mapping** (`gpt-image-2` only supports these three sizes):
 
-| Parameter | Short | Description | Default |
-|-----------|-------|-------------|---------|
-| `prompt` | - | Positive prompt (positional arg) | - |
-| `--negative_prompt` | `-n` | Negative prompt | None |
-| `--aspect_ratio` | - | Image aspect ratio | `1:1` |
-| `--image_size` | - | Size (`1K`/`2K`/`4K`) | `1K` |
-| `--output` | `-o` | Output directory | Current directory |
-| `--filename` | `-f` | Output filename (no extension) | Auto-named |
-| `--backend` | `-b` | Override backend (`gemini`/`openai`/`stability`/`bfl`/`ideogram`/`qwen`/`zhipu`/`volcengine`/`siliconflow`/`fal`/`replicate`) | None |
-| `--model` | `-m` | Model name | Backend default |
-| `--list-backends` | - | Print support tiers and exit | `false` |
+| Slot | `--size` | SVG handling |
+|------|----------|--------------|
+| Hero / full-bleed 16:9 | `1536x1024` | `preserveAspectRatio="xMidYMid slice"` → crops to 1280×720 |
+| Inline card 1:1 | `1024x1024` | Use as-is |
+| Portrait card 3:4 | `1024x1536` | `preserveAspectRatio="xMidYMid slice"` |
 
-**Configuration sources**:
-- Current process environment variables
-- Project-root `.env` as fallback
+**Negative prompt handling**: codex-image has no separate negative-prompt arg. Append the §2.4 / §6 negative list to the prompt body as `Avoid: <comma-separated list>`. gpt-image-2 honors this convention reliably.
 
-Precedence:
-- Current process environment wins
-- `.env` fills missing values only
+**Filename**: `--filename <slot_name>` (no extension) writes directly to `<project_path>/images/<slot_name>.png`, matching the Image Resource List filename. Omit `--filename` only for standalone (non-pipeline) use.
 
-| Variable | Required | Description |
-|----------|----------|-------------|
-| `IMAGE_BACKEND` | Required | `gemini` / `openai` / `stability` / `bfl` / `ideogram` / `qwen` / `zhipu` / `volcengine` / `siliconflow` / `fal` / `replicate` |
-| `{PROVIDER}_API_KEY` | Required | Provider-specific API key, e.g. `GEMINI_API_KEY`, `ZHIPU_API_KEY` |
-| `{PROVIDER}_BASE_URL` | Optional | Provider-specific custom endpoint |
-| `{PROVIDER}_MODEL` | Optional | Provider-specific model override |
+**Pacing**: One image at a time, confirm file exists before next, 2–5 s spacing. codex exec has a 2-min timeout per image; if it times out, retry with `--quality medium`.
 
-> Use provider-specific names only: `GEMINI_API_KEY`, `OPENAI_API_KEY`, `STABILITY_API_KEY`, `BFL_API_KEY`, `IDEOGRAM_API_KEY`, `QWEN_API_KEY` / `DASHSCOPE_API_KEY`, `ZHIPU_API_KEY` / `BIGMODEL_API_KEY`, `VOLCENGINE_API_KEY` / `ARK_API_KEY`, `SILICONFLOW_API_KEY`, `FAL_KEY`, and `REPLICATE_API_TOKEN`.
+**Auth precondition**: `codex login status` must return "Logged in". If not, stop and instruct: "Run `codex login` in terminal." Do not silently skip image slots.
 
-> `IMAGE_API_KEY`, `IMAGE_MODEL`, and `IMAGE_BASE_URL` are intentionally unsupported.
+#### Method B: Manual Generation (escape hatch)
 
-> If `.env` or the current environment contains multiple provider configs, `IMAGE_BACKEND` explicitly selects the active one.
-
-**Support tiers (recommended usage)**:
-- Core: `gemini`, `openai`, `qwen`, `zhipu`, `volcengine`
-- Extended: `stability`, `bfl`, `ideogram`
-- Experimental: `siliconflow`, `fal`, `replicate`
-
-**Generation pacing (mandatory)**:
-- Execute only one generation command at a time; wait for file confirmation before the next
-- Recommend 2-5 second intervals between images to avoid concurrency failures
-- If failure/no output occurs, halt the queue, check `IMAGE_BACKEND`, provider-specific credentials, and the output directory, then resume
-
-#### Method 2: Auto-generation
-
-Directly call image generation API, download and save to `project/images/` directory.
-
-#### Method 3: Gemini Web Interface
-
-1. Generate images in [Gemini](https://gemini.google.com/)
-2. Select **Download full size** for high-resolution version
-3. Remove watermark: `python3 scripts/gemini_watermark_remover.py <image_path>`
-4. Place processed images in `project/images/` directory
-
-#### Method 4: Manual Generation (Other AI Platforms)
-
-Prompts are saved in `images/image_prompts.md`; inform the user of the file location. User generates on Midjourney, DALL-E, Stable Diffusion, etc. and places images in `project/images/` directory.
+If codex-image is unavailable (no Codex CLI, no OAuth, sandboxed claude.ai upload, etc.), prompts are still saved in `images/image_prompts.md`; inform the user of the file location and let them generate images manually on Midjourney / DALL·E / Stable Diffusion / Gemini and drop the results into `project/images/`.
 
 ### 4.4 Verification Phase
 

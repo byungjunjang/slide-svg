@@ -385,5 +385,5 @@ now-obsolete.
   tokens into DrawingML. Each `/theme-init` is full replacement.
 - Canvas format expansion (e.g., 1920×1080, A4). Separate tooling
   project; not a theme concern.
-- Image generation (AI illustrations). Lives in
-  `image_gen.py` / Image_Generator role, intentionally decoupled.
+- Image generation (AI illustrations). Lives in the `/codex-image`
+  skill / Image_Generator role, intentionally decoupled.

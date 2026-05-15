@@ -57,6 +57,7 @@ pip install -r requirements.txt
 Important optional packages:
 - `python-pptx` for PPTX export
 - `Pillow` for image utilities
-- `numpy` for watermark removal
+- `numpy` for image processing helpers
 - `PyMuPDF` for PDF conversion
-- `google-genai` / `openai` for image generation backends
+
+(AI image generation no longer relies on Python SDKs — it goes through the `/codex-image` skill, which uses the Node-based Codex CLI.)
