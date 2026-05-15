@@ -107,12 +107,12 @@ When the user provides non-Markdown content, convert immediately:
 
 | User Provides | Command |
 |---------------|---------|
-| PDF file | `python3 ${SKILL_DIR}/scripts/source_to_md/pdf_to_md.py <file>` |
-| DOCX / Word / Office document | `python3 ${SKILL_DIR}/scripts/source_to_md/doc_to_md.py <file>` |
-| PPTX / PowerPoint deck | `python3 ${SKILL_DIR}/scripts/source_to_md/ppt_to_md.py <file>` |
-| EPUB / HTML / LaTeX / RST / other | `python3 ${SKILL_DIR}/scripts/source_to_md/doc_to_md.py <file>` |
-| Web link | `python3 ${SKILL_DIR}/scripts/source_to_md/web_to_md.py <URL>` |
-| WeChat / high-security site | `python3 ${SKILL_DIR}/scripts/source_to_md/web_to_md.py <URL>` (requires `curl_cffi`; falls back to `node web_to_md.cjs <URL>` only if that package is unavailable) |
+| PDF file | `${SKILL_DIR}/scripts/_py.sh ${SKILL_DIR}/scripts/source_to_md/pdf_to_md.py <file>` |
+| DOCX / Word / Office document | `${SKILL_DIR}/scripts/_py.sh ${SKILL_DIR}/scripts/source_to_md/doc_to_md.py <file>` |
+| PPTX / PowerPoint deck | `${SKILL_DIR}/scripts/_py.sh ${SKILL_DIR}/scripts/source_to_md/ppt_to_md.py <file>` |
+| EPUB / HTML / LaTeX / RST / other | `${SKILL_DIR}/scripts/_py.sh ${SKILL_DIR}/scripts/source_to_md/doc_to_md.py <file>` |
+| Web link | `${SKILL_DIR}/scripts/_py.sh ${SKILL_DIR}/scripts/source_to_md/web_to_md.py <URL>` |
+| WeChat / high-security site | `${SKILL_DIR}/scripts/_py.sh ${SKILL_DIR}/scripts/source_to_md/web_to_md.py <URL>` (requires `curl_cffi`; falls back to `node web_to_md.cjs <URL>` only if that package is unavailable) |
 | Markdown | Read directly |
 
 **✅ Checkpoint — Confirm source content is ready, proceed to Step 2.**
@@ -124,7 +124,7 @@ When the user provides non-Markdown content, convert immediately:
 🚧 **GATE**: Step 1 complete; source content is ready (Markdown file, user-provided text, or requirements described in conversation are all valid).
 
 ```bash
-python3 ${SKILL_DIR}/scripts/project_manager.py init <project_name> --format ppt169
+${SKILL_DIR}/scripts/_py.sh ${SKILL_DIR}/scripts/project_manager.py init <project_name> --format ppt169
 ```
 
 **Under this skill, always use `--format ppt169` (1280×720).** Other format flags exist for CLI compatibility but the Jangpm design language is calibrated to 1280×720 only. See `references/canvas-formats.md`.
@@ -133,7 +133,7 @@ Import source content (choose based on the situation):
 
 | Situation | Action |
 |-----------|--------|
-| Has source files (PDF/MD/etc.) | `python3 ${SKILL_DIR}/scripts/project_manager.py import-sources <project_path> <source_files...> --move` |
+| Has source files (PDF/MD/etc.) | `${SKILL_DIR}/scripts/_py.sh ${SKILL_DIR}/scripts/project_manager.py import-sources <project_path> <source_files...> --move` |
 | User provided text directly in conversation | No import needed — content is already in conversation context; subsequent steps can reference it directly |
 
 > ⚠️ **MUST use `--move`**: All source files (original PDF / MD / images) MUST be **moved** (not copied) into `sources/` for archiving.
@@ -197,7 +197,7 @@ If a plan exists:
 
 1. **Validate the plan first.** Re-run the plan validator to catch any post-edit drift:
    ```bash
-   python3 .claude/skills/slide-plan/scripts/validate_plan.py <project_path>/slide_plan.json
+   .claude/skills/slide/scripts/_py.sh .claude/skills/slide-plan/scripts/validate_plan.py <project_path>/slide_plan.json
    ```
    Hard errors abort `/slide`; the user must fix them via `/slide-plan` before proceeding.
 
@@ -268,7 +268,7 @@ Read references/strategist.md
 
 If the user has provided images, run the analysis script **before outputting the design spec** (do NOT directly read/open image files — use the script output only):
 ```bash
-python3 ${SKILL_DIR}/scripts/analyze_images.py <project_path>/images
+${SKILL_DIR}/scripts/_py.sh ${SKILL_DIR}/scripts/analyze_images.py <project_path>/images
 ```
 
 > ⚠️ **Image handling rule**: The AI must NEVER directly read, open, or view image files (`.jpg`, `.png`, etc.). All image information must come from the `analyze_images.py` script output or the Design Specification's Image Resource List.
@@ -288,7 +288,7 @@ Before leaving Step 4, perform a self-check against Layer 1 quality rules. This 
 
 If any check fails, fix `design_spec.md` (Standalone) or roll back to `/slide-plan` (Plan-Consuming) and re-validate. **Plan-Consuming mode users:** `validate_plan.py` already enforced this — re-running it after any post-plan hand edit is recommended:
 ```bash
-python3 .claude/skills/slide-plan/scripts/validate_plan.py <project_path>/slide_plan.json
+.claude/skills/slide/scripts/_py.sh .claude/skills/slide-plan/scripts/validate_plan.py <project_path>/slide_plan.json
 ```
 
 **B-density verification (both modes; run after Step 6 SVGs exist):**
@@ -497,17 +497,17 @@ Read references/executor.md
 
 **Step 7.1** — Split speaker notes:
 ```bash
-python3 ${SKILL_DIR}/scripts/total_md_split.py <project_path>
+${SKILL_DIR}/scripts/_py.sh ${SKILL_DIR}/scripts/total_md_split.py <project_path>
 ```
 
 **Step 7.2** — SVG post-processing (icon embedding / image crop & embed / text flattening / rounded rect to path):
 ```bash
-python3 ${SKILL_DIR}/scripts/finalize_svg.py <project_path>
+${SKILL_DIR}/scripts/_py.sh ${SKILL_DIR}/scripts/finalize_svg.py <project_path>
 ```
 
 **Step 7.3** — Export PPTX (embeds speaker notes by default):
 ```bash
-python3 ${SKILL_DIR}/scripts/svg_to_pptx.py <project_path> -s final
+${SKILL_DIR}/scripts/_py.sh ${SKILL_DIR}/scripts/svg_to_pptx.py <project_path> -s final
 # Output: exports/<project_name>_<timestamp>.pptx + exports/<project_name>_<timestamp>_svg.pptx
 # Use --only native  to skip SVG reference version
 # Use --only legacy  to only generate SVG image version

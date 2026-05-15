@@ -11,7 +11,7 @@
 **듀얼 모드 (Claude Code · claude.ai)**: 외부 MCP 서버, 브라우저 바이너리, 다른 스킬 폴더 참조 없음. 핵심 PPTX 빌드(`finalize_svg.py` + `svg_to_pptx.py`)는 100% 순수 Python (`python-pptx` + 자체 DrawingML XML 라이터). 시스템 바이너리(`cairo`, `pandoc`)는 모두 선택적이며 없으면 svglib + reportlab 경로로 자동 폴백.
 
 - **Claude Code 로컬**: 풀 라이브러리 모드. `.claude/skills/slide/` + 외부 `assets/icons/` (Tabler 6000+) + `assets/fonts/` (Pretendard) 모두 사용. 성능·완성도 100%.
-- **claude.ai 업로드**: essentials 모드. `python3 .claude/skills/slide/scripts/package_for_claude_ai.py`로 묶은 `output/slide-skill-claude-ai.zip`을 업로더에 드래그. 외부 `assets/icons/`는 번들에 포함 안 됨 — 스킬 안에 동봉된 ~20개 essentials 아이콘만 인라인되고 그 외는 graceful skip(`[WARN] Icon not found`). 폰트는 기본 미동봉 (claude.ai 환경엔 폰트 설치 권한 없어 데드웨이트). `/theme-init`은 새 디자인을 굽는 용도라 Claude Code 로컬 전용, `/upload-drive`는 Google 인증 필요해 로컬 전용.
+- **claude.ai 업로드**: essentials 모드. `.claude/skills/slide/scripts/_py.sh .claude/skills/slide/scripts/package_for_claude_ai.py`로 묶은 `output/slide-skill-claude-ai.zip`을 업로더에 드래그. 외부 `assets/icons/`는 번들에 포함 안 됨 — 스킬 안에 동봉된 ~20개 essentials 아이콘만 인라인되고 그 외는 graceful skip(`[WARN] Icon not found`). 폰트는 기본 미동봉 (claude.ai 환경엔 폰트 설치 권한 없어 데드웨이트). `/theme-init`은 새 디자인을 굽는 용도라 Claude Code 로컬 전용, `/upload-drive`는 Google 인증 필요해 로컬 전용.
 
 ## 핵심 제약 (non-negotiable)
 
@@ -136,20 +136,20 @@ slide-svg/
 
 ```bash
 # 1. 프로젝트 초기화 (Jangpm 기본)
-python3 .claude/skills/slide/scripts/project_manager.py init <project_name> --format ppt169
+.claude/skills/slide/scripts/_py.sh .claude/skills/slide/scripts/project_manager.py init <project_name> --format ppt169
 
 # 2. 소스 문서 변환
-python3 .claude/skills/slide/scripts/source_to_md/pdf_to_md.py <file.pdf>
-python3 .claude/skills/slide/scripts/source_to_md/doc_to_md.py <file.docx>
-python3 .claude/skills/slide/scripts/source_to_md/web_to_md.py <URL>
+.claude/skills/slide/scripts/_py.sh .claude/skills/slide/scripts/source_to_md/pdf_to_md.py <file.pdf>
+.claude/skills/slide/scripts/_py.sh .claude/skills/slide/scripts/source_to_md/doc_to_md.py <file.docx>
+.claude/skills/slide/scripts/_py.sh .claude/skills/slide/scripts/source_to_md/web_to_md.py <URL>
 
 # 3. 소스 임포트 (반드시 --move)
-python3 .claude/skills/slide/scripts/project_manager.py import-sources <project_path> <source_files...> --move
+.claude/skills/slide/scripts/_py.sh .claude/skills/slide/scripts/project_manager.py import-sources <project_path> <source_files...> --move
 
 # 4. (Step 7 후처리 — 각각 별도 호출)
-python3 .claude/skills/slide/scripts/total_md_split.py <project_path>
-python3 .claude/skills/slide/scripts/finalize_svg.py <project_path>
-python3 .claude/skills/slide/scripts/svg_to_pptx.py <project_path> -s final
+.claude/skills/slide/scripts/_py.sh .claude/skills/slide/scripts/total_md_split.py <project_path>
+.claude/skills/slide/scripts/_py.sh .claude/skills/slide/scripts/finalize_svg.py <project_path>
+.claude/skills/slide/scripts/_py.sh .claude/skills/slide/scripts/svg_to_pptx.py <project_path> -s final
 
 # 5. 로컬 프리뷰
 python3 -m http.server -d <project_path>/svg_final 8000
@@ -159,7 +159,7 @@ grep '^tabler-outline/.*<keyword>' assets/icons/icons_index.txt
 ls assets/icons/tabler-outline/ | grep <keyword>
 
 # 6b. claude.ai 번들 빌드 (output/slide-skill-claude-ai.zip)
-python3 .claude/skills/slide/scripts/package_for_claude_ai.py
+.claude/skills/slide/scripts/_py.sh .claude/skills/slide/scripts/package_for_claude_ai.py
 
 ```
 

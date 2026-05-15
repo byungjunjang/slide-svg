@@ -18,20 +18,20 @@ AI image generation is handled by the bundled `/codex-image` skill (Codex CLI OA
 Typical end-to-end workflow:
 
 ```bash
-python3 scripts/source_to_md/pdf_to_md.py <file.pdf>
+./scripts/_py.sh scripts/source_to_md/pdf_to_md.py <file.pdf>
 # or
-python3 scripts/source_to_md/ppt_to_md.py <deck.pptx>
-python3 scripts/project_manager.py init <project_name> --format ppt169
-python3 scripts/project_manager.py import-sources <project_path> <source_files...> --move
-python3 scripts/total_md_split.py <project_path>
-python3 scripts/finalize_svg.py <project_path>
-python3 scripts/svg_to_pptx.py <project_path> -s final
+./scripts/_py.sh scripts/source_to_md/ppt_to_md.py <deck.pptx>
+./scripts/_py.sh scripts/project_manager.py init <project_name> --format ppt169
+./scripts/_py.sh scripts/project_manager.py import-sources <project_path> <source_files...> --move
+./scripts/_py.sh scripts/total_md_split.py <project_path>
+./scripts/_py.sh scripts/finalize_svg.py <project_path>
+./scripts/_py.sh scripts/svg_to_pptx.py <project_path> -s final
 ```
 
 Repository update:
 
 ```bash
-python3 scripts/dev/update_repo.py
+./scripts/_py.sh scripts/dev/update_repo.py
 ```
 
 ## Script Index
@@ -50,39 +50,39 @@ python3 scripts/dev/update_repo.py
 Conversion:
 
 ```bash
-python3 scripts/source_to_md/pdf_to_md.py <file.pdf>
-python3 scripts/source_to_md/ppt_to_md.py <deck.pptx>
-python3 scripts/source_to_md/doc_to_md.py <file.docx>
-python3 scripts/source_to_md/web_to_md.py <url>
+./scripts/_py.sh scripts/source_to_md/pdf_to_md.py <file.pdf>
+./scripts/_py.sh scripts/source_to_md/ppt_to_md.py <deck.pptx>
+./scripts/_py.sh scripts/source_to_md/doc_to_md.py <file.docx>
+./scripts/_py.sh scripts/source_to_md/web_to_md.py <url>
 ```
 
 Project setup:
 
 ```bash
-python3 scripts/project_manager.py init <project_name> --format ppt169
-python3 scripts/project_manager.py import-sources <project_path> <source_files...> --move
-python3 scripts/project_manager.py validate <project_path>
+./scripts/_py.sh scripts/project_manager.py init <project_name> --format ppt169
+./scripts/_py.sh scripts/project_manager.py import-sources <project_path> <source_files...> --move
+./scripts/_py.sh scripts/project_manager.py validate <project_path>
 ```
 
 Template source import:
 
 ```bash
-python3 scripts/pptx_template_import.py <template.pptx>
-python3 scripts/pptx_template_import.py <template.pptx> --manifest-only
+./scripts/_py.sh scripts/pptx_template_import.py <template.pptx>
+./scripts/_py.sh scripts/pptx_template_import.py <template.pptx> --manifest-only
 ```
 
 Post-processing and export:
 
 ```bash
-python3 scripts/total_md_split.py <project_path>
-python3 scripts/finalize_svg.py <project_path>
-python3 scripts/svg_to_pptx.py <project_path> -s final
+./scripts/_py.sh scripts/total_md_split.py <project_path>
+./scripts/_py.sh scripts/finalize_svg.py <project_path>
+./scripts/_py.sh scripts/svg_to_pptx.py <project_path> -s final
 ```
 
 Image inspection (size/aspect for layout planning):
 
 ```bash
-python3 scripts/analyze_images.py <project_path>/images
+./scripts/_py.sh scripts/analyze_images.py <project_path>/images
 ```
 
 (For AI image generation, use the `/codex-image` slash command — see `.claude/skills/codex-image/README.md`.)
@@ -90,8 +90,8 @@ python3 scripts/analyze_images.py <project_path>/images
 Repository update:
 
 ```bash
-python3 scripts/dev/update_repo.py
-python3 scripts/dev/update_repo.py --skip-pip
+./scripts/_py.sh scripts/dev/update_repo.py
+./scripts/_py.sh scripts/dev/update_repo.py --skip-pip
 ```
 
 ## Recommendations
