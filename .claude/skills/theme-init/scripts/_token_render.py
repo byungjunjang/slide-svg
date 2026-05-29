@@ -19,6 +19,8 @@ Supported filters:
     bulleted  — list         → newline-joined markdown bullets
     csv       — list         → comma-joined inline enumeration (e.g. `"a", "b"`)
     optional  — any          → str(value) or "_(not provided)_" when value is null
+    cap       — any          → str(value) with the first character capitalized
+                               (e.g. theme `name` "montage" → "Montage")
 
 Called by render_anti_slop_theme.py, render_design_system.py, render_prompts.py.
 """
@@ -86,6 +88,8 @@ def _format(value: Any, fmt: str | None) -> str:
         if value is None:
             return "_(not provided)_"
         return str(value)
+    if fmt == "cap":
+        return str(value).capitalize()
     if fmt == "rgb":
         if not isinstance(value, str):
             raise ValueError(f"|rgb expects hex string, got {type(value).__name__}")

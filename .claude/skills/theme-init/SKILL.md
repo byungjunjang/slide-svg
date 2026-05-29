@@ -5,7 +5,8 @@ description: >
   calling agent reads the user's design guide, extracts tokens into a theme
   JSON matching the v1 token contract, runs the render pipeline, and every
   downstream reference (SVG layouts, HTML gallery CSS, design-system.md,
-  anti-slop-theme.md, strategist.md, executor.md) is regenerated so the next
+  anti-slop-theme.md, strategist.md, executor.md, image-generator.md) is
+  regenerated so the next
   `/slide` run produces decks in the new visual language. Use when the user
   asks to "change the design system", "replace the theme", "set up a new
   brand", "테마 교체", "디자인 시스템 바꿔", "새 브랜드 적용", or invokes
@@ -119,7 +120,9 @@ This runs:
    theme.
 5. **Render chain** — regenerates `templates/layouts/<name>/*.svg`,
    `colors_and_type.css` (HTML gallery), `design-system.md`,
-   `anti-slop-theme.md`, `strategist.md`, `executor.md`, and a
+   `anti-slop-theme.md`, `strategist.md`, `executor.md`,
+   `image-generator.md` (AI-illustration palette/style lock — rendered
+   from `image-generator.tpl.md`), and a
    `templates/layouts/<name>/DESIGN.md` skeleton (only when the file
    does not already exist — hand-authored DESIGN.md is preserved on
    re-runs; pass `--force` to `render_design_md.py` to overwrite).
@@ -134,8 +137,11 @@ This runs:
    broken shell.
 7. **`preview_shells.py`** (non-fatal) — rasterizes the shells with
    sample content into `templates/layouts/<name>/_preview/` for the
-   Step 5 review checkpoint. Missing `cairosvg`/`svglib` just yields
-   filled SVGs to open in a browser.
+   Step 5 review checkpoint. If neither `cairosvg` nor `svglib` is
+   installed it can only write filled SVGs (no PNG thumbnails) — the
+   Step 5c BLOCKING review then has nothing to show. Install a rasterizer
+   first (`pip install cairosvg`, the crispest path) so the PNG review
+   works; see the Step 5 header note.
 
 > The first `/theme-init` run for a brand-new theme has no `_shell_src/`
 > yet, so Step 3 renders the **baseline** (global `_source/`) shells —
@@ -206,6 +212,15 @@ band — so the deck skeleton matches the new design's signature.
 with jangpm geometry — the baseline shells already work. Run it whenever
 the design guide implies a distinct page architecture (a navy hero, a
 spectrum dot row, tag-chip headers, band cards, etc.).
+
+> **Rasterizer preflight (do this before 5b/5c).** The Step 5c review is a
+> render-first BLOCKING checkpoint that shows the user PNG thumbnails of the
+> composed shells. `preview_shells.py` needs `cairosvg` (crispest) or
+> `svglib`+`reportlab` to emit PNGs; without one it can only drop filled
+> SVGs and the visual review silently degrades. Install up front:
+> `pip install cairosvg` (or `pip install -r .claude/skills/slide/requirements.txt`).
+> The dual-mode "no browser binary" purity rule still holds — do **not** add
+> Playwright; the cairosvg/svglib path is the supported rasterizer.
 
 **Inputs** (read all four before composing):
 1. `theme-active.json` — tokens, including any `colors.shell-*` band tokens.
@@ -359,6 +374,7 @@ After a successful run the following files are updated in place:
 | `.claude/skills/slide/references/anti-slop-theme.md` | Theme-literal enforcement rules (rendered) |
 | `.claude/skills/slide/references/strategist.md` | Eight-Confirmations prompt with active-theme values |
 | `.claude/skills/slide/references/executor.md` | SVG-generation prompt with active-theme values |
+| `.claude/skills/slide/references/image-generator.md` | AI-illustration Style Lock + codex-image recipe (rendered from `image-generator.tpl.md`; active palette/name, hue-neutral prose) |
 | `.claude/skills/slide/references/colors_and_type.css` | CSS vars powering the HTML gallery |
 | `.claude/skills/slide/templates/layouts/<theme-name>/*.svg` | Cover / chapter / content / ending shells (rendered; carry the narrative band when the theme sets `shell-bg`) |
 | `.claude/skills/slide/templates/layouts/<theme-name>/_shell_src/*.tpl.svg` | Per-theme composed shell **source** (Step 5; preserved across re-runs). Absent → renders from global `_source/` baseline |
@@ -418,6 +434,29 @@ colors + soft variants, full type scale, radius/stroke/spacing, icon
 pack, forbidden phrases, GM hint) fall back to safe defaults if the
 guide doesn't specify them. Fill them in explicitly only when the guide
 calls for something different.
+
+#### Narrative-shell band tokens — extract in Step 2 when the design implies a band
+
+The optional `colors.shell-*` band tokens are **the inputs Step 5 needs to
+compose a branded cover/chapter/closing** (a hero band, a brand-spectrum dot
+row, a CTA on the band). If the design guide shows or describes any of these,
+extract them **now, in Step 2** — don't leave them to be patched in after Step
+5 (a `null` band makes Step 3 render a light baseline with no band table / no
+Rule T9, and the only way to add the band later is to edit `theme-active.json`
+and re-run `init_theme.py`).
+
+```
+colors.shell-bg         hero/band fill (cover/chapter/closing) — null = light shell, no band
+colors.shell-text       text on the band (null → falls back to `text`)
+colors.shell-text-secondary  muted text on the band (null → `text-secondary`)
+colors.shell-accent     CTA / accent legible on the band (null → `accent`)
+colors.shell-spectrum   ordered brand-spectrum hues for band decoration ([] = none)
+```
+
+These are **narrative-shell only** — the content shell stays light and never
+paints the band fill or a spectrum hue (`validate_shells.py` enforces this by
+geometry: a small accent cue is fine, a large band fill is not). Leave them
+`null` / `[]` for a flat monochrome rebrand that keeps jangpm geometry.
 
 ### Derived-color hints
 

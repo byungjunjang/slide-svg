@@ -154,7 +154,10 @@ def main(argv: list[str] | None = None) -> int:
         print("  → Read the montage (or per-shell PNGs) to review the composition, "
               "then present it to the user for the Step 5 checkpoint.")
     else:
-        print("  no SVG rasterizer (cairosvg / svglib) available — open the filled SVGs in a browser:")
+        print("  no SVG rasterizer (cairosvg / svglib) available — Step 5c PNG review is degraded.")
+        print("  → install one and re-run for PNG thumbnails:  pip install cairosvg")
+        print("     (or: pip install -r .claude/skills/slide/requirements.txt)")
+        print("  meanwhile, open the filled SVGs in a browser:")
         for p in svgs:
             print(f"  SVG: {p}")
         print(f"  e.g.  python3 -m http.server -d {preview_dir} 8000")

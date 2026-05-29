@@ -5,22 +5,22 @@
      (render_prompts.py). theme-init regenerates image-generator.md from this
      template every time theme-active.json changes. -->
 
-> This file is the streamlined reference for the Image_Generator role. Common standards (SVG technical constraints, canvas formats, post-processing pipeline, etc.) are in [shared-standards.md](./shared-standards.md). Jangpm visual-asset conventions are in [visual-assets.md](./visual-assets.md).
+> This file is the streamlined reference for the Image_Generator role. Common standards (SVG technical constraints, canvas formats, post-processing pipeline, etc.) are in [shared-standards.md](./shared-standards.md). {{TOKEN:name|cap}} visual-asset conventions are in [visual-assets.md](./visual-assets.md).
 
-## 🔒 Jangpm Style Lock — DEFAULT FOR EVERY IMAGE
+## 🔒 {{TOKEN:name|cap}} Style Lock — DEFAULT FOR EVERY IMAGE
 
-Under the `slide` skill, **every AI-generated image MUST follow the Jangpm illustration recipe**, which is the default and the only recommended style:
+Under the `slide` skill, **every AI-generated image MUST follow the {{TOKEN:name|cap}} illustration recipe**, which is the default and the only recommended style:
 
 **Style directive** (prepend to every prompt):
-> `minimal flat illustration, line-art style, restrained clean tones, transparent background, no gradients, no glow, no 3D rendering, no photorealism, harmonized with a #FAFAF9 backdrop and a single #4633E3 accent`
+> `minimal flat illustration, line-art style, restrained clean tones, transparent background, no gradients, no glow, no 3D rendering, no photorealism, harmonized with a {{TOKEN:colors.bg}} backdrop and a single {{TOKEN:colors.accent}} accent`
 
 **Deck Style Anchor** (shared prefix for all images in a deck):
-> `Jangpm lecture deck illustration — minimal flat line-art, restrained clean tones aligned with the single #4633E3 accent and #FAFAF9 background, transparent background`
+> `{{TOKEN:name|cap}} lecture deck illustration — minimal flat line-art, restrained clean tones aligned with the single {{TOKEN:colors.accent}} accent and {{TOKEN:colors.bg}} background, transparent background`
 
 **Negative prompt** (always include):
 > `text, watermark, logo, photograph, photorealistic, 3D render, gradient, glow, neon, vibrant colors, rainbow, dashboard UI, stock photo, shutterstock, low quality, blurry`
 
-**What to avoid** (Jangpm anti-slop alignment):
+**What to avoid** ({{TOKEN:name|cap}} anti-slop alignment):
 - Gradient skies, radial-glow orbs, atmospheric fog — anti-slop Rule 1 & 5
 - Multi-hue rainbow palettes — color rule
 - Gradient text inside illustrations — Rule 3
@@ -28,7 +28,7 @@ Under the `slide` skill, **every AI-generated image MUST follow the Jangpm illus
 - Photorealistic stock imagery — Rule 13 (decorative-only images)
 - Colored icon-badge illustration style — Rule 18 (SaaS dashboard aesthetics)
 
-Overrides below (style keywords table, industry presets) are kept for completeness but **must yield to the Jangpm lock**. If the Strategist's Design Spec requests a different illustration style, stop — the spec has drifted from the Jangpm lock.
+Overrides below (style keywords table, industry presets) are kept for completeness but **must yield to the {{TOKEN:name|cap}} lock**. If the Strategist's Design Spec requests a different illustration style, stop — the spec has drifted from the {{TOKEN:name|cap}} lock.
 
 ---
 
@@ -106,13 +106,13 @@ Every image must be output in the following format:
 | Quality directive | Resolution quality | `high quality`, `4K resolution`, `sharp details` |
 | Negative prompt | Exclude elements | `text, watermark, blurry, low quality` |
 
-### 2.3 Style Keywords — LOCKED (Jangpm)
+### 2.3 Style Keywords — LOCKED ({{TOKEN:name|cap}})
 
 **Under this skill, only one style is valid.** The table below is kept for reference only; do NOT use it.
 
 | Design Style | Image Style | Core Keywords |
 |-------------|-------------|---------------|
-| **Jangpm (locked default)** | Minimal flat line-art, restrained clean tones | `minimal flat illustration`, `line-art style`, `restrained clean tones`, `transparent background`, `no gradients`, `no glow`, `harmonized with the single #4633E3 accent` |
+| **{{TOKEN:name|cap}} (locked default)** | Minimal flat line-art, restrained clean tones | `minimal flat illustration`, `line-art style`, `restrained clean tones`, `transparent background`, `no gradients`, `no glow`, `harmonized with the single {{TOKEN:colors.accent}} accent` |
 
 <details>
 <summary>Legacy style presets (DO NOT USE — kept for historical reference)</summary>
@@ -129,19 +129,19 @@ Every image must be output in the following format:
 | ~~Finance / Banking~~ | ~~Conservative, trustworthy~~ | ~~`conservative`, `trustworthy`, `blue-gray palette`, `structured`, `precise`~~ |
 | ~~Creative / Design~~ | ~~Artistic, experimental~~ | ~~`artistic`, `experimental`, `asymmetric`, `textured`, `hand-crafted feel`~~ |
 
-These legacy presets conflict with Jangpm's anti-slop rules (gradients, vibrant colors, dark backgrounds, colored badges). They are preserved only so callers who strayed from the Jangpm lock can recognize why their output looked wrong.
+These legacy presets conflict with {{TOKEN:name|cap}}'s anti-slop rules (gradients, vibrant colors, dark backgrounds, colored badges). They are preserved only so callers who strayed from the {{TOKEN:name|cap}} lock can recognize why their output looked wrong.
 
 </details>
 
-### 2.4 Color Integration — LOCKED (Jangpm)
+### 2.4 Color Integration — LOCKED ({{TOKEN:name|cap}})
 
 Under the `slide` skill, the color directive for every prompt is fixed:
 
 ```
-color palette: #FAFAF9 background, restrained clean midtones harmonized with the single #4633E3 accent, neutral grays (#1A1A1A text, #6B7280 secondary)
+color palette: {{TOKEN:colors.bg}} background, restrained clean midtones harmonized with the single {{TOKEN:colors.accent}} accent, neutral grays ({{TOKEN:colors.text}} text, {{TOKEN:colors.text-secondary}} secondary)
 ```
 
-Do NOT extract a bespoke palette from the Design Spec (the Design Spec is already locked to the Jangpm palette — extraction is redundant). Do NOT introduce a second hue.
+Do NOT extract a bespoke palette from the Design Spec (the Design Spec is already locked to the {{TOKEN:name|cap}} palette — extraction is redundant). Do NOT introduce a second hue.
 
 ### 2.5 Canvas Format & Aspect Ratio — LOCKED
 
@@ -295,7 +295,7 @@ For each image with "Pending" status:
 ```bash
 /codex-image --size 1536x1024 --quality high \
   --out <project_path>/images --filename cover_bg \
-  "Jangpm lecture deck illustration — minimal flat line-art, restrained clean tones aligned with the single #4633E3 accent and #FAFAF9 background, transparent background, <subject>, color palette: #FAFAF9 background, restrained clean midtones harmonized with the single #4633E3 accent, neutral grays (#1A1A1A text, #6B7280 secondary). Avoid: text, watermark, logo, photograph, photorealistic, 3D render, gradient, glow, neon, vibrant colors, rainbow, dashboard UI, stock photo, shutterstock, low quality, blurry"
+  "{{TOKEN:name|cap}} lecture deck illustration — minimal flat line-art, restrained clean tones aligned with the single {{TOKEN:colors.accent}} accent and {{TOKEN:colors.bg}} background, transparent background, <subject>, color palette: {{TOKEN:colors.bg}} background, restrained clean midtones harmonized with the single {{TOKEN:colors.accent}} accent, neutral grays ({{TOKEN:colors.text}} text, {{TOKEN:colors.text-secondary}} secondary). Avoid: text, watermark, logo, photograph, photorealistic, 3D render, gradient, glow, neon, vibrant colors, rainbow, dashboard UI, stock photo, shutterstock, low quality, blurry"
 ```
 
 **Size mapping** (`gpt-image-2` only supports these three sizes):

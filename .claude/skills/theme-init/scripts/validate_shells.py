@@ -13,9 +13,13 @@ Locks enforced (see CLAUDE.md "핵심 제약" + references/shared-standards.md �
        <script>/<animate*>/<set>/<symbol>/<iframe>/<mask>/rgba()).
     4. Every <text> carries the active-theme font chain verbatim.
     5. The content shell carries the {{GOVERNING_MESSAGE}} placeholder (GM line).
-    6. Light-mode lock: the content shell must NOT use the narrative-band fill
-       (`shell-bg`) or any `shell-spectrum` hue. The light-mode relaxation is
-       scoped to the narrative shells (cover / chapter / closing) only.
+    6. Light-mode lock: the content shell must NOT carry a LARGE narrative-band
+       fill (`shell-bg`) or `shell-spectrum` fill that covers most of the canvas.
+       Judged by GEOMETRY, not by a raw hex match — a single small accent cue
+       (e.g. a 48×2 rule) is a legitimate content accent even when the theme
+       sets shell-bg == accent (single-brand-colour design systems). The
+       light-mode relaxation is scoped to the narrative shells (cover / chapter
+       / closing) only.
 
 Usage:
     python3 validate_shells.py
@@ -61,6 +65,57 @@ _VIEWBOX_RE = re.compile(r'viewBox\s*=\s*"([^"]*)"')
 _WIDTH_RE = re.compile(r'\bwidth\s*=\s*"([^"]*)"')
 _HEIGHT_RE = re.compile(r'\bheight\s*=\s*"([^"]*)"')
 
+# Narrative-band geometry: a band / large decorative fill covers most of the
+# 1280×720 canvas. Check #6 flags only such large fills, so a small accent cue
+# (e.g. a 48×2 rule) on the content shell is fine even when the theme sets
+# shell-bg == accent. Bands in the shells are always <rect>s.
+_RECT_TAG_RE = re.compile(r"<rect\b[^>]*?/?>", re.DOTALL)
+_BAND_MIN_W = 960.0   # ≥ 75% of canvas width
+_BAND_MIN_H = 300.0   # ≥ ~42% of canvas height
+
+
+def _attr(tag: str, name: str) -> str | None:
+    m = re.search(rf'\b{name}\s*=\s*"([^"]*)"', tag)
+    return m.group(1) if m else None
+
+
+def _dim(raw: str | None, full: float) -> float | None:
+    """Parse an SVG length to user units; '%' is relative to the canvas axis."""
+    if raw is None:
+        return None
+    raw = raw.strip()
+    if raw.endswith("%"):
+        try:
+            return float(raw[:-1]) / 100.0 * full
+        except ValueError:
+            return None
+    m = re.match(r"-?\d+(?:\.\d+)?", raw)
+    return float(m.group(0)) if m else None
+
+
+def _rect_fill(tag: str) -> str | None:
+    fill = _attr(tag, "fill")
+    if fill:
+        return fill
+    style = _attr(tag, "style")
+    if style:
+        m = re.search(r"fill\s*:\s*([^;]+)", style)
+        if m:
+            return m.group(1).strip()
+    return None
+
+
+def _large_rect_fills(text: str):
+    """Yield UPPER-cased fill of every <rect> that covers most of the canvas."""
+    for tag in _RECT_TAG_RE.findall(text):
+        w = _dim(_attr(tag, "width"), 1280.0)
+        h = _dim(_attr(tag, "height"), 720.0)
+        if w is None or h is None or w < _BAND_MIN_W or h < _BAND_MIN_H:
+            continue
+        fill = _rect_fill(tag)
+        if fill:
+            yield fill.upper()
+
 
 def _resolve(theme: dict, dotted: str):
     cur = theme
@@ -100,18 +155,29 @@ def check_shell(path: Path, name: str, theme: dict, errors: list[str]) -> None:
     if name == CONTENT_SHELL and "{{GOVERNING_MESSAGE}}" not in text:
         errors.append(f"{name}: content shell must carry the {{{{GOVERNING_MESSAGE}}}} GM placeholder")
 
-    # 6. Light-mode lock on the content shell — no band fill / spectrum hues.
+    # 6. Light-mode lock on the content shell — no LARGE narrative-band / spectrum
+    #    fill. Judged by GEOMETRY (a band covers most of the canvas), not by a raw
+    #    hex match: a single small accent cue (e.g. a 48×2 rule) is a legitimate
+    #    content accent even when the theme sets shell-bg == accent.
     if name == CONTENT_SHELL:
         bg = _resolve(theme, "colors.bg")
         shell_bg = _resolve(theme, "colors.shell-bg")
-        if shell_bg and shell_bg != bg and shell_bg.upper() in text.upper():
-            errors.append(f"{name}: content shell uses narrative band fill {shell_bg} "
-                          "— content must stay light (band is narrative-shell only)")
         spectrum = _resolve(theme, "colors.shell-spectrum") or []
+        band_reason: dict[str, str] = {}
+        if shell_bg and shell_bg != bg:
+            band_reason[shell_bg.upper()] = (
+                f"narrative band fill {shell_bg} — content must stay light "
+                "(band is narrative-shell only)")
         for hue in spectrum:
-            if hue.upper() in text.upper():
-                errors.append(f"{name}: content shell uses shell-spectrum hue {hue} "
-                              "— spectrum is narrative-shell decoration only")
+            if hue and hue != bg:
+                band_reason.setdefault(hue.upper(),
+                    f"shell-spectrum hue {hue} — spectrum is narrative-shell decoration only")
+        if band_reason:
+            seen: set[str] = set()
+            for fill in _large_rect_fills(text):
+                if fill in band_reason and fill not in seen:
+                    seen.add(fill)
+                    errors.append(f"{name}: large canvas fill uses {band_reason[fill]}")
 
 
 def main(argv: list[str] | None = None) -> int:

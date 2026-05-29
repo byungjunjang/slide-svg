@@ -85,7 +85,8 @@ slide-svg/
 │       │   ├── strategist.md          ← Eight Confirmations (활성 테마 락; `/theme-init` 시 생성)
 │       │   ├── executor.tpl.md        ← 단일 executor 템플릿
 │       │   ├── executor.md            ← 단일 executor (활성 테마 락; `/theme-init` 시 생성)
-│       │   ├── image-generator.md     ← 활성 테마 일러스트 레시피 기본 (현재: Jangpm)
+│       │   ├── image-generator.tpl.md ← 일러스트 레시피 템플릿 (활성 테마 토큰으로 렌더)
+│       │   ├── image-generator.md     ← 활성 테마 일러스트 레시피 (`/theme-init` 시 image-generator.tpl.md에서 렌더; hue-neutral, 현재: Jangpm)
 │       │   ├── export.md              ← svg_to_pptx 파이프라인
 │       │   ├── shared-standards.md    ← SVG 기술 제약
 │       │   ├── canvas-formats.md      ← 1280×720 전용
