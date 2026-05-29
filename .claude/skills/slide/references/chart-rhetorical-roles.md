@@ -180,17 +180,17 @@ Use this to validate post-hoc when reading existing decks or to disambiguate whe
 
 ---
 
-## Jangpm-specific styling lock (applied by `/slide` Executor)
+## Active-theme styling lock (applied by `/slide` Executor)
 
 Regardless of which template is chosen:
 
-- **Palette:** single-accent opacity ladder `rgba(70, 51, 227, 0.85 / 0.60 / 0.40 / 0.25)`. Multi-hue is forbidden (anti-slop T4).
+- **Palette:** single-accent opacity ladder on the **active theme accent** — `rgba(<accent>, 0.85 / 0.60 / 0.40 / 0.25)`. The rendered literal lives in `anti-slop-theme.md` Rule T4; the Executor substitutes the active accent at use-time. Multi-hue is forbidden (anti-slop T4).
 - **Semantic exception:** growth in `--positive`, decline in `--negative`, only when color encodes data meaning.
 - **Annotations:** axis labels `--text-secondary` (12.8/500), data labels accent-colored only on the focus value.
 - **No** drop shadows, 3D, gradient fills, glow, or legend chrome.
 - **Required adjacency:** every chart slide pairs with a takeaway card holding 1 metric + 1 trend annotation + 1 contextual line.
 
-> See `templates/layouts/jangpm/DESIGN.md` §8 for the full Jangpm chart treatment spec.
+> See `templates/layouts/<active-theme>/DESIGN.md` §8 (currently `jangpm/`) for the full active-theme chart treatment spec.
 
 ---
 

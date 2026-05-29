@@ -124,6 +124,13 @@ CANVAS_FORMATS = {
 # ============================================================
 # Design Color Configuration
 # ============================================================
+#
+# DEPRECATED / LEGACY (ppt-master upstream). No code imports DESIGN_COLORS,
+# DESIGN_FONTS, get_color_scheme, or get_design_colors — the active visual
+# language now comes entirely from references/theme-active.json (single-accent
+# lock) via the /theme-init render chain. These palettes (consulting/general/…)
+# predate the Jangpm single-theme model and are kept only to avoid touching the
+# shared config module; do not wire new code to them.
 
 DESIGN_COLORS = {
     'consulting': {

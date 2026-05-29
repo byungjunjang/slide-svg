@@ -146,13 +146,15 @@ Key spacing values:
 
 ## Card System
 
+**Card treatment:**{{IF:surface.card_style=hairline}} **hairline** (default) — a `1px solid var(--border)` rule on a `var(--surface)` fill. Differentiate the hero card with a `var(--accent-soft)` background.{{/IF}}{{IF:surface.card_style=filled}} **filled** — `var(--surface-alt)` / `var(--surface)` fill, **no** border; differentiate the hero card with a `var(--accent-soft)` background.{{/IF}}{{IF:surface.card_style=borderless}} **borderless** — do **not** draw a `<rect>` card container. Group content with whitespace + a single hairline rule (`var(--border)`) and the type hierarchy. No filled or bordered rectangles as containers; differentiate the hero block with weight/size, not a fill.{{/IF}}
+
 | Property | Value |
 |----------|-------|
 | `--card-padding` | `var(--space-6)` |
 | `--card-gap` | `var(--space-6)` |
 | `--card-radius` | `{{TOKEN:radius.md}}px` |
-| Background | `var(--surface)` or `var(--surface-alt)` |
-| Border | `1px solid var(--border)` |
+| Background | per treatment (default `var(--surface)` / `var(--surface-alt)`) |
+| Border | per treatment (hairline default: `1px solid var(--border)`) |
 
 ## Calibration Anchors
 

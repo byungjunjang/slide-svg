@@ -210,6 +210,8 @@ In any card grid, **at least one** card should be visually distinct: background 
 
 Max accent events per slide: **1–2**. Never color every card with accent-soft.
 
+**Card treatment (active theme):** hairline — a card `<rect>` uses a `#FFFFFF` fill + `1px #E5E7EB` stroke, radius 12.
+
 ### Chart Colors (Jangpm Lock)
 
 When using a template from `templates/charts/`, **override every fill and stroke**. Charts under Jangpm use:
@@ -375,7 +377,7 @@ Placeholder:
 
 When AI-generated illustrations are used (via Image_Generator), they MUST match the Jangpm visual-assets recipe:
 - **minimal flat illustration**, **muted / pastel tones**, **transparent background**, **line-art style**, **no gradients, no glow, no 3D renders**
-- Match the warm off-white `#FAFAF9` page; pastels that harmonize with monochrome palette
+- Match the page background `#FAFAF9`; tones that harmonize with the active palette (see `image-generator.md` §🔒 for the full active-theme style lock)
 - Brand character: `.claude/skills/slide/templates/layouts/jangpm/assets/brand/jangpm-character.png`. When provided, it can be used on slides that benefit from an instructor persona; when not provided, omit persona slides entirely.
 
 ---
@@ -399,9 +401,9 @@ Every `<text>` element MUST include the full font-family chain:
 | Display | 56 | 800 | -1.68 |
 | Display-sm | 40 | 800 | -0.8 |
 | Headline | 32 | 700 | -0.64 |
-| Title | 18.4 | 600 | 0 |
-| Body | 15.2 | 400 | 0 |
-| Caption | 12.8 | 500 | 0 |
+| Title | 18.4 | 600 | 0.0 |
+| Body | 15.2 | 400 | 0.0 |
+| Caption | 12.8 | 500 | 0.0 |
 | Label (uppercase) | 12.8 | 600 | 0.64 (with `text-transform: uppercase` equivalent — SVG: write content in actual uppercase) |
 
 Color:

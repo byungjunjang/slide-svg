@@ -2,21 +2,22 @@
 name: slide
 description: >
   Korean-first lecture deck generator. Converts source documents (PDF/DOCX/URL/Markdown)
-  or a prompt brief into Jangpm-branded SVG pages and exports to native DrawingML PPTX
+  or a prompt brief into active-theme-branded SVG pages and exports to native DrawingML PPTX
   through a strict serial pipeline (Strategist → [Image_Generator] → Executor →
-  Post-processing → Export). Locks visual language to monochrome + single `#4633E3`
-  indigo accent, Pretendard typography, 1280×720. Use when user asks to "make slides",
+  Post-processing → Export). Locks the canvas to 1280×720 and the visual language to the
+  active theme's single accent + typography (default: Jangpm — monochrome, `#4633E3` indigo,
+  Pretendard). Use when user asks to "make slides",
   "슬라이드 만들어", "강의 슬라이드", "프레젠테이션", "생성PPT", or invokes "/slide".
 ---
 
 # /slide — Active-Theme Lecture Deck Skill
 
-> Korean-first lecture deck generator. Converts source documents or prompt briefs into Jangpm-branded SVG pages and exports to native DrawingML PPTX through a strict serial pipeline.
+> Korean-first lecture deck generator. Converts source documents or prompt briefs into active-theme-branded SVG pages and exports to native DrawingML PPTX through a strict serial pipeline.
 
 **Core Pipeline**: `Source Document → Create Project → Strategist → [Image_Generator] → Executor → Post-processing → Export`
 
 > [!NOTE]
-> The Jangpm Slide Design System is the single visual language for this skill. Monochrome + single `#4633E3` accent, Pretendard, 1280×720, editorial report tone. See `references/design-system.md`, `references/anti-slop-core.md` (structural), and `references/anti-slop-theme.md` (theme-literal enforcement). The `templates/layouts/jangpm/` pack is the only layout pack.
+> The active theme (read from `references/theme-active.json`) is the single visual language for this skill. **1280×720 is permanently locked**; the accent, typography, and palette come from the active theme (default: Jangpm — monochrome, single `#4633E3` indigo accent, Pretendard, editorial report tone). See `references/design-system.md`, `references/anti-slop-core.md` (structural), and `references/anti-slop-theme.md` (theme-literal enforcement). The active theme's `templates/layouts/<theme>/` pack (currently `jangpm/`) is the only layout pack.
 
 > [!CAUTION]
 > ## 🚨 Global Execution Discipline (MANDATORY)
@@ -68,7 +69,7 @@ For complete tool documentation, see `${SKILL_DIR}/scripts/README.md`.
 | Index | Path | Purpose |
 |-------|------|---------|
 | Layout template (Jangpm only) | `${SKILL_DIR}/templates/layouts/jangpm/` | Single Jangpm layout pack: `01_cover.svg`, `02_chapter.svg`, `03_content.svg`, `04_ending.svg`, `design_spec.md` |
-| Visualization templates | `${SKILL_DIR}/templates/charts/charts_index.json` | Chart / infographic / diagram SVG templates. **Under Jangpm lock**: Executor overrides fills to the `#4633E3` opacity ladder regardless of template's native palette |
+| Visualization templates | `${SKILL_DIR}/templates/charts/charts_index.json` | Chart / infographic / diagram SVG templates. **Under the active-theme lock**: Executor overrides fills to the active accent's opacity ladder regardless of template's native palette |
 | Icon library | `${REPO_ROOT}/assets/icons/tabler-outline/<name>.svg` (Claude Code) · `${SKILL_DIR}/templates/icons/tabler-outline/<name>.svg` (claude.ai essentials) | Lucide-compatible line-art icons (Jangpm-preferred). Fallback library: `tabler-filled/`. `embed_icons.py` resolves `data-icon="tabler-outline/<name>"` against the external repo asset first, then the bundled essentials inside the skill, then warns and skips. Search the full library with `grep <keyword> ${REPO_ROOT}/assets/icons/icons_index.txt`; the bundled essentials are listable via `ls ${SKILL_DIR}/templates/icons/tabler-outline/`. |
 
 ## Standalone Workflows
@@ -468,7 +469,7 @@ Read references/executor.md
 
 **Plan-Consuming mode reminder** — if `slide_plan.json` exists at `<project_path>/slide_plan.json`, Executor MUST treat it as the per-slide source of truth: each slide's `recommended_layout_family`, `chart_strategy`, `content_blocks[]`, and `evidence_to_use` drive page construction. `design_spec.md` §IX is the formatted transcription; `slide_plan.json` is the SSOT. If the two disagree (e.g., user hand-edited only one), trust `slide_plan.json` and surface the inconsistency to the user before continuing. In Standalone mode (no plan), `design_spec.md` §IX is itself the SSOT — proceed with the existing flow.
 
-**Design Parameter Confirmation (Mandatory)**: Before generating the first SVG, the Executor MUST review and output key design parameters from the Design Specification (canvas 1280×720, monochrome + `#4633E3` accent, Pretendard font chain, body 15.2px baseline) to ensure Jangpm lock adherence. See `executor.md` §2 for the exact confirmation block.
+**Design Parameter Confirmation (Mandatory)**: Before generating the first SVG, the Executor MUST review and output key design parameters from the Design Specification (canvas 1280×720 — permanently locked — plus the active theme's accent, font chain, and body baseline; the rendered values live in `executor.md` §2 / `design-system.md`) to ensure active-theme lock adherence. See `executor.md` §2 for the exact confirmation block.
 
 > ⚠️ **Main-agent only rule**: SVG generation in Step 6 MUST remain with the current main agent because page design depends on full upstream context (source content, design spec, template mapping, image decisions, and cross-page consistency). Do NOT delegate any slide SVG generation to sub-agents.
 > ⚠️ **Generation rhythm rule**: After confirming the global design parameters, the Executor MUST generate pages sequentially, one page at a time, while staying in the same continuous main-agent context. Do NOT split Step 6 into grouped page batches such as 5 pages per batch.

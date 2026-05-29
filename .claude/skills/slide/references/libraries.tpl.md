@@ -75,9 +75,9 @@ new Chart(ctx, {
       data: [10, 20, 15],
       // Single-accent opacity ladder — active theme accent (anti-slop Rule T4). Never multi-hue.
       backgroundColor: [
-        'rgba(70, 51, 227, 0.85)',
-        'rgba(70, 51, 227, 0.6)',
-        'rgba(70, 51, 227, 0.4)'
+        'rgba({{TOKEN:colors.accent|rgb}}, 0.85)',
+        'rgba({{TOKEN:colors.accent|rgb}}, 0.6)',
+        'rgba({{TOKEN:colors.accent|rgb}}, 0.4)'
       ]
     }]
   },
@@ -258,7 +258,7 @@ Inline SVG — no CDN dependency required.
 Use the active theme font chain (rendered from `theme-active.json`):
 
 ```css
---font-sans: Pretendard, 'Apple SD Gothic Neo', 'Malgun Gothic', Arial, sans-serif;
+--font-sans: {{TOKEN:typography.font-chain}};
 ```
 
 The chain ends in a generic fallback, so the in-browser preview degrades gracefully

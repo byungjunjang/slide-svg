@@ -138,6 +138,24 @@
           "description": "One-sentence hint the Executor uses when composing .gm lines."
         }
       }
+    },
+    "surface": {
+      "type": "object",
+      "description": "OPTIONAL (v1.1, additive). Card / container treatment. Absent ⇒ hairline (1px-border card on a surface fill) — the stock behaviour. Token NAME matches the slide-html / slide-pencil contracts.",
+      "additionalProperties": false,
+      "required": ["card_style"],
+      "properties": {
+        "card_style": {
+          "type": "string",
+          "enum": ["filled", "hairline", "borderless"],
+          "description": "filled = surface-alt/surface fill, no border. hairline = 1px border on a surface fill (default). borderless = no rect card; group with whitespace + a single hairline rule."
+        }
+      }
+    },
+    "palette_mode": {
+      "type": "string",
+      "enum": ["chromatic", "monochrome"],
+      "description": "OPTIONAL (v1.1, additive). chromatic (default) ⇒ unspecified semantic positive/negative/warning fill green/red/orange. monochrome ⇒ a hue-free brand; fill_theme_defaults derives null semantic tokens from ink tones instead. Never relaxes the single-accent lock."
     }
   },
   "$defs": {

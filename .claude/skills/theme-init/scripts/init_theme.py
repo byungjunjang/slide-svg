@@ -45,6 +45,7 @@ from __future__ import annotations
 
 import argparse
 import json
+import os
 import shutil
 import subprocess
 import sys
@@ -54,11 +55,24 @@ SCRIPTS_DIR = Path(__file__).resolve().parent
 SKILL_ROOT = SCRIPTS_DIR.parents[1] / "slide"
 DEFAULT_THEME = SKILL_ROOT / "references" / "theme-active.json"
 
+# The step scripts print non-ASCII status lines (em-dashes, "→"). On a non-UTF-8
+# console (e.g. Windows cp949) those raise UnicodeEncodeError mid-print and abort
+# the step — and therefore the whole pipeline. Force UTF-8 for our own streams
+# and for every child subprocess so /theme-init runs cleanly regardless of the
+# host console code page.
+try:
+    sys.stdout.reconfigure(encoding="utf-8")  # type: ignore[attr-defined]
+    sys.stderr.reconfigure(encoding="utf-8")  # type: ignore[attr-defined]
+except (AttributeError, ValueError):
+    pass
+
+_CHILD_ENV = {**os.environ, "PYTHONUTF8": "1", "PYTHONIOENCODING": "utf-8"}
+
 
 def _run(step: str, argv: list[str]) -> None:
     """Run a subprocess and raise SystemExit on failure."""
     print(f"\n=== {step} ===")
-    r = subprocess.run(argv, cwd=SCRIPTS_DIR.parents[2])  # repo root
+    r = subprocess.run(argv, cwd=SCRIPTS_DIR.parents[2], env=_CHILD_ENV)  # repo root
     if r.returncode != 0:
         print(f"\n[init_theme] step failed: {step} (exit {r.returncode})", file=sys.stderr)
         raise SystemExit(r.returncode)
@@ -185,7 +199,7 @@ def main() -> int:
     preview = SCRIPTS_DIR / "preview_shells.py"
     if preview.exists():
         print(f"\n=== preview_shells (non-fatal) ===")
-        subprocess.run([sys.executable, str(preview)], cwd=SCRIPTS_DIR.parents[2])
+        subprocess.run([sys.executable, str(preview)], cwd=SCRIPTS_DIR.parents[2], env=_CHILD_ENV)
 
     print(f"\n=== /theme-init complete ===")
     print(f"active theme: {after.get('display_name')} ({after.get('name')})")

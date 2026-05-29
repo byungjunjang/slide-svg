@@ -1230,11 +1230,13 @@ var barChart = new Chart(barCtx, {
     datasets: [{
       label: 'Revenue ($M)',
       data: [42, 68, 55, 31],
+      // Single-accent opacity ladder (anti-slop T4) — never multi-hue.
+      // Executor substitutes the ACTIVE theme accent at use-time.
       backgroundColor: [
-        'rgba(37,99,235,0.8)',
-        'rgba(5,150,105,0.8)',
-        'rgba(217,119,6,0.8)',
-        'rgba(124,58,237,0.85)'
+        'rgba(70, 51, 227, 0.85)',
+        'rgba(70, 51, 227, 0.60)',
+        'rgba(70, 51, 227, 0.40)',
+        'rgba(70, 51, 227, 0.25)'
       ],
       borderRadius: 6,
       barThickness: 40
@@ -1305,11 +1307,12 @@ var lineChart = new Chart(lineCtx, {
     datasets: [{
       label: 'Revenue ($M)',
       data: [120, 145, 178, 210, 260],
-      borderColor: 'rgba(37,99,235,0.8)',
-      backgroundColor: 'rgba(37,99,235,0.12)',
+      // Single accent (anti-slop T4) — Executor substitutes the ACTIVE theme accent.
+      borderColor: 'rgba(70, 51, 227, 0.85)',
+      backgroundColor: 'rgba(70, 51, 227, 0.12)',
       fill: true,
       tension: 0.3,
-      pointBackgroundColor: 'rgba(37,99,235,1)',
+      pointBackgroundColor: 'rgba(70, 51, 227, 1)',
       pointRadius: 5,
       pointHoverRadius: 7,
       borderWidth: 3
@@ -1404,12 +1407,14 @@ var doughnutChart = new Chart(doughnutCtx, {
     labels: ['Segment A', 'Segment B', 'Segment C', 'Segment D', 'Others'],
     datasets: [{
       data: [28, 22, 18, 14, 18],
+      // Single-accent opacity ladder (anti-slop T4); trailing neutral gray for the residual "Others" slice.
+      // Executor substitutes the ACTIVE theme accent at use-time.
       backgroundColor: [
-        'rgba(37,99,235,0.8)',
-        'rgba(5,150,105,0.8)',
-        'rgba(217,119,6,0.8)',
-        'rgba(124,58,237,0.85)',
-        'rgba(107,114,128,0.4)'
+        'rgba(70, 51, 227, 0.85)',
+        'rgba(70, 51, 227, 0.60)',
+        'rgba(70, 51, 227, 0.40)',
+        'rgba(70, 51, 227, 0.25)',
+        'rgba(107, 114, 128, 0.40)'
       ],
       borderWidth: 2,
       borderColor: '#FFFFFF'

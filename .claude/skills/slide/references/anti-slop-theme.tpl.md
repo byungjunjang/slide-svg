@@ -154,6 +154,20 @@ Semantic columns (growth vs. decline) may use `{{TOKEN:colors.positive}}` / `{{T
 **Forbidden:** hairline strokes (<1px), display-weight strokes (>3px), or decorative dashed/dotted patterns.
 
 **Why:** Stroke inconsistency is the other half of radius discipline. Together they set the deck's mechanical precision; drifting from these values is visible at a glance.
+
+---
+
+## Card Treatment Lock
+
+The active theme's card treatment is **{{IF:surface.card_style=hairline}}hairline{{/IF}}{{IF:surface.card_style=filled}}filled{{/IF}}{{IF:surface.card_style=borderless}}borderless{{/IF}}**. Apply it consistently across the whole deck.
+
+**Forbidden:** mixing card treatments within one deck, or ignoring the active treatment.
+{{IF:surface.card_style=borderless}}
+**Borderless lock:** NEVER draw a `<rect>` as a card container. Group with whitespace + a single hairline rule (`{{TOKEN:colors.border}}`) and the type hierarchy. A filled or bordered rectangle used as a card box is a violation.
+{{/IF}}{{IF:surface.card_style=filled}}
+**Filled lock:** card boxes use a `{{TOKEN:colors.surface-alt}}` / `{{TOKEN:colors.surface}}` fill with **no** border. Do not add a 1px border on top of the fill.
+{{/IF}}
+**Why:** Card treatment is a structural identity signal. One file = one theme = one treatment; mixing hairline, filled, and borderless boxes reads as AI-assembled rather than designed.
 {{IF:colors.shell-bg}}
 ---
 
