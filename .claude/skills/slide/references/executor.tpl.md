@@ -60,19 +60,22 @@ In **Standalone** mode the Executor selects family and pattern both, as before �
 
 ## 1. Template Adherence
 
-The Jangpm template pack at `templates/layouts/jangpm/` is the only layout pack this skill uses. Inherit:
+The **{{TOKEN:display_name}}** template pack at `templates/layouts/{{TOKEN:name}}/` is the only layout pack this skill uses. These shells are the composed deck skeleton (see DESIGN.md §6.0) — inherit their geometry, decoration, and band exactly; only replace the named content placeholders:
 
 | Page Type | Template | Adherence |
 |-----------|----------|-----------|
-| Cover | `01_cover.svg` | Inherit background, accent rule, typography scale; replace `{{TITLE}}`, `{{EYEBROW}}`, `{{SUBTITLE}}`, `{{PRESENTER}}`, `{{DATE}}` |
+| Cover | `01_cover.svg` | Inherit background/band, accent rule, typography scale; replace `{{TITLE}}`, `{{EYEBROW}}`, `{{SUBTITLE}}`, `{{PRESENTER}}`, `{{DATE}}` |
 | Chapter / Section | `02_chapter.svg` | Inherit numbering, eyebrow, title block; replace `{{CHAPTER_NUMBER}}`, `{{CHAPTER_LABEL}}`, `{{CHAPTER_TITLE}}`, `{{CHAPTER_SUMMARY}}`, `{{PAGE_NUM}}` |
-| Content | `03_content.svg` | Inherit headline bar + GM + page-number row. **Content area** (x=56, y=160, w=1168, h=480) is freely composed by Executor within the Jangpm rules |
-| Ending | `04_ending.svg` | Inherit layout; replace `{{CLOSING_LABEL}}`, `{{CLOSING_HEADLINE}}`, `{{CLOSING_ACCENT}}`, `{{CONTACT_LINE}}`, `{{PRESENTER}}`, `{{DATE}}` |
+| Content | `03_content.svg` | Inherit headline bar + GM + page-number row. **Content area** (x=56, y=160, w=1168, h=480) is freely composed by Executor within the active-theme rules |
+| Ending | `04_ending.svg` | Inherit layout/band; replace `{{CLOSING_LABEL}}`, `{{CLOSING_HEADLINE}}`, `{{CLOSING_ACCENT}}`, `{{CONTACT_LINE}}`, `{{PRESENTER}}`, `{{DATE}}` |
+{{IF:colors.shell-bg}}
+> **Narrative band (this theme).** The narrative shells (cover / chapter / ending) render full-bleed on the band fill `{{TOKEN:colors.shell-bg}}`; their text already uses `shell-text` / `shell-accent` and any `shell-spectrum` decoration is baked into the shell. Do NOT recolor those text elements to the light-mode `text`/`accent` — inherit them verbatim. The **content shell (`03_content.svg`) stays light** and is the only canvas you compose freely: never paint the band fill or a spectrum hue onto a content slide (anti-slop Rule T9).
+{{/IF}}
 
 ### Page-Template Mapping Declaration (Required Before Each Page)
 
 ```
-📝 **Template mapping**: `templates/jangpm/03_content.svg`
+📝 **Template mapping**: `templates/layouts/{{TOKEN:name}}/03_content.svg`
 🎯 **Adherence rules / layout strategy**: [brief note — e.g., "Headline + three-card grid + GM"]
 ```
 

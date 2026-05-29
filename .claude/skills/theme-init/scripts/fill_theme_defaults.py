@@ -58,6 +58,16 @@ SAFE_DEFAULTS: dict[str, Any] = {
         "negative-soft":  "#FFF1F2",
         "warning":        "#D97706",
         "warning-soft":   "#FFFBEB",
+        # Optional narrative-shell band tokens (v1.1, additive). Default null /
+        # empty so monochrome themes stay light (no band) and the schema's
+        # additionalProperties:false round-trips. render_layouts.py falls back
+        # null shell-* to the matching base token (text/text-secondary/accent),
+        # so a theme that sets only shell-bg still renders safely.
+        "shell-bg":             None,
+        "shell-text":           None,
+        "shell-text-secondary": None,
+        "shell-accent":         None,
+        "shell-spectrum":       [],
     },
     "typography": {
         "font-chain": "system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif",

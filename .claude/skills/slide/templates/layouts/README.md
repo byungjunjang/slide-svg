@@ -115,6 +115,27 @@ Each template should contain the following standard files (TOC page is optional)
 
 > **Design philosophy**: Templates define visual consistency and structural pages; content pages maintain maximum flexibility, letting AI determine layout based on actual content.
 
+### Shell render layers (`_source/` vs per-theme `_shell_src/`)
+
+The four shells (`01_cover` / `02_chapter` / `03_content` / `04_ending`) in a
+theme directory are **rendered output**. `/theme-init`'s `render_layouts.py`
+produces them from one of two parametric sources, in priority order:
+
+| Source | Path | Authored by | When used |
+|--------|------|-------------|-----------|
+| Per-theme composed | `<theme>/_shell_src/*.tpl.svg` | agent, in `/theme-init` Step 5 (Shell Composition) | whenever it exists — defines that theme's geometry, decoration, and narrative band |
+| Global baseline | `_source/*.tpl.svg` | repo (stock jangpm geometry) | fallback when a theme has no `_shell_src/` |
+
+Both are parametric: colors are `{{TOKEN:colors.*}}` placeholders (resolved at
+render time), content placeholders (`{{TITLE}}`, `{{GOVERNING_MESSAGE}}`, …) are
+left for the Executor. Keeping the composition as **source** (not a flattened
+SVG) means a token-only theme change re-propagates with a clean diff, and
+`_shell_src/` is preserved across re-runs like the hand-authored `DESIGN.md`.
+`validate_shells.py` enforces the permanent locks (1280×720, font chain, GM
+line on content, no banned SVG features, content shell stays light) on the
+rendered result regardless of which source produced it. See
+`.claude/skills/theme-init/SKILL.md` §5 for the composition workflow.
+
 ---
 
 ## design_spec.md Standard Structure

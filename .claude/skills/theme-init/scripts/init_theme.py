@@ -12,14 +12,17 @@ Steps:
     2. validate_fonts.py      — primary-font availability under assets/fonts/;
                                 injects "Arial" into the chain if missing
     3. diff vs. prior theme   — human-readable summary of what changed
-    4. render_layouts.py      — theme-parametric SVG layouts for the pack
-    5. reskin_gallery.py      — regenerate colors_and_type.css for HTML gallery
-    6. render_design_system.py — regenerate design-system.md
-    7. render_anti_slop_theme.py — regenerate anti-slop-theme.md
-    8. render_prompts.py      — regenerate strategist.md + executor.md
-    9. render_design_md.py    — render DESIGN.md skeleton for slide-plan
+    4. render_layouts.py      — theme-parametric SVG layouts (source-aware:
+                                per-theme _shell_src/ if composed, else _source/)
+    5. validate_shells.py     — FATAL lock check on the rendered shells
+    6. reskin_gallery.py      — regenerate colors_and_type.css for HTML gallery
+    7. render_design_system.py — regenerate design-system.md
+    8. render_anti_slop_theme.py — regenerate anti-slop-theme.md
+    9. render_prompts.py      — regenerate strategist.md + executor.md
+   10. render_design_md.py    — render DESIGN.md skeleton for slide-plan
                                 (skipped if target file already exists; --force
                                  to overwrite hand-authored content)
+   11. preview_shells.py      — NON-fatal: rasterize shells for Step 5 review
 
 Usage:
     # Agent wrote theme-active.json directly; run validate + full render:
@@ -156,8 +159,14 @@ def main() -> int:
     # the calling agent must finish authoring (AGENT-FILL markers). It is
     # also the only step that is no-op when its output already exists,
     # protecting hand-authored content (e.g., the canonical jangpm DESIGN.md).
+    # render_layouts is source-aware: it renders the per-theme _shell_src/ (the
+    # Step 5 composed shells) when present, else the global _source/ baseline.
+    # validate_shells runs immediately after and is FATAL — a composed shell that
+    # broke a permanent lock (canvas, font chain, banned feature, content-shell
+    # light lock, GM line) must abort before downstream files reference it.
     for step, script, extra in [
         ("render_layouts",          "render_layouts.py",          []),
+        ("validate_shells",         "validate_shells.py",         []),
         ("reskin_gallery",          "reskin_gallery.py",          []),
         ("render_design_system",    "render_design_system.py",    []),
         ("render_anti_slop_theme",  "render_anti_slop_theme.py",  []),
@@ -169,6 +178,14 @@ def main() -> int:
             print(f"[init_theme] missing script: {path}", file=sys.stderr)
             return 1
         _run(step, [sys.executable, str(path)] + extra)
+
+    # preview_shells is NON-fatal: it rasterizes the rendered shells for the
+    # Step 5 review checkpoint. Missing rasterizer (cairosvg/svglib) just yields
+    # filled SVGs to open in a browser — never a reason to fail the init.
+    preview = SCRIPTS_DIR / "preview_shells.py"
+    if preview.exists():
+        print(f"\n=== preview_shells (non-fatal) ===")
+        subprocess.run([sys.executable, str(preview)], cwd=SCRIPTS_DIR.parents[2])
 
     print(f"\n=== /theme-init complete ===")
     print(f"active theme: {after.get('display_name')} ({after.get('name')})")

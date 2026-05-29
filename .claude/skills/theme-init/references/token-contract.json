@@ -42,7 +42,12 @@
         "negative":        { "$ref": "#/$defs/hex", "description": "Decline / error (data contexts only)." },
         "negative-soft":   { "$ref": "#/$defs/hex" },
         "warning":         { "$ref": "#/$defs/hex", "description": "Caution (data contexts only)." },
-        "warning-soft":    { "$ref": "#/$defs/hex" }
+        "warning-soft":    { "$ref": "#/$defs/hex" },
+        "shell-bg":             { "$ref": "#/$defs/hexOrNull", "description": "OPTIONAL (v1.1, additive). Narrative-shell band fill — cover / chapter / closing ONLY. null = light shell, no band (stock behavior). Content shell must never use this." },
+        "shell-text":           { "$ref": "#/$defs/hexOrNull", "description": "OPTIONAL. Text color on the narrative-shell band. null falls back to `text` at render time." },
+        "shell-text-secondary": { "$ref": "#/$defs/hexOrNull", "description": "OPTIONAL. Muted text on the band. null falls back to `text-secondary`." },
+        "shell-accent":         { "$ref": "#/$defs/hexOrNull", "description": "OPTIONAL. Accent / CTA on the band (e.g., a brighter brand hue legible on the dark fill). null falls back to `accent`." },
+        "shell-spectrum":       { "$ref": "#/$defs/hexList",   "description": "OPTIONAL. Ordered decorative brand-spectrum hues for narrative shells ONLY (e.g., a row of brand dots). [] = none. Decorative-only and exempt from the content accent budget; never used on content slides." }
       }
     },
     "typography": {
@@ -140,6 +145,16 @@
       "type": "string",
       "pattern": "^#([0-9A-F]{6}|[0-9A-F]{8})$",
       "description": "Hex color, 6 or 8 digits (RGB or RGBA). Uppercase enforced — lowercase is rejected so validate_theme's hint can guide the agent toward the canonical form."
+    },
+    "hexOrNull": {
+      "oneOf": [ { "$ref": "#/$defs/hex" }, { "type": "null" } ],
+      "description": "Optional hex color or null (token absent / falls back to a base token at render time)."
+    },
+    "hexList": {
+      "type": "array",
+      "items": { "$ref": "#/$defs/hex" },
+      "maxItems": 6,
+      "description": "Ordered list of hex colors (decorative spectrum). Max 6 to keep the spectrum legible."
     },
     "typeScale": {
       "type": "object",

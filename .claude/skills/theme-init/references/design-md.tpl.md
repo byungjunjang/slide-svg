@@ -206,11 +206,36 @@ This is the canonical vocabulary `slide-plan` writes into `recommended_layout_fa
 
 ## 6. Header / Body / Footer Structure
 
+### 6.0 Shell composition (narrative band vs content light)
+
+<!-- AGENT-FILL §6.0
+   Document the Step 5 shell composition for THIS preset, one row per shell.
+   This is the contract the Executor inherits from templates/layouts/<theme>/*.svg
+   (composed parametric source lives in <theme>/_shell_src/*.tpl.svg).
+
+   Required table columns: Shell | Band? | Fill | Signature elements | Text color
+   For each shell state:
+     - 01_cover    — narrative. May go full-bleed on `shell-bg` (if the theme
+                     sets it) with `shell-text`/`shell-accent` + an optional
+                     `shell-spectrum` dot row. Describe the hero composition.
+     - 02_chapter  — narrative. Band card / divider treatment.
+     - 03_content  — CONTENT. MUST stay light: `bg`/`surface` background,
+                     `text`/`text-secondary` ink, single `accent`. NEVER uses
+                     `shell-bg` or `shell-spectrum` (validate_shells enforces).
+                     Document the header (eyebrow/title/accent rule), the free
+                     content region (x/y/w/h), and the mandatory GM line.
+     - 04_ending   — narrative. Closing band / CTA treatment.
+
+   If the theme leaves `shell-bg` null (monochrome), ALL shells stay light and
+   this table just records the light composition per shell — there is no band.
+-->
+
 ### 6.1 Page anatomy (1280×720)
 
 <!-- AGENT-FILL §6.1
    ASCII-diagram the page anatomy with y-coordinates and zone heights.
    Identify: header zone (optional), title zone, body zone, GM line, footer.
+   Note which zones differ between the narrative band shells and the content shell.
 -->
 
 ### 6.2 Header zone

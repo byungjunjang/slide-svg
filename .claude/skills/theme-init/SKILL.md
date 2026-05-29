@@ -18,8 +18,16 @@ description: >
 > tokens into DrawingML at export time, so runtime multi-theming is
 > impossible. `/theme-init` is a **one-shot full replacement** — every
 > reference file is rewritten from `theme-active.json` and every SVG
-> layout is re-rendered from `_source/*.tpl.svg`. Run `/theme-init` again
-> with a different guide to switch.
+> layout is re-rendered from its shell source — the per-theme
+> `_shell_src/*.tpl.svg` composed in Step 5 when present, else the global
+> `_source/*.tpl.svg` baseline. Run `/theme-init` again with a different
+> guide to switch.
+>
+> **Two render layers.** Step 3 substitutes tokens into the shell source
+> (token swap). Step 5 (optional) is where the agent re-composes the shell
+> *structure itself* — coordinates, alignment, decoration, narrative band
+> — into a per-theme `_shell_src/`, so the deck skeleton matches the new
+> design's signature rather than inheriting jangpm's geometry.
 >
 > **Agent-driven extraction.** You (the agent invoking this skill) read
 > the design guide and produce `theme-active.json` yourself. There is no
@@ -115,6 +123,23 @@ This runs:
    `templates/layouts/<name>/DESIGN.md` skeleton (only when the file
    does not already exist — hand-authored DESIGN.md is preserved on
    re-runs; pass `--force` to `render_design_md.py` to overwrite).
+   `render_layouts.py` is **source-aware**: it renders the per-theme
+   composed source `templates/layouts/<name>/_shell_src/*.tpl.svg` when
+   it exists (the Step 5 output below), otherwise the global baseline
+   `templates/layouts/_source/*.tpl.svg` (stock jangpm geometry).
+6. **`validate_shells.py`** (FATAL) — checks the rendered shells against
+   the permanent locks (1280×720, font chain on every `<text>`, GM line
+   on the content shell, no banned SVG features, content shell stays
+   light). Aborts the chain before any downstream file references a
+   broken shell.
+7. **`preview_shells.py`** (non-fatal) — rasterizes the shells with
+   sample content into `templates/layouts/<name>/_preview/` for the
+   Step 5 review checkpoint. Missing `cairosvg`/`svglib` just yields
+   filled SVGs to open in a browser.
+
+> The first `/theme-init` run for a brand-new theme has no `_shell_src/`
+> yet, so Step 3 renders the **baseline** (global `_source/`) shells —
+> these are the reference Step 5 then re-composes.
 
 The HTML gallery's `@font-face` block is generated dynamically from
 whatever weight files actually exist under `assets/fonts/` matching the
@@ -168,7 +193,96 @@ confirmation before proceeding. The DESIGN.md is the contract between
 this preset and `/slide-plan` — the user must agree before downstream
 decks inherit it.
 
-### 5. Verify
+### 5. Shell Composition (agent task — re-compose coordinates, alignment, decoration, band)
+
+Step 3 renders **baseline** shells from the global `_source/` (jangpm
+geometry) by substituting tokens only. That gives a working light deck,
+but the *composition* is still jangpm's. This step is where you (the
+agent) re-author the shell composition itself — coordinates, alignment,
+decorative elements, and (when the theme defines a band) the narrative
+band — so the deck skeleton matches the new design's signature.
+
+**This step is optional.** Skip it for a monochrome rebrand that's happy
+with jangpm geometry — the baseline shells already work. Run it whenever
+the design guide implies a distinct page architecture (a navy hero, a
+spectrum dot row, tag-chip headers, band cards, etc.).
+
+**Inputs** (read all four before composing):
+1. `theme-active.json` — tokens, including any `colors.shell-*` band tokens.
+2. This theme's `DESIGN.md` §1 (mood) · §5 (layout grammar) · §6.0 (shell
+   composition) / §6 (page anatomy) — authored in Step 4.
+3. The original `design.md` (the user's design guide) — the source of the
+   visual signature.
+4. The just-rendered **baseline shells** (`templates/layouts/<name>/*.svg`)
+   — the starting reference you re-compose.
+
+**5a. Compose the per-theme shell source.** Write four parametric
+templates to `templates/layouts/<name>/_shell_src/`:
+
+```
+01_cover.tpl.svg  02_chapter.tpl.svg  03_content.tpl.svg  04_ending.tpl.svg
+```
+
+Rules for the templates:
+- **Colors are tokens, never literals.** Use `{{TOKEN:colors.<name>}}`.
+  For the narrative band use `{{TOKEN:colors.shell-bg}}`,
+  `{{TOKEN:colors.shell-text}}`, `{{TOKEN:colors.shell-accent}}`; spectrum
+  dots address entries by index: `{{TOKEN:colors.shell-spectrum.0}}`,
+  `.1`, … (author exactly as many dots as the spectrum length). Null
+  band tokens fall back to their light sibling automatically
+  (`shell-text`→`text`, etc.), so a monochrome theme still renders.
+- **Keep content placeholders** (`{{TITLE}}`, `{{PAGE_TITLE}}`,
+  `{{GOVERNING_MESSAGE}}`, …) untouched for the Executor to fill.
+- **Narrative shells** (`01_cover` / `02_chapter` / `04_ending`) may go
+  full-bleed on `shell-bg`, place the spectrum row, and use a CTA button
+  in `shell-accent`.
+- **The content shell (`03_content`) stays light** — `bg`/`surface`
+  background, `text`/`text-secondary` ink, single `accent`. It MUST keep
+  the `{{GOVERNING_MESSAGE}}` GM line. Never paint the band fill or a
+  spectrum hue here. (The light-mode relaxation is scoped to the
+  narrative band; `validate_shells.py` enforces this.)
+- **Permanent locks apply** (see "Locks that persist across themes"):
+  viewBox `0 0 1280 720`; every `<text>` carries the full font chain; no
+  `<style>`/`class`/`@font-face`/`<foreignObject>`/`textPath`/`rgba()`/
+  `<mask>`/`<script>` (use `fill-opacity`, not `rgba`); native shapes,
+  no flattened images.
+
+**5b. Render + validate.**
+
+```bash
+python3 .claude/skills/theme-init/scripts/render_layouts.py     # now picks up _shell_src/
+python3 .claude/skills/theme-init/scripts/validate_shells.py    # FATAL lock check
+python3 .claude/skills/theme-init/scripts/preview_shells.py     # rasterize for review
+```
+
+Fix any `validate_shells` violation in `_shell_src/` and re-render — the
+render is deterministic, so identical source yields a clean diff.
+
+**5c. Review checkpoint (BLOCKING — render-first preview loop).** Read
+the rendered preview PNGs (or filled SVGs) in
+`templates/layouts/<name>/_preview/` and present them to the user as the
+**reference for the proposed shell composition** — the actual rendered
+shells, not an ASCII sketch. State, per shell, the signature choices you
+made (band, alignment, decoration). Collect feedback, edit `_shell_src/`,
+re-render + re-preview, and **repeat until the user approves**. Do not
+proceed to sync/verify on the first render.
+
+**5d. Sync DESIGN.md + anti-slop.** Once approved, bring the references
+into line with the composition:
+- `templates/layouts/<name>/DESIGN.md` §6.0 (shell composition table) and
+  §5/§6 — describe the new layout grammar / page anatomy.
+- `anti-slop-theme.md` — regenerated from `theme-active.json`; the band
+  allowed-colors table and Rule T9 (band scope) appear automatically when
+  `colors.shell-bg` is set. Re-run `init_theme.py` (or
+  `render_anti_slop_theme.py`) to refresh.
+
+**Idempotence / re-runs.** `_shell_src/` is agent-authored source and is
+**preserved** across `/theme-init` re-runs (like the hand-authored
+DESIGN.md) — `render_layouts.py` keeps consuming it, so a token-only
+change re-propagates colors with a clean diff and no re-composition. To
+re-compose from scratch, delete (or edit) `_shell_src/` and redo 5a–5c.
+
+### 6. Verify
 
 After the render completes:
 
@@ -246,7 +360,8 @@ After a successful run the following files are updated in place:
 | `.claude/skills/slide/references/strategist.md` | Eight-Confirmations prompt with active-theme values |
 | `.claude/skills/slide/references/executor.md` | SVG-generation prompt with active-theme values |
 | `.claude/skills/slide/references/colors_and_type.css` | CSS vars powering the HTML gallery |
-| `.claude/skills/slide/templates/layouts/<theme-name>/*.svg` | Cover / chapter / content / ending shells |
+| `.claude/skills/slide/templates/layouts/<theme-name>/*.svg` | Cover / chapter / content / ending shells (rendered; carry the narrative band when the theme sets `shell-bg`) |
+| `.claude/skills/slide/templates/layouts/<theme-name>/_shell_src/*.tpl.svg` | Per-theme composed shell **source** (Step 5; preserved across re-runs). Absent → renders from global `_source/` baseline |
 
 ## Canvas lock (non-negotiable)
 
@@ -273,6 +388,8 @@ remediation rules. A different aspect ratio is out of scope for
 | Serial pipeline discipline | Executor Step 6 main-agent ownership + sequential pages — see slide/SKILL.md §Global Execution Discipline |
 | GM line on every content slide | Core anti-slop principle (rule T6) — every theme must define its GM style hint |
 | Native SVG→PPTX (no image flattening) | The export pipeline's entire value prop |
+| Content shell stays light (no band / no spectrum) | The light-mode relaxation is scoped to the narrative band (cover/chapter/closing). `validate_shells.py` rejects a band fill or spectrum hue on `03_content` |
+| Composed shells pass `validate_shells.py` | Step 5 re-composition is free, but the four permanent locks above are enforced on every render |
 
 ## Extraction cheat-sheet
 

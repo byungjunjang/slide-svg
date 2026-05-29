@@ -39,7 +39,7 @@
 스킬 정의:
 - `/slide`: `.claude/skills/slide/SKILL.md` — Step 4에서 `slide_plan.json` 존재 시 plan-consuming 모드, 부재 시 Eight Confirmations 모드로 자동 분기
 - `/slide-plan`: `.claude/skills/slide-plan/SKILL.md` — deck_type 감지 + narrative arc + 슬라이드별 rationale + 차트 수사적 역할 + Layer 1 R1–R5 검증 (`scripts/validate_plan.py`). 출력: `output/<project>/slide_plan.json`
-- `/theme-init`: `.claude/skills/theme-init/SKILL.md` (활성 테마 전체 교체; 에이전트가 디자인 가이드를 직접 추출 → fill-nulls → 토큰 검증 → 전 참조 파일 재생성 + `templates/layouts/<theme>/DESIGN.md` skeleton 생성 → 에이전트가 `<!-- AGENT-FILL -->` 마커 채워 완성 → 사용자 검토 BLOCKING; API key 불필요, jsonschema만 필요; 캔버스 1280×720은 테마 간 영구 락)
+- `/theme-init`: `.claude/skills/theme-init/SKILL.md` (활성 테마 전체 교체; 에이전트가 디자인 가이드를 직접 추출 → fill-nulls → 토큰 검증 → 전 참조 파일 재생성 + `templates/layouts/<theme>/DESIGN.md` skeleton 생성 → 에이전트가 `<!-- AGENT-FILL -->` 마커 채워 완성 → **Step 5 Shell Composition**(선택): 에이전트가 baseline 셸을 레퍼런스로 좌표·정렬·장식·내러티브 밴드를 `_shell_src/*.tpl.svg`로 재작곡 → render-first 프리뷰로 사용자 피드백 루프 → `validate_shells.py` 락 검사 → 사용자 검토 BLOCKING; API key 불필요, jsonschema만 필요; 캔버스 1280×720은 테마 간 영구 락; 라이트 완화는 내러티브 셸 밴드까지만 — content 셸은 라이트 유지)
 
 ## 사용 패턴
 

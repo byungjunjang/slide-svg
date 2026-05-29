@@ -1,13 +1,33 @@
 #!/usr/bin/env python3
 """Render theme-parametric layout templates into a concrete theme directory.
 
-Reads `_source/*.tpl.svg` and a theme descriptor (`references/theme-active.json`),
-substitutes every `{{TOKEN:<dotted.path>}}` placeholder with the resolved token
-value, and writes the result to `templates/layouts/<theme.name>/*.svg`.
+Reads a shell-source directory and a theme descriptor
+(`references/theme-active.json`), substitutes every `{{TOKEN:<dotted.path>}}`
+placeholder with the resolved token value, and writes the result to
+`templates/layouts/<theme.name>/*.svg`.
+
+Source selection (Shell Composition layer):
+    The renderer prefers a PER-THEME composed source at
+    `templates/layouts/<theme.name>/_shell_src/*.tpl.svg` when it exists. This is
+    the agent-authored shell composition produced by /theme-init Step 5 — its
+    geometry, alignment, decoration, and band colors define the theme's deck
+    skeleton. When no per-theme `_shell_src/` exists, the renderer falls back to
+    the GLOBAL baseline `templates/layouts/_source/*.tpl.svg` (the stock jangpm
+    geometry). An explicit `--source` overrides both. This keeps the agent's
+    composition as a parametric SOURCE (token changes still propagate; identical
+    input yields a clean diff) instead of a one-shot flattened SVG.
 
 Content placeholders (e.g., `{{TITLE}}`, `{{PAGE_TITLE}}`) — any `{{...}}` that
 does NOT start with `TOKEN:` — are left untouched so the Executor can fill them
 per slide.
+
+Shell-token fallback: optional narrative-band tokens (`colors.shell-*`) resolve
+to their base sibling when null or absent — `shell-text`→`text`,
+`shell-text-secondary`→`text-secondary`, `shell-accent`→`accent`,
+`shell-bg`→`bg` — so a composed shell that references the band still renders on a
+monochrome theme that left the band tokens null. Spectrum entries are addressed
+by index (`colors.shell-spectrum.0`); an out-of-range index is reported as a
+missing token.
 
 Usage:
     python3 render_layouts.py
@@ -31,16 +51,47 @@ DEFAULT_OUT_BASE   = SKILL_ROOT / "templates" / "layouts"
 
 TOKEN_RE = re.compile(r"\{\{TOKEN:([a-zA-Z0-9_.\-]+)\}\}")
 
+# Optional narrative-band tokens fall back to their base sibling when null /
+# absent, so a composed shell can reference the band unconditionally and still
+# render on a theme that left the band tokens null (monochrome behavior).
+SHELL_FALLBACKS = {
+    "colors.shell-bg":             "colors.bg",
+    "colors.shell-text":           "colors.text",
+    "colors.shell-text-secondary": "colors.text-secondary",
+    "colors.shell-accent":         "colors.accent",
+}
+
 
 def resolve_path(theme: dict, dotted: str):
-    """Walk a dotted path in the theme dict. Raises KeyError on miss."""
+    """Walk a dotted path in the theme dict (dict keys + integer list indices).
+
+    Raises KeyError on miss.
+    """
     node = theme
     for part in dotted.split("."):
         if isinstance(node, dict) and part in node:
             node = node[part]
+        elif isinstance(node, list) and part.isdigit() and int(part) < len(node):
+            node = node[int(part)]
         else:
             raise KeyError(f"Token path not found in theme: {dotted!r}")
     return node
+
+
+def resolve_token(theme: dict, dotted: str):
+    """Resolve a token, applying the shell-* fallback when null / absent.
+
+    Raises KeyError only when neither the token nor its fallback resolves.
+    """
+    try:
+        value = resolve_path(theme, dotted)
+    except KeyError:
+        value = None
+    if value is None and dotted in SHELL_FALLBACKS:
+        return resolve_path(theme, SHELL_FALLBACKS[dotted])
+    if value is None:
+        raise KeyError(f"Token path not found in theme: {dotted!r}")
+    return value
 
 
 def format_value(val) -> str:
@@ -69,7 +120,7 @@ def render_template(tpl: str, theme: dict) -> tuple[str, list[str]]:
     def sub(match: re.Match) -> str:
         path = match.group(1)
         try:
-            value = resolve_path(theme, path)
+            value = resolve_token(theme, path)
         except KeyError:
             missing.append(path)
             return match.group(0)
@@ -102,8 +153,9 @@ def main(argv: list[str] | None = None) -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--theme", type=Path, default=DEFAULT_THEME_PATH,
                         help="Path to theme-active.json (default: slide/references/theme-active.json)")
-    parser.add_argument("--source", type=Path, default=DEFAULT_SOURCE_DIR,
-                        help="Path to templates/_source/ directory")
+    parser.add_argument("--source", type=Path, default=None,
+                        help="Override shell-source directory. Default: per-theme "
+                             "<out>/_shell_src/ when present, else global _source/.")
     parser.add_argument("--out-base", type=Path, default=DEFAULT_OUT_BASE,
                         help="Parent directory for the rendered theme folder (output path = <out-base>/<theme.name>)")
     parser.add_argument("--out", type=Path, default=None,
@@ -114,9 +166,6 @@ def main(argv: list[str] | None = None) -> int:
     if not args.theme.exists():
         print(f"error: theme file not found: {args.theme}", file=sys.stderr)
         return 2
-    if not args.source.exists():
-        print(f"error: source directory not found: {args.source}", file=sys.stderr)
-        return 2
 
     theme = json.loads(args.theme.read_text(encoding="utf-8"))
     theme_name = theme.get("name")
@@ -126,13 +175,32 @@ def main(argv: list[str] | None = None) -> int:
 
     out_dir = args.out if args.out is not None else (args.out_base / theme_name)
 
+    # Source selection: explicit --source wins; else per-theme _shell_src/ when it
+    # holds composed templates; else the global baseline _source/.
+    if args.source is not None:
+        source_dir = args.source
+        source_label = "explicit"
+    else:
+        shell_src = out_dir / "_shell_src"
+        if shell_src.is_dir() and any(shell_src.glob("*.tpl.svg")):
+            source_dir = shell_src
+            source_label = "per-theme _shell_src"
+        else:
+            source_dir = DEFAULT_SOURCE_DIR
+            source_label = "global _source"
+
+    if not source_dir.exists():
+        print(f"error: source directory not found: {source_dir}", file=sys.stderr)
+        return 2
+
     if args.dry_run:
-        print(f"[dry-run] theme={theme_name} source={args.source} out={out_dir}")
-        for tpl_path in sorted(args.source.glob("*.tpl.svg")):
+        print(f"[dry-run] theme={theme_name} source={source_dir} ({source_label}) out={out_dir}")
+        for tpl_path in sorted(source_dir.glob("*.tpl.svg")):
             print(f"  would render: {tpl_path.name} -> {out_dir / tpl_path.name.replace('.tpl.svg', '.svg')}")
         return 0
 
-    results = render_directory(args.source, out_dir, theme)
+    print(f"shell source: {source_dir} ({source_label})")
+    results = render_directory(source_dir, out_dir, theme)
 
     print(f"Rendered theme '{theme_name}' into {out_dir}")
     for path in results["rendered"]:
