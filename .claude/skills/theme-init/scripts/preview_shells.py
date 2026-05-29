@@ -29,8 +29,91 @@ from pathlib import Path
 SKILL_ROOT = Path(__file__).resolve().parents[2] / "slide"
 DEFAULT_THEME = SKILL_ROOT / "references" / "theme-active.json"
 LAYOUTS_BASE = SKILL_ROOT / "templates" / "layouts"
+ASSETS_FONTS_DIR = Path(__file__).resolve().parents[4] / "assets" / "fonts"
 
 SHELL_FILES = ["01_cover.svg", "02_chapter.svg", "03_content.svg", "04_ending.svg"]
+
+
+def _ensure_static_ttf(var_ttf: Path) -> Path | None:
+    """Instance a (possibly variable) TTF to a static Regular-weight TTF and
+    cache it under the OS temp dir. reportlab/renderPM cannot rasterize the
+    bundled CFF/OTF weights, nor a raw variable font's glyphs (→ tofu); a static
+    glyf instance renders Hangul correctly. Returns the static path or None.
+    """
+    try:
+        import tempfile
+        from fontTools import ttLib  # type: ignore
+        from fontTools.varLib import instancer  # type: ignore
+    except Exception:
+        return None
+    cache_dir = Path(tempfile.gettempdir()) / "slide-svg-preview-fonts"
+    try:
+        cache_dir.mkdir(parents=True, exist_ok=True)
+        static = cache_dir / f"{var_ttf.stem}-static.ttf"
+        if static.exists() and static.stat().st_mtime >= var_ttf.stat().st_mtime:
+            return static
+        try:
+            f = ttLib.TTFont(str(var_ttf))
+            instancer.instantiateVariableFont(f, {"wght": 400}).save(str(static))
+        except Exception:
+            # Not a variable font (or instancing failed) — copy through as-is.
+            ttLib.TTFont(str(var_ttf)).save(str(static))
+        return static
+    except Exception:
+        return None
+
+
+def register_preview_fonts(theme: dict) -> str | None:
+    """Best-effort: make the svglib/reportlab fallback render Hangul instead of
+    tofu (□) in the Step 5 review PNGs.
+
+    Two things are required and easy to get wrong: (1) reportlab can't load the
+    bundled CFF/OTF weights or a raw variable TTF, so we instance a static TTF
+    (`_ensure_static_ttf`); (2) svglib IGNORES `pdfmetrics.registerFont` — its
+    text path resolves families through its own map, so we must call
+    `svglib.register_font`. cairosvg, when present, uses system fontconfig and
+    needs none of this. Returns the registered family name, or None when
+    svglib/fonttools or a usable .ttf is unavailable (then Hangul shows as □ and
+    the caller should point the reviewer at cairosvg / a browser).
+    """
+    try:
+        import svglib.svglib as svglib_mod  # type: ignore
+    except Exception:
+        return None
+    if not ASSETS_FONTS_DIR.is_dir():
+        return None
+    var_ttf = next(iter(sorted(ASSETS_FONTS_DIR.glob("*.ttf"))), None)
+    if var_ttf is None:
+        return None
+    static = _ensure_static_ttf(var_ttf)
+    if static is None:
+        return None
+    chain = (theme.get("typography") or {}).get("font-chain", "") or ""
+    families = [x.strip().strip("'\"") for x in chain.split(",") if x.strip()]
+    generic = {"sans-serif", "serif", "monospace", "arial"}
+    # The active theme's primary family (svglib resolves the first family) + a
+    # Pretendard alias as a CJK glyph source.
+    targets = [x for x in families if x.lower() not in generic][:1] + ["Pretendard"]
+    # svglib keys its FontMap by family + the RAW font-weight string, so a numeric
+    # weight in the SVG (font-weight="800") looks up "Family-800" — NOT "Family" or
+    # "Family-Bold". Even "400" becomes "Family-400". So register the static
+    # instance under every weight the active theme actually emits (plus
+    # normal/bold). One static instance backs all of them — preview weight is
+    # approximate, but Hangul renders for every text element instead of tofu.
+    typ = theme.get("typography") or {}
+    weights = {"normal", "bold"}
+    for scale in typ.values():
+        if isinstance(scale, dict) and scale.get("weight") is not None:
+            weights.add(str(scale["weight"]))
+    registered: str | None = None
+    for fam in dict.fromkeys(targets):
+        for weight in sorted(weights):
+            try:
+                svglib_mod.register_font(font_name=fam, font_path=str(static), weight=weight)
+                registered = registered or fam
+            except Exception:
+                pass
+    return registered
 
 # Neutral sample content so the composed shell reads as a real page. The body of
 # the content shell is intentionally left empty — Step 5 reviews the shell frame
@@ -103,6 +186,9 @@ def main(argv: list[str] | None = None) -> int:
         print(f"error: theme file not found: {args.theme}", file=sys.stderr)
         return 2
     theme = json.loads(args.theme.read_text(encoding="utf-8"))
+    # Register a Hangul-capable font for the svglib fallback BEFORE rasterizing
+    # (no-op when cairosvg is present or no usable .ttf / fonttools is available).
+    font_family = register_preview_fonts(theme)
     layouts_dir = args.layouts_dir or (LAYOUTS_BASE / theme.get("name"))
     if not layouts_dir.is_dir():
         print(f"error: layout dir not found: {layouts_dir}", file=sys.stderr)
@@ -147,6 +233,13 @@ def main(argv: list[str] | None = None) -> int:
     print(f"\n[preview_shells] preview written to {preview_dir}")
     if renderer:
         print(f"  renderer: {renderer}")
+        if renderer == "svglib":
+            if font_family:
+                print(f"  Hangul font registered for svglib: {font_family} (static instance)")
+            else:
+                print("  note: Hangul may render as □ (no svglib/fonttools or usable .ttf). "
+                      "For a faithful preview: pip install cairosvg, or open the filled SVGs "
+                      "in a browser (they carry the full font chain).")
         for p in pngs:
             print(f"  PNG: {p}")
         if montage:

@@ -2,17 +2,17 @@
 <svg xmlns="http://www.w3.org/2000/svg" width="1280" height="720" viewBox="0 0 1280 720">
   <!-- Lecture Deck — 04 Ending (theme-parametric) -->
 
-  <rect width="1280" height="720" fill="{{TOKEN:colors.bg}}"/>
+  <rect width="1280" height="720" fill="{{TOKEN:colors.shell-bg}}"/>
 
   <!-- Accent rule -->
-  <rect x="56" y="140" width="80" height="3" fill="{{TOKEN:colors.accent}}"/>
+  <rect x="56" y="140" width="80" height="3" fill="{{TOKEN:colors.shell-accent}}"/>
 
   <!-- Eyebrow -->
   <text x="56" y="180"
         font-family="{{TOKEN:typography.font-chain}}"
         font-size="{{TOKEN:typography.label.size}}" font-weight="{{TOKEN:typography.label.weight}}"
         letter-spacing="{{TOKEN:typography.label.letter-spacing}}"
-        fill="{{TOKEN:colors.text-secondary}}">
+        fill="{{TOKEN:colors.shell-text-secondary}}">
     {{CLOSING_LABEL}}
   </text>
 
@@ -21,7 +21,7 @@
         font-family="{{TOKEN:typography.font-chain}}"
         font-size="{{TOKEN:typography.display.size}}" font-weight="{{TOKEN:typography.display.weight}}"
         letter-spacing="{{TOKEN:typography.display.letter-spacing}}"
-        fill="{{TOKEN:colors.text}}">
+        fill="{{TOKEN:colors.shell-text}}">
     {{CLOSING_HEADLINE}}
   </text>
 
@@ -30,7 +30,7 @@
         font-family="{{TOKEN:typography.font-chain}}"
         font-size="{{TOKEN:typography.display-sm.size}}" font-weight="{{TOKEN:typography.display-sm.weight}}"
         letter-spacing="{{TOKEN:typography.display-sm.letter-spacing}}"
-        fill="{{TOKEN:colors.accent}}">
+        fill="{{TOKEN:colors.shell-accent}}">
     {{CLOSING_ACCENT}}
   </text>
 
@@ -38,7 +38,7 @@
   <text x="56" y="470"
         font-family="{{TOKEN:typography.font-chain}}"
         font-size="{{TOKEN:typography.title.size}}" font-weight="{{TOKEN:typography.title.weight}}"
-        fill="{{TOKEN:colors.text}}">
+        fill="{{TOKEN:colors.shell-text}}">
     {{CONTACT_LINE}}
   </text>
 

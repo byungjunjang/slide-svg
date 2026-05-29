@@ -68,7 +68,7 @@ For complete tool documentation, see `${SKILL_DIR}/scripts/README.md`.
 
 | Index | Path | Purpose |
 |-------|------|---------|
-| Layout template (Jangpm only) | `${SKILL_DIR}/templates/layouts/jangpm/` | Single Jangpm layout pack: `01_cover.svg`, `02_chapter.svg`, `03_content.svg`, `04_ending.svg`, `design_spec.md` |
+| Layout template (active theme) | `${SKILL_DIR}/templates/layouts/<active-theme>/` (currently `jangpm/`) | The active theme's layout pack: `01_cover.svg`, `02_chapter.svg`, `03_content.svg`, `04_ending.svg`, `design_spec.md`. `/theme-init` renames this directory on a swap |
 | Visualization templates | `${SKILL_DIR}/templates/charts/charts_index.json` | Chart / infographic / diagram SVG templates. **Under the active-theme lock**: Executor overrides fills to the active accent's opacity ladder regardless of template's native palette |
 | Icon library | `${REPO_ROOT}/assets/icons/tabler-outline/<name>.svg` (Claude Code) · `${SKILL_DIR}/templates/icons/tabler-outline/<name>.svg` (claude.ai essentials) | Lucide-compatible line-art icons (Jangpm-preferred). Fallback library: `tabler-filled/`. `embed_icons.py` resolves `data-icon="tabler-outline/<name>"` against the external repo asset first, then the bundled essentials inside the skill, then warns and skips. Search the full library with `grep <keyword> ${REPO_ROOT}/assets/icons/icons_index.txt`; the bundled essentials are listable via `ls ${SKILL_DIR}/templates/icons/tabler-outline/`. |
 
@@ -128,7 +128,7 @@ When the user provides non-Markdown content, convert immediately:
 ${SKILL_DIR}/scripts/_py.sh ${SKILL_DIR}/scripts/project_manager.py init <project_name> --format ppt169
 ```
 
-**Under this skill, always use `--format ppt169` (1280×720).** Other format flags exist for CLI compatibility but the Jangpm design language is calibrated to 1280×720 only. See `references/canvas-formats.md`.
+**Under this skill, always use `--format ppt169` (1280×720).** Other format flags exist for CLI compatibility but the active theme is calibrated to 1280×720 only (a permanent lock across themes). See `references/canvas-formats.md`.
 
 Import source content (choose based on the situation):
 
@@ -146,22 +146,23 @@ Import source content (choose based on the situation):
 
 ---
 
-### Step 3: Template Copy (Jangpm — automatic, non-blocking)
+### Step 3: Template Copy (active theme — automatic, non-blocking)
 
 🚧 **GATE**: Step 2 complete; project directory structure is ready.
 
-This skill uses a single template pack — **Jangpm**. There is no branching prompt at this step. Copy the Jangpm pack automatically:
+This skill uses a single layout pack — the **active theme**'s (default: Jangpm). There is no branching prompt at this step. The pack lives at `templates/layouts/<active-theme>/`, where `<active-theme>` is `theme-active.json`'s `name` (`/theme-init` renames this directory on a swap). Resolve it, then copy automatically:
 
 ```bash
-cp ${SKILL_DIR}/templates/layouts/jangpm/*.svg <project_path>/templates/
-cp ${SKILL_DIR}/templates/layouts/jangpm/design_spec.md <project_path>/templates/
+THEME=$(python3 -c "import json; print(json.load(open('${SKILL_DIR}/references/theme-active.json'))['name'])")
+cp ${SKILL_DIR}/templates/layouts/$THEME/*.svg <project_path>/templates/
+cp ${SKILL_DIR}/templates/layouts/$THEME/design_spec.md <project_path>/templates/
 ```
 
-**No user prompt for template selection.** The Jangpm design language is the skill's defining decision. If the user needs a different visual style, run `/theme-init` to replace the active theme — this skill only renders decks in whatever theme is currently active.
+**No user prompt for template selection.** The active theme is the skill's defining decision. If the user needs a different visual style, run `/theme-init` to replace the active theme — this skill only renders decks in whatever theme is currently active.
 
-> To author an alternate template pack under the Jangpm lock (unusual — e.g., for a sub-brand), see `workflows/create-template.md`.
+> To author an alternate template pack under the active-theme lock (unusual — e.g., for a sub-brand), see `workflows/create-template.md`.
 
-**✅ Checkpoint — Jangpm template pack copied to `<project_path>/templates/`. Proceed to Step 4.**
+**✅ Checkpoint — active-theme template pack copied to `<project_path>/templates/`. Proceed to Step 4.**
 
 ---
 
