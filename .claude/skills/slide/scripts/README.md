@@ -11,7 +11,6 @@ AI image generation is handled by the bundled `/codex-image` skill (Codex CLI OA
 - `scripts/template_import/`: internal PPTX reference-preparation helpers used by `pptx_template_import.py`
 - `scripts/svg_finalize/`: internal post-processing helpers used by `finalize_svg.py`
 - `scripts/docs/`: topic-focused script documentation
-- `scripts/assets/`: static assets consumed by scripts
 
 ## Quick Start
 

@@ -38,9 +38,19 @@ def _attrs(s: str) -> dict[str, str]:
     return {m.group(1).lower(): m.group(3) for m in _ATTR_RE.finditer(s)}
 
 
+_NUM_RE = re.compile(r"\s*(-?\d*\.?\d+)")
+
+
 def _num(v: Any, default: float = 0.0) -> float:
-    m = re.match(r"\s*(-?[\d.]+)", str(v)) if v is not None else None
-    return float(m.group(1)) if m else default
+    if v is None:
+        return default
+    m = _NUM_RE.match(str(v))
+    if not m:
+        return default
+    try:
+        return float(m.group(1))
+    except ValueError:  # pathological capture (e.g. lone '.') — degrade, never crash
+        return default
 
 
 def _has(attr: dict, key: str) -> bool:
@@ -59,20 +69,38 @@ def _is_kicker(attr: dict, text: str) -> bool:
     return fs <= 14 and (upper or ls > 0)
 
 
+def _svg_canvas(svg: str) -> tuple[float, float]:
+    """Canvas (width, height) from the <svg> viewBox, else its width/height attrs,
+    else the 1280x720 default. Sizes the full-bleed-background skip so reference
+    decks authored at other sizes (e.g. 1920x1080) are read correctly."""
+    m = re.search(r'viewBox\s*=\s*["\']\s*[-\d.]+\s+[-\d.]+\s+([\d.]+)\s+([\d.]+)', svg, re.I)
+    if m:
+        return _num(m.group(1), 1280), _num(m.group(2), 720)
+    mw = re.search(r'<svg\b[^>]*?\bwidth\s*=\s*["\']([\d.]+)', svg, re.I)
+    mh = re.search(r'<svg\b[^>]*?\bheight\s*=\s*["\']([\d.]+)', svg, re.I)
+    return (_num(mw.group(1), 1280) if mw else 1280.0,
+            _num(mh.group(1), 720) if mh else 720.0)
+
+
 def _analyze_svg(stem: str, svg: str) -> dict[str, Any]:
     filled = hairline = cta = 0
     fills: set[str] = set()
     rules = len(_LINE_RE.findall(svg))
+    cw, ch = _svg_canvas(svg)
+    texts = [(_attrs(tm.group(1)), tm.group(2)) for tm in _TEXT_RE.finditer(svg)]
+    text_pts = [(_num(at.get("x")), _num(at.get("y")))
+                for at, _ in texts if at.get("x") and at.get("y")]
     for m in _RECT_RE.finditer(svg):
         a = _attrs(m.group(1))
         w, h = _num(a.get("width")), _num(a.get("height"))
-        if w >= 1200 and h >= 680:        # full-canvas background
+        if w >= 0.93 * cw and h >= 0.93 * ch:   # full-canvas background
             continue
         if (0 < h <= 3 and w > h) or (0 < w <= 3 and h > w):  # thin rule
             rules += 1
             continue
         rounded = "rx" in a or "ry" in a
-        has_stroke = _has(a, "stroke") or _num(a.get("stroke-width")) >= 1
+        has_stroke = _has(a, "stroke")   # a stroke COLOR makes a card hairline;
+        #          a leftover stroke-width on stroke="none" must NOT (Figma/PPT export)
         has_fill = _has(a, "fill")
         if rounded and (has_stroke or has_fill):
             if has_stroke:
@@ -80,12 +108,16 @@ def _analyze_svg(stem: str, svg: str) -> dict[str, Any]:
             else:
                 filled += 1
                 fills.add(a.get("fill", "").lower())
+            # CTA = button-sized rounded rect WITH a text label inside its box
+            # (require text, matching the PPTX path; bare chips aren't CTAs).
             if 80 <= w <= 360 and 28 <= h <= 72:
-                cta += 1
+                rx0, ry0 = _num(a.get("x")), _num(a.get("y"))
+                if any(rx0 <= px <= rx0 + w and ry0 <= py <= ry0 + h
+                       for px, py in text_pts):
+                    cta += 1
         elif has_fill:
             fills.add(a.get("fill", "").lower())
-    kicker = sum(1 for m in _TEXT_RE.finditer(svg)
-                 if _is_kicker(_attrs(m.group(1)), m.group(2)))
+    kicker = sum(1 for at, inner in texts if _is_kicker(at, inner))
     return {"slide": stem, "cards": filled + hairline, "filled": filled,
             "hairline": hairline, "surface_alt": len(fills) >= 2,
             "rules": rules, "cta": cta, "kicker": kicker}
@@ -110,6 +142,22 @@ def _pptx_has_line(shape) -> bool:
         return False
 
 
+def _iter_pptx_shapes(shapes):
+    """Yield leaf shapes, recursing into GroupShapes (slide.shapes is not recursive,
+    so cards wrapped in a <g> would otherwise be invisible)."""
+    from pptx.enum.shapes import MSO_SHAPE_TYPE
+    for shape in shapes:
+        is_group = False
+        try:
+            is_group = shape.shape_type == MSO_SHAPE_TYPE.GROUP
+        except Exception:  # noqa: BLE001
+            pass
+        if is_group:
+            yield from _iter_pptx_shapes(shape.shapes)
+        else:
+            yield shape
+
+
 def _analyze_pptx(path: Path) -> list[dict]:
     from pptx import Presentation
     from pptx.enum.shapes import MSO_SHAPE_TYPE
@@ -124,7 +172,7 @@ def _analyze_pptx(path: Path) -> list[dict]:
     for i, slide in enumerate(prs.slides, 1):
         filled = hairline = rules = cta = kicker = 0
         fills: set[str] = set()
-        for shape in slide.shapes:
+        for shape in _iter_pptx_shapes(slide.shapes):
             w = int(shape.width or 0)
             h = int(shape.height or 0)
             is_line = False
@@ -308,7 +356,10 @@ def extract(ref: Path) -> dict[str, Any]:
         per_slide = [_analyze_svg(p.stem, p.read_text(encoding="utf-8", errors="replace"))
                      for p in slide_files]
     else:
-        per_slide = _analyze_pptx(slide_files[0])
+        try:
+            per_slide = _analyze_pptx(slide_files[0])
+        except Exception:  # noqa: BLE001 — corrupt .pptx / missing python-pptx →
+            per_slide = []  # degrade to 0 slides so main() exits 1 with guidance
     return _aggregate(ref, fmt, per_slide)
 
 
