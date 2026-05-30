@@ -67,6 +67,26 @@ Read the whole thing. Watch for:
   sans-serif` for Latin-first).
 - **Voice**: tone, POV, register, forbidden phrases, GM style hint
 
+### 1.5 Ingest a reference deck (optional)
+
+If the user supplies a hand-made reference deck (the deck the new theme should
+echo) as **SVG or PPTX**, extract its layout devices before authoring the theme
+JSON:
+
+```bash
+python3 .claude/skills/theme-init/scripts/ingest_reference.py \
+  --reference <deck-dir | deck.svg | deck.pptx> --quiet
+```
+
+Use the printed `card_style` recommendation when you set `surface.card_style` in
+Step 2, and review the surface/divider/cta/kicker hints when you author
+DESIGN.md §5/§6 in Step 4 (pass `--design-md templates/layouts/<theme>/DESIGN.md`
+after the DESIGN.md skeleton exists to seed an additive §5 hint block). The
+script only **recommends** — it never edits `theme-active.json` or re-renders.
+Unsupported formats (PDF/images) are skipped with guidance. See
+`references/reference-ingestion.md` for the schema; PDF/image ingestion is a
+documented future extension.
+
 ### 2. Produce the theme JSON
 
 Write a JSON object conforming to the v1 token contract
