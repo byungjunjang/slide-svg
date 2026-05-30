@@ -287,20 +287,22 @@ Rules for the templates:
 ```bash
 python3 .claude/skills/theme-init/scripts/render_layouts.py     # now picks up _shell_src/
 python3 .claude/skills/theme-init/scripts/validate_shells.py    # FATAL lock check
-python3 .claude/skills/theme-init/scripts/preview_shells.py     # rasterize for review
+python3 .claude/skills/theme-init/scripts/preview_shells.py     # build _preview/index.html
 ```
 
 Fix any `validate_shells` violation in `_shell_src/` and re-render — the
 render is deterministic, so identical source yields a clean diff.
 
-**5c. Review checkpoint (BLOCKING — render-first preview loop).** Read
-the rendered preview PNGs (or filled SVGs) in
-`templates/layouts/<name>/_preview/` and present them to the user as the
+**5c. Review checkpoint (BLOCKING — render-first preview loop).** Open
+`templates/layouts/<name>/_preview/index.html` (built by
+`preview_shells.py`) and present the rendered shells to the user as the
 **reference for the proposed shell composition** — the actual rendered
 shells, not an ASCII sketch. State, per shell, the signature choices you
 made (band, alignment, decoration). Collect feedback, edit `_shell_src/`,
 re-render + re-preview, and **repeat until the user approves**. Do not
-proceed to sync/verify on the first render.
+proceed to sync/verify on the first render. (This is the shell-only loop
+inside optional Step 5; the whole-theme gate is Step 6.5 below, which runs
+on every completion path.)
 
 **5d. Sync DESIGN.md + anti-slop.** Once approved, bring the references
 into line with the composition:
@@ -337,6 +339,39 @@ After the render completes:
    → `finalize_svg.py` → `svg_to_pptx.py -s final`). Open in PowerPoint /
    Keynote / the mobile viewer — text must render in the primary font
    with correct color tokens.
+
+### 6.5 Final Approval (BLOCKING — every completion path)
+
+`init_theme.py` always builds a single self-contained approval page at
+`templates/layouts/<name>/_preview/index.html` as its last (non-fatal)
+step — including the monochrome rebrand that skips optional Step 5. The
+page shows three things in the active palette:
+
+1. a **theme spec header** — palette swatches + type scale,
+2. the **four boilerplate shells** (cover / chapter / content / ending)
+   filled with sample content, and
+3. **sample content layouts** (stat row, two-column) so body composition is
+   visible, not just the shell frame.
+
+The SVG is inlined, so the browser renders the real font chain — no
+rasterizer / `cairosvg` / `fonttools` needed, and Hangul never shows as
+tofu.
+
+**You (the agent) MUST:**
+
+1. Present the preview to the user. Point them at it:
+   ```bash
+   python3 -m http.server -d .claude/skills/slide/templates/layouts/<name>/_preview 8000
+   # then open http://localhost:8000/  (or open index.html directly)
+   ```
+2. **Wait for explicit approval or feedback.** Do not declare `/theme-init`
+   done until the user approves.
+3. On feedback: edit the tokens in `theme-active.json` (or, for layout
+   issues, the `_shell_src/` shells or `scripts/preview_samples/*.tpl.svg`),
+   re-run `init_theme.py`, and re-present. Repeat until approved.
+
+This is the whole-theme gate. Step 5c (above) is a narrower shell-only loop
+that only runs when optional Step 5 is used; Step 6.5 runs on every path.
 
 ## Alternative entry points
 
