@@ -117,6 +117,14 @@ slide-svg/
     └── technical-design.md
 ```
 
+## 이미지 생성 백엔드
+
+`/slide` Step 5(Image_Generator)가 이미지가 필요한 슬롯을 채울 때 사용하는 경로는 **`codex-image` 단일 경로**다. `references/image-generator.md` §🔒의 **활성 테마 Style Lock**(Deck Style Anchor + Negative Prompt)이 프롬프트 앞/뒤에 자동 prepend 된다. 이 Style Lock의 팔레트·테마명은 `image-generator.tpl.md`에서 `theme-active.json` 토큰으로 렌더되므로 `/theme-init` 교체 시 자동으로 새 테마 색을 따른다 (anti-slop 구조 락은 테마 불가지로 고정).
+
+- **`codex-image` 스킬** (`.claude/skills/codex-image/SKILL.md`) — API 키 불필요. Codex CLI OAuth(ChatGPT 로그인) 경유 `gpt-image-2` 호출. Step 5가 `/codex-image --out <project>/images --filename <slot> --size <매핑> --quality high "<Jangpm anchor> <prompt> Avoid: <negative>"` 형태로 호출. 사이즈는 `1024x1024` / `1024x1536` / `1536x1024` 중 선택 (gpt-image-2 제약). 16:9 슬롯은 `1536x1024` 생성 → SVG `preserveAspectRatio="xMidYMid slice"`로 1280×720 크롭.
+
+codex-image preflight(`codex login status`)가 실패하면 Step 5는 진행을 멈추고 사용자에게 `codex login` 안내한다 — 다른 백엔드로 silent fallback 하지 않는다. 새 레이아웃 템플릿은 추가하지 않음 — 기존 `templates/layouts/jangpm/01_cover.svg`(풀-블리드 16:9 슬롯) + `references/patterns.md`의 `image-text`/`image-annotated` 패턴이 이미지 슬롯을 커버한다.
+
 ## 다이어그램
 
 시스템·관계·프로세스 시각물(architecture / flowchart / sequence / state / ER / timeline / swimlane / quadrant / nested / tree / org / layers / venn / pyramid)은 `/slide` Executor가 `references/diagram-types.md`를 참조해 **네이티브 DrawingML SVG**로 그린다. 이 브리지는 벤더링된 `.claude/skills/diagram-design/`(lean clone, MIT — `cathrynlavery/diagram-design`) 레퍼런스 라이브러리의 14종 타입 관례를 strict SVG subset(`shared-standards.md`) + 활성 테마 토큰으로 재서술한 것이다. **슬라이드 전용** — 독립 HTML 출력은 쓰지 않으며(네이티브 파이프라인 락), 이미지 플래튼도 금지. 브리지는 테마 비종속이라 `/theme-init` 교체에도 그대로 유지된다. 깊은 타입별 관례는 `.claude/skills/diagram-design/references/type-*.md`. (기존 Mermaid 경로는 HTML 프리뷰 전용으로 유지 — `libraries.md`.)

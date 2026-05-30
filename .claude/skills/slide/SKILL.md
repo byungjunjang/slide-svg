@@ -431,6 +431,8 @@ PY
 
 Read `references/image-generator.md`
 
+> 🔒 **Single-backend lock**: AI images are generated **only** through the `/codex-image` skill. Never use nanobanana2, Gemini, DALL·E, Midjourney, Stable Diffusion, FLUX, Imagen, Qwen, Zhipu, or any MCP image tool. If the codex-image preflight fails, halt and ask the user to run `codex login` — do NOT substitute another generator.
+
 1. Extract all images with status "pending generation" from the design spec
 2. Generate prompt document → `<project_path>/images/image_prompts.md`. Every prompt MUST embed the Jangpm Deck Style Anchor (§🔒 of `image-generator.md`) as prefix, and the negative list as `Avoid: ...` suffix in the prompt body (codex-image has no separate negative-prompt arg).
 3. Generate images via `/codex-image` (Codex CLI OAuth → `gpt-image-2`, no API key needed). Loop once per slot — serial, 2–5 s spacing, confirm file exists before the next:
