@@ -95,7 +95,7 @@ PPT Master works with any AI coding agent that can read files and run shell comm
 
 ## Q: Can I use AI-generated images in my presentation?
 
-Yes. PPT Master includes a built-in image generation script that supports multiple providers (Gemini, OpenAI, FLUX, Qwen, Zhipu, etc.). During the Strategist phase, if you choose "AI generation" for the image approach, the pipeline will automatically generate images based on your content. You can also provide your own images — just place them in the project's `images/` folder.
+Yes. AI image generation goes through **one path only: the bundled `/codex-image` skill** (Codex CLI OAuth → `gpt-image-2`, no API key needed). No other backend is used — not Gemini, OpenAI REST, DALL·E, Midjourney, Stable Diffusion, FLUX, nanobanana2, or any MCP image tool. During the Strategist phase, if you choose "AI generation" for the image approach, Step 5 calls `/codex-image` per image slot. If codex-image is unavailable (Codex CLI missing or `codex login` expired) the pipeline halts and asks you to fix it rather than falling back to another tool. You can always provide your own images instead — just place them in the project's `images/` folder.
 
 ## Q: Can I edit the generated presentations?
 

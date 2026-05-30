@@ -1,0 +1,19 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1280 720" width="1280" height="720">
+  <rect x="0" y="0" width="1280" height="720" fill="{{TOKEN:colors.bg}}"/>
+  <text x="56" y="92" font-family='{{TOKEN:typography.font-chain}}' font-size="20" font-weight="500" fill="{{TOKEN:colors.text-secondary}}" letter-spacing="2">CONTENT · 샘플 레이아웃</text>
+  <text x="56" y="150" font-family='{{TOKEN:typography.font-chain}}' font-size="44" font-weight="700" fill="{{TOKEN:colors.text}}">핵심 지표 세 가지</text>
+  <rect x="56" y="226" width="360" height="280" rx="16" fill="{{TOKEN:colors.surface}}"/>
+  <text x="92" y="338" font-family='{{TOKEN:typography.font-chain}}' font-size="76" font-weight="800" fill="{{TOKEN:colors.accent}}">87%</text>
+  <text x="92" y="392" font-family='{{TOKEN:typography.font-chain}}' font-size="24" font-weight="600" fill="{{TOKEN:colors.text}}">도입 후 만족도</text>
+  <text x="92" y="430" font-family='{{TOKEN:typography.font-chain}}' font-size="18" font-weight="400" fill="{{TOKEN:colors.text-secondary}}">전년 대비 +12%p</text>
+  <rect x="460" y="226" width="360" height="280" rx="16" fill="{{TOKEN:colors.surface}}"/>
+  <text x="496" y="338" font-family='{{TOKEN:typography.font-chain}}' font-size="76" font-weight="800" fill="{{TOKEN:colors.accent}}">3.2x</text>
+  <text x="496" y="392" font-family='{{TOKEN:typography.font-chain}}' font-size="24" font-weight="600" fill="{{TOKEN:colors.text}}">처리 속도 향상</text>
+  <text x="496" y="430" font-family='{{TOKEN:typography.font-chain}}' font-size="18" font-weight="400" fill="{{TOKEN:colors.text-secondary}}">수작업 대비</text>
+  <rect x="864" y="226" width="360" height="280" rx="16" fill="{{TOKEN:colors.surface}}"/>
+  <text x="900" y="338" font-family='{{TOKEN:typography.font-chain}}' font-size="76" font-weight="800" fill="{{TOKEN:colors.accent}}">42h</text>
+  <text x="900" y="392" font-family='{{TOKEN:typography.font-chain}}' font-size="24" font-weight="600" fill="{{TOKEN:colors.text}}">주당 절감 시간</text>
+  <text x="900" y="430" font-family='{{TOKEN:typography.font-chain}}' font-size="18" font-weight="400" fill="{{TOKEN:colors.text-secondary}}">팀 8인 기준</text>
+  <line x1="56" y1="636" x2="1224" y2="636" stroke="{{TOKEN:colors.text-secondary}}" stroke-opacity="0.2" stroke-width="1"/>
+  <text x="56" y="678" font-family='{{TOKEN:typography.font-chain}}' font-size="18" font-weight="500" fill="{{TOKEN:colors.text-secondary}}">{{GOVERNING_MESSAGE}}</text>
+</svg>

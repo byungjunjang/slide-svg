@@ -91,6 +91,11 @@ SAFE_DEFAULTS: dict[str, Any] = {
                 "register": "report / lecture",
                 "forbidden_phrases": [],
                 "gm_style_hint": "One declarative sentence stating the so-what / takeaway."},
+    # v1.1 additive tokens (optional in the contract). chromatic + hairline
+    # reproduce the stock behaviour, so an agent that omits them gets exactly
+    # today's output.
+    "palette_mode": "chromatic",
+    "surface": {"card_style": "hairline"},
 }
 
 
@@ -156,6 +161,25 @@ def _extract_json(text: str) -> dict[str, Any]:
     raise json.JSONDecodeError("unmatched braces", text, start)
 
 
+def _derive_monochrome_semantics(filled: dict[str, Any], partial: dict[str, Any]) -> None:
+    """For a monochrome palette, replace UNSPECIFIED semantic hues with ink tones.
+
+    A hue-free brand encodes positive/negative/warning via direction / icon, not
+    colour — so the green/red/orange defaults would be off-brand. Only tokens the
+    agent left null (or omitted) are overridden; an explicit hue is respected.
+    Idempotent: a second pass sees the derived (non-null) values and skips them.
+    """
+    pcolors = partial.get("colors") or {}
+    colors = filled["colors"]
+    ink = colors.get("text")
+    soft = colors.get("surface-alt")
+    for base in ("positive", "negative", "warning"):
+        if pcolors.get(base) is None:
+            colors[base] = ink
+        if pcolors.get(f"{base}-soft") is None:
+            colors[f"{base}-soft"] = soft
+
+
 def fill(partial: dict[str, Any]) -> dict[str, Any]:
     """Fill nulls and missing tokens in a partial theme dict with defaults.
 
@@ -169,6 +193,8 @@ def fill(partial: dict[str, Any]) -> dict[str, Any]:
         filled["display_name"] = partial.get("display_name") or filled["name"].title()
     if "description" in partial and partial["description"]:
         filled["description"] = partial["description"]
+    if filled.get("palette_mode") == "monochrome":
+        _derive_monochrome_semantics(filled, partial)
     return filled
 
 

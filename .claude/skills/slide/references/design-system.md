@@ -146,13 +146,15 @@ Key spacing values:
 
 ## Card System
 
+**Card treatment:** **hairline** (default) — a `1px solid var(--border)` rule on a `var(--surface)` fill. Differentiate the hero card with a `var(--accent-soft)` background.
+
 | Property | Value |
 |----------|-------|
 | `--card-padding` | `var(--space-6)` |
 | `--card-gap` | `var(--space-6)` |
 | `--card-radius` | `12px` |
-| Background | `var(--surface)` or `var(--surface-alt)` |
-| Border | `1px solid var(--border)` |
+| Background | per treatment (default `var(--surface)` / `var(--surface-alt)`) |
+| Border | per treatment (hairline default: `1px solid var(--border)`) |
 
 ## Calibration Anchors
 

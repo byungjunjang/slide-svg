@@ -95,7 +95,7 @@ slide-svg/
 │       │   ├── template-designer.md
 │       │   ├── reference-2-text.txt   ← 타깃 시각 기준 텍스트
 │       │   └── jangpm-patterns/       ← 25 HTML 샘플 (시각 레퍼런스 갤러리; 활성 테마 CSS로 reskin)
-│       ├── scripts/                   ← 28 파이썬 도구 (source_to_md, svg_quality_checker, finalize_svg, svg_to_pptx, …)
+│       ├── scripts/                   ← 파이썬 도구 모음 (source_to_md, svg_quality_checker, finalize_svg, svg_to_pptx, …)
 │       ├── templates/
 │       │   ├── layouts/<theme>/       ← 활성 테마 레이아웃 팩 (cover, chapter, content, ending + design_spec + DESIGN.md). 현재: `jangpm/`
 │       │   │   ├── DESIGN.md          ← preset 디자인 어휘 (`recommended_layout_family` + 차트 처리 + anti-pattern). slide-plan이 소비. jangpm은 수동 작성, 새 preset은 `/theme-init`이 skeleton 생성 후 agent가 마커 채움

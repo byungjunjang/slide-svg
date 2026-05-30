@@ -34,7 +34,7 @@ Overrides below (style keywords table, industry presets) are kept for completene
 
 ## Core Mission
 
-Receive the "Image Resource List" from the Design Specification & Content Outline output by the Strategist, create optimized prompts for each image pending generation, generate images via AI tools, and save them to the project's `images/` directory.
+Receive the "Image Resource List" from the Design Specification & Content Outline output by the Strategist, create optimized prompts for each image pending generation, generate images **via the `/codex-image` skill — the only sanctioned backend** — and save them to the project's `images/` directory.
 
 **Trigger condition**: When AI image generation is needed (standalone use or invoked within pipeline)
 
@@ -288,7 +288,11 @@ For each image with "Pending" status:
 
 > Prerequisite: Section 4.2 must be complete; `images/image_prompts.md` must exist
 
-#### Method A: codex-image (default and only first-party backend)
+#### codex-image — the ONLY image backend (never use any other)
+
+**Every AI-generated image MUST be produced by the `/codex-image` skill.** Do NOT use
+nanobanana2, Midjourney, DALL·E, Stable Diffusion, Gemini, Imagen, FLUX, Qwen, Zhipu,
+any MCP image tool, or any other generator under any circumstance.
 
 `/slide` Step 5는 항상 `/codex-image`를 호출합니다. API 키 불필요 — Codex CLI OAuth(ChatGPT 로그인)가 `gpt-image-2`를 호출. 스킬 정의는 `.claude/skills/codex-image/SKILL.md`.
 
@@ -314,9 +318,14 @@ For each image with "Pending" status:
 
 **Auth precondition**: `codex login status` must return "Logged in". If not, stop and instruct: "Run `codex login` in terminal." Do not silently skip image slots.
 
-#### Method B: Manual Generation (escape hatch)
+#### If codex-image is unavailable → HALT (no fallback backend)
 
-If codex-image is unavailable (no Codex CLI, no OAuth, sandboxed claude.ai upload, etc.), prompts are still saved in `images/image_prompts.md`; inform the user of the file location and let them generate images manually on Midjourney / DALL·E / Stable Diffusion / Gemini and drop the results into `project/images/`.
+codex-image is the **only** AI image path. If the Codex CLI is missing or `codex login` is
+expired/sandboxed (e.g. claude.ai upload), **do NOT** switch to any other generator. Instead:
+stop, keep the saved `images/image_prompts.md`, and tell the user to run `codex login` in their
+terminal. (If they would rather supply their own assets, they can re-run with the Strategist's
+"B) user-provided" image option and drop files into `project/images/` themselves — but the skill
+never calls a non-codex-image generator on their behalf.)
 
 ### 4.4 Verification Phase
 
@@ -368,8 +377,8 @@ Abstract futuristic background with flowing digital waves...
 
 ## Usage Instructions
 
-1. Copy the "Prompt" above into an AI image generation tool
-2. Recommended platforms: Midjourney / DALL-E 3 / Gemini / Stable Diffusion
+1. Images are generated automatically via `/codex-image` (the only sanctioned backend)
+2. codex-image unavailable? Halt and run `codex login` — do not substitute another generator
 3. Rename generated images to the corresponding filenames
 4. Place in the `images/` directory
 ```

@@ -80,7 +80,6 @@ tramp
 # User workspace — generated decks are not version controlled.
 # Use cloud sync (iCloud/Dropbox) for backup/multi-device access.
 output/
-!output/README.md
 # generated/
 # *.svg
 

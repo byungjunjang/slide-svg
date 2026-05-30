@@ -69,5 +69,9 @@
     "register": "Korean lecture / report",
     "forbidden_phrases": ["여러분", "우리는", "함께해요"],
     "gm_style_hint": "One declarative sentence stating the so-what / takeaway. Never a restatement of the page title. Korean-first, ≤30 chars ideal."
+  },
+  "palette_mode": "chromatic",
+  "surface": {
+    "card_style": "hairline"
   }
 }

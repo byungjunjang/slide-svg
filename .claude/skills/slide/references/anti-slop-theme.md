@@ -149,4 +149,14 @@ Semantic columns (growth vs. decline) may use `#059669` / `#E11D48` **only when 
 
 ---
 
+## Card Treatment Lock
+
+The active theme's card treatment is **hairline**. Apply it consistently across the whole deck.
+
+**Forbidden:** mixing card treatments within one deck, or ignoring the active treatment.
+
+**Why:** Card treatment is a structural identity signal. One file = one theme = one treatment; mixing hairline, filled, and borderless boxes reads as AI-assembled rather than designed.
+
+---
+
 <!-- Rendered by render_anti_slop_theme.py from theme-active.json -->

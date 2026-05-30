@@ -16,7 +16,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title><!-- TITLE --></title>
-  <!-- Font: active theme chain (Pretendard, 'Apple SD Gothic Neo', 'Malgun Gothic', Arial, sans-serif). The chain ends in a
+  <!-- Font: active theme chain ({{TOKEN:typography.font-chain}}). The chain ends in a
        generic fallback, so the preview degrades gracefully when the primary font isn't
        installed/loaded in-browser. The exported PPTX bundles the primary font separately. -->
 
@@ -33,35 +33,35 @@
     /* === CSS CUSTOM PROPERTIES === */
     :root {
       /* Colors — active theme tokens (rendered from theme-active.json) */
-      --bg: #FAFAF9;
-      --surface: #FFFFFF;
-      --text: #1A1A1A;
-      --text-secondary: #6B7280;
-      --accent: #4633E3;
-      --accent-soft: #E8E5FC;
-      --border: #E5E7EB;
+      --bg: {{TOKEN:colors.bg}};
+      --surface: {{TOKEN:colors.surface}};
+      --text: {{TOKEN:colors.text}};
+      --text-secondary: {{TOKEN:colors.text-secondary}};
+      --accent: {{TOKEN:colors.accent}};
+      --accent-soft: {{TOKEN:colors.accent-soft}};
+      --border: {{TOKEN:colors.border}};
 
       /* Semantic */
-      --positive: #059669;
-      --positive-soft: #ECFDF5;
-      --negative: #E11D48;
-      --negative-soft: #FFF1F2;
-      --warning: #D97706;
-      --warning-soft: #FFFBEB;
+      --positive: {{TOKEN:colors.positive}};
+      --positive-soft: {{TOKEN:colors.positive-soft}};
+      --negative: {{TOKEN:colors.negative}};
+      --negative-soft: {{TOKEN:colors.negative-soft}};
+      --warning: {{TOKEN:colors.warning}};
+      --warning-soft: {{TOKEN:colors.warning-soft}};
 
       /* Typography — font chain + weights from tokens; rem sizes are a preview scale */
-      --font-sans: Pretendard, 'Apple SD Gothic Neo', 'Malgun Gothic', Arial, sans-serif;
+      --font-sans: {{TOKEN:typography.font-chain}};
       --fs-display: 3rem;
       --fs-display-sm: 2.5rem;
       --fs-headline: 2rem;
       --fs-title: 1.15rem;
       --fs-body: 0.95rem;
       --fs-caption: 0.8rem;
-      --fw-display: 800;
-      --fw-headline: 700;
-      --fw-title: 600;
-      --fw-body: 400;
-      --fw-caption: 500;
+      --fw-display: {{TOKEN:typography.display.weight}};
+      --fw-headline: {{TOKEN:typography.headline.weight}};
+      --fw-title: {{TOKEN:typography.title.weight}};
+      --fw-body: {{TOKEN:typography.body.weight}};
+      --fw-caption: {{TOKEN:typography.caption.weight}};
 
       /* Spacing (8px grid) */
       --space-1: 0.25rem;
@@ -373,7 +373,7 @@
     .report-table thead th:first-child { text-align: left; }
     .report-table tbody td { padding: var(--space-3) var(--space-4); border-bottom: 1px solid var(--border); text-align: center; }
     .report-table tbody td:first-child { text-align: left; }
-    .col-highlight { border-left: 2px solid var(--accent); border-right: 2px solid var(--accent); background: rgba(70, 51, 227, 0.03); }
+    .col-highlight { border-left: 2px solid var(--accent); border-right: 2px solid var(--accent); background: rgba({{TOKEN:colors.accent|rgb}}, 0.03); }
 
     /* === BEFORE/AFTER LABEL === */
     .before-after-label {
@@ -465,7 +465,7 @@
 
 ## Font
 
-Decks use the active theme font chain: `Pretendard, 'Apple SD Gothic Neo', 'Malgun Gothic', Arial, sans-serif`. The chain
+Decks use the active theme font chain: `{{TOKEN:typography.font-chain}}`. The chain
 ends in a generic fallback, so the in-browser preview degrades gracefully when the
 primary font isn't installed/loaded. The exported PPTX bundles the primary font separately.
 

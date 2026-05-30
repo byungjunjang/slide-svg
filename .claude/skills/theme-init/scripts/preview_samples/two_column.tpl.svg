@@ -1,0 +1,19 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1280 720" width="1280" height="720">
+  <rect x="0" y="0" width="1280" height="720" fill="{{TOKEN:colors.bg}}"/>
+  <text x="56" y="92" font-family='{{TOKEN:typography.font-chain}}' font-size="20" font-weight="500" fill="{{TOKEN:colors.text-secondary}}" letter-spacing="2">CONTENT · 샘플 레이아웃</text>
+  <text x="56" y="150" font-family='{{TOKEN:typography.font-chain}}' font-size="44" font-weight="700" fill="{{TOKEN:colors.text}}">좌우 2단 구성</text>
+  <text x="56" y="244" font-family='{{TOKEN:typography.font-chain}}' font-size="26" font-weight="600" fill="{{TOKEN:colors.text}}">왜 지금인가</text>
+  <text x="56" y="296" font-family='{{TOKEN:typography.font-chain}}' font-size="20" font-weight="400" fill="{{TOKEN:colors.text-secondary}}">시장 전환이 가속되며 의사결정 창이</text>
+  <text x="56" y="326" font-family='{{TOKEN:typography.font-chain}}' font-size="20" font-weight="400" fill="{{TOKEN:colors.text-secondary}}">좁아지고 있다. 지금이 진입 적기다.</text>
+  <rect x="660" y="226" width="564" height="300" rx="16" fill="{{TOKEN:colors.surface}}"/>
+  <circle cx="700" cy="280" r="5" fill="{{TOKEN:colors.accent}}"/>
+  <text x="724" y="288" font-family='{{TOKEN:typography.font-chain}}' font-size="22" font-weight="500" fill="{{TOKEN:colors.text}}">경쟁사 대비 6개월 선행</text>
+  <circle cx="700" cy="338" r="5" fill="{{TOKEN:colors.accent}}"/>
+  <text x="724" y="346" font-family='{{TOKEN:typography.font-chain}}' font-size="22" font-weight="500" fill="{{TOKEN:colors.text}}">초기 도입 비용 회수 9개월</text>
+  <circle cx="700" cy="396" r="5" fill="{{TOKEN:colors.accent}}"/>
+  <text x="724" y="404" font-family='{{TOKEN:typography.font-chain}}' font-size="22" font-weight="500" fill="{{TOKEN:colors.text}}">기존 워크플로우와 호환</text>
+  <circle cx="700" cy="454" r="5" fill="{{TOKEN:colors.accent}}"/>
+  <text x="724" y="462" font-family='{{TOKEN:typography.font-chain}}' font-size="22" font-weight="500" fill="{{TOKEN:colors.text}}">단계적 롤아웃 가능</text>
+  <line x1="56" y1="636" x2="1224" y2="636" stroke="{{TOKEN:colors.text-secondary}}" stroke-opacity="0.2" stroke-width="1"/>
+  <text x="56" y="678" font-family='{{TOKEN:typography.font-chain}}' font-size="18" font-weight="500" fill="{{TOKEN:colors.text-secondary}}">{{GOVERNING_MESSAGE}}</text>
+</svg>

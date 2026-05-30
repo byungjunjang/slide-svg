@@ -10,5 +10,6 @@ These scripts are **not part of the active `/slide` pipeline**. They are kept as
 | `svg_position_calculator.py` | Geometry / position-calculation helpers used during template authoring (debug aid). |
 | `rotate_images.py` | Bulk-rotate images by EXIF orientation (one-off normalization tool). |
 | `pptx_animations.py` | Apply animation hints to an exported PPTX (post-export experiment, not in the standard export path). |
+| `extract_essential_icons.py` | Regenerate the ~20 essential Tabler icons inlined into the claude.ai upload bundle (run after changing the essentials set). |
 
 If something in this folder ends up needed by the main `/slide` pipeline, **promote it back to `scripts/`** and add it to `SKILL.md`. Don't reach into `dev/` from the documented workflow.

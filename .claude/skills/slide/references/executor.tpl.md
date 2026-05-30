@@ -1,6 +1,6 @@
 # Role: Executor ({{TOKEN:display_name}})
 
-> The single executor role for the `slide` skill. Replaces the legacy `executor-base.md`, `executor-general.md`, `executor-consultant.md`, and `executor-consultant-top.md` — they were calibrated for multiple style variants; Jangpm is a single visual language. Technical SVG constraints are in `shared-standards.md`. Design tokens are in `design-system.md`; structural anti-patterns in `anti-slop-core.md`; theme-literal enforcement in `anti-slop-theme.md`.
+> The single executor role for the `slide` skill. Replaces the legacy `executor-base.md`, `executor-general.md`, `executor-consultant.md`, and `executor-consultant-top.md` — they were calibrated for multiple style variants; {{TOKEN:display_name}} is a single visual language. Technical SVG constraints are in `shared-standards.md`. Design tokens are in `design-system.md`; structural anti-patterns in `anti-slop-core.md`; theme-literal enforcement in `anti-slop-theme.md`.
 
 ---
 
@@ -156,8 +156,8 @@ This audit applies to **content slides only**. Cover / chapter / ending pages ar
   2. **Logic Construction Phase** — after all SVGs are finalized, batch-write speaker notes for narrative coherence
 - **Proximity principle** — related elements close together; unrelated groups separated by increased space or a rule line
 - **Absolute spec adherence** — Canvas size, color palette, typography scale, and layout grid come from the Design Spec. No improvisation.
-- **Jangpm anti-slop** — Read `anti-slop-core.md` (18 structural rules) and `anti-slop-theme.md` (active-theme literal enforcement) once at session start; apply both (see §6 below for executor-relevant summary)
-- **Visual depth via hierarchy, not effects** — Jangpm rejects filter shadows, glow, gradient overlays, same-hue gradient title bars, numbered circles with theme-fill backgrounds. Create depth through typographic contrast, rule lines, card containment (sparingly), and whitespace — NOT through visual effects.
+- **{{TOKEN:display_name}} anti-slop** — Read `anti-slop-core.md` (18 structural rules) and `anti-slop-theme.md` (active-theme literal enforcement) once at session start; apply both (see §6 below for executor-relevant summary)
+- **Visual depth via hierarchy, not effects** — {{TOKEN:display_name}} rejects filter shadows, glow, gradient overlays, same-hue gradient title bars, numbered circles with theme-fill backgrounds. Create depth through typographic contrast, rule lines, card containment (sparingly), and whitespace — NOT through visual effects.
 
 ### SVG File Naming Convention
 
@@ -174,7 +174,7 @@ Use underscores, not spaces. File names with special characters are allowed if t
 
 ---
 
-## 4. Layout Techniques (Jangpm-Compatible)
+## 4. Layout Techniques ({{TOKEN:display_name}}-Compatible)
 
 Flexible compositions within the content area (x=56, y=160, w=1168, h=480):
 
@@ -193,7 +193,7 @@ Every layout MUST preserve:
 - GM line at y=680 (centered, `{{TOKEN:colors.text-secondary}}`, {{TOKEN:typography.body.size}}px, 700)
 - Page number at top-right or bottom-right (caption size, `{{TOKEN:colors.text-tertiary}}`)
 
-### Column-Count Sizing (Jangpm: Breath Over Symmetry)
+### Column-Count Sizing ({{TOKEN:display_name}}: Breath Over Symmetry)
 
 Before picking a layout from the table above, **measure the longest body sentence** that will go on the slide. The chosen layout's inner column width must hold that sentence on ONE line with ≥10% headroom at 15.2px / 18.4px body size. Rule of thumb:
 
@@ -206,15 +206,17 @@ Before picking a layout from the table above, **measure the longest body sentenc
 
 Korean char width ≈ `fs × 0.95`. Latin char width ≈ `fs × 0.52`. If the longest sentence would require breaking on the visually "balanced" layout, **drop a column instead of breaking the sentence** — visual breath (one sentence, one line) is worth more than column symmetry. Never equalize columns at the cost of legibility. The two deadly sins: (a) four cards with bodies that all run 2-3 lines because the cards are 272px wide, (b) a 2-column split where every bullet wraps because the copy needed 1-col width.
 
-### Card Differentiation Rule (Jangpm)
+### Card Differentiation Rule ({{TOKEN:display_name}})
 
 In any card grid, **at least one** card should be visually distinct: background `{{TOKEN:colors.accent-soft}}` (accent-soft) OR a highlighted metric with `{{TOKEN:colors.accent}}` fill. Equal-weight all-white cards are a design smell.
 
 Max accent events per slide: **1–2**. Never color every card with accent-soft.
 
-### Chart Colors (Jangpm Lock)
+**Card treatment (active theme):**{{IF:surface.card_style=hairline}} hairline — a card `<rect>` uses a `{{TOKEN:colors.surface}}` fill + `1px {{TOKEN:colors.border}}` stroke, radius {{TOKEN:radius.md}}.{{/IF}}{{IF:surface.card_style=filled}} filled — a card `<rect>` uses a `{{TOKEN:colors.surface-alt}}` fill, **no** stroke, radius {{TOKEN:radius.md}}.{{/IF}}{{IF:surface.card_style=borderless}} borderless — **do NOT draw card `<rect>` containers.** Separate groups with whitespace and a single `1px {{TOKEN:colors.border}}` rule; let the type hierarchy carry the structure. Distinguish the hero block by size/weight, not a box.{{/IF}}
 
-When using a template from `templates/charts/`, **override every fill and stroke**. Charts under Jangpm use:
+### Chart Colors ({{TOKEN:display_name}} Lock)
+
+When using a template from `templates/charts/`, **override every fill and stroke**. Charts under {{TOKEN:display_name}} use:
 
 - Primary series: `{{TOKEN:colors.accent}}` at full opacity
 - Secondary series: `{{TOKEN:colors.accent}}` at opacity 0.6
@@ -341,7 +343,7 @@ When the Design Spec's §VII calls for a chart type, read the template first:
 read_file templates/charts/<chart_name>.svg
 ```
 
-Extract layout coordinates, card structure, spacing rhythm as creative reference — then redraw in the Jangpm palette (accent + opacity ladder). Do NOT copy the template's colors verbatim. Re-reading is needed only when the chart type changes.
+Extract layout coordinates, card structure, spacing rhythm as creative reference — then redraw in the {{TOKEN:display_name}} palette (accent + opacity ladder). Do NOT copy the template's colors verbatim. Re-reading is needed only when the chart type changes.
 
 Full index: `templates/charts/charts_index.json` (56 chart types).
 
@@ -373,11 +375,11 @@ Placeholder:
 </text>
 ```
 
-### Jangpm Illustration Style
+### {{TOKEN:display_name}} Illustration Style
 
-When AI-generated illustrations are used (via Image_Generator), they MUST match the Jangpm visual-assets recipe:
+When AI-generated illustrations are used (via Image_Generator), they MUST match the {{TOKEN:display_name}} visual-assets recipe:
 - **minimal flat illustration**, **muted / pastel tones**, **transparent background**, **line-art style**, **no gradients, no glow, no 3D renders**
-- Match the warm off-white `#FAFAF9` page; pastels that harmonize with monochrome palette
+- Match the page background `{{TOKEN:colors.bg}}`; tones that harmonize with the active palette (see `image-generator.md` §🔒 for the full active-theme style lock)
 - Brand character: `{{TOKEN:assets.character|optional}}`. When provided, it can be used on slides that benefit from an instructor persona; when not provided, omit persona slides entirely.
 
 ---
@@ -398,13 +400,13 @@ Every `<text>` element MUST include the full font-family chain:
 
 | Role | Size (px) | Weight | Letter-spacing |
 |------|-----------|--------|----------------|
-| Display | 56 | 800 | -1.68 |
-| Display-sm | 40 | 800 | -0.8 |
-| Headline | 32 | 700 | -0.64 |
-| Title | 18.4 | 600 | 0 |
-| Body | 15.2 | 400 | 0 |
-| Caption | 12.8 | 500 | 0 |
-| Label (uppercase) | 12.8 | 600 | 0.64 (with `text-transform: uppercase` equivalent — SVG: write content in actual uppercase) |
+| Display | {{TOKEN:typography.display.size}} | {{TOKEN:typography.display.weight}} | {{TOKEN:typography.display.letter-spacing}} |
+| Display-sm | {{TOKEN:typography.display-sm.size}} | {{TOKEN:typography.display-sm.weight}} | {{TOKEN:typography.display-sm.letter-spacing}} |
+| Headline | {{TOKEN:typography.headline.size}} | {{TOKEN:typography.headline.weight}} | {{TOKEN:typography.headline.letter-spacing}} |
+| Title | {{TOKEN:typography.title.size}} | {{TOKEN:typography.title.weight}} | {{TOKEN:typography.title.letter-spacing}} |
+| Body | {{TOKEN:typography.body.size}} | {{TOKEN:typography.body.weight}} | {{TOKEN:typography.body.letter-spacing}} |
+| Caption | {{TOKEN:typography.caption.size}} | {{TOKEN:typography.caption.weight}} | {{TOKEN:typography.caption.letter-spacing}} |
+| Label (uppercase) | {{TOKEN:typography.label.size}} | {{TOKEN:typography.label.weight}} | {{TOKEN:typography.label.letter-spacing}} (with `text-transform: uppercase` equivalent — SVG: write content in actual uppercase) |
 
 Color:
 - Primary text: `{{TOKEN:colors.text}}`
@@ -460,7 +462,7 @@ Labels MUST match deck content language. Never mix English markers with Korean b
 
 ### Voice
 
-Jangpm's editorial voice extends to the speaker notes: declarative, analytical, third-person institutional. Avoid direct address ("여러분"), marketing tone, and motivational cheerleading. The notes are the instructor's analytic gloss, not a sales pitch.
+{{TOKEN:display_name}}'s editorial voice extends to the speaker notes: declarative, analytical, third-person institutional. Avoid direct address ("여러분"), marketing tone, and motivational cheerleading. The notes are the instructor's analytic gloss, not a sales pitch.
 
 ### Task 2. Split into Per-Page Files
 
@@ -487,11 +489,11 @@ Each command runs in its own bash call — never bundled into one block. See `re
 
 ---
 
-## 12. Self-check (Jangpm)
+## 12. Self-check ({{TOKEN:display_name}})
 
 Final pre-save verification (items covered by §2 Per-Page Self-Audit are omitted here):
 
-- [ ] Background is `#FAFAF9` (not white, not pure black)
+- [ ] Background is `{{TOKEN:colors.bg}}` (not white, not pure black)
 - [ ] Text primary is `{{TOKEN:colors.text}}`, not `#000000`
 - [ ] No gradients, no glow, no filter-shadow with color, no multi-hue
 - [ ] Every `<text>` has the full active-theme font-family chain (`{{TOKEN:typography.font-chain}}`)

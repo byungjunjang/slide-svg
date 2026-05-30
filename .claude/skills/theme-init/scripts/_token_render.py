@@ -5,11 +5,19 @@ Placeholder grammar:
     {{TOKEN:<dotted.path>|<filter>}}     — value run through a named filter
     {{IF:<dotted.path>}}...{{/IF}}       — render inner block iff token is truthy
     {{IFNOT:<dotted.path>}}...{{/IF}}    — render inner block iff token is falsy
+    {{IF:<dotted.path>=<value>}}...{{/IF}}    — render iff str(token) == <value>
+    {{IFNOT:<dotted.path>=<value>}}...{{/IF}} — render iff str(token) != <value>
 
 Truthiness for IF/IFNOT: a token is falsy when missing, null, an empty string,
 or an empty list — otherwise truthy. This lets optional tokens (e.g. the
 narrative-shell band group `colors.shell-bg`/`shell-spectrum`) gate whole
 documentation sections without raising on monochrome themes that omit them.
+
+Equality form (`=value`): the token is compared as a string to <value>; a
+missing path counts as "not equal" (so an absent optional token like
+`surface.card_style` drops every `{{IF:...=...}}` branch instead of raising).
+This drives the mutually-exclusive card-treatment guidance blocks in the
+reference templates.
 
 Dotted paths walk dicts and also integer list indices, e.g.
 `colors.shell-spectrum.0` resolves the first spectrum hue.
@@ -34,7 +42,8 @@ from typing import Any
 _PLACEHOLDER_RE = re.compile(r"\{\{TOKEN:([a-zA-Z0-9_.\-]+)(?:\|([a-z]+))?\}\}")
 # Non-greedy block match; DOTALL so blocks may span multiple lines. Conditionals
 # do not nest (a flat block model is enough for the reference templates).
-_BLOCK_RE = re.compile(r"\{\{(IF|IFNOT):([a-zA-Z0-9_.\-]+)\}\}(.*?)\{\{/IF\}\}", re.DOTALL)
+_BLOCK_RE = re.compile(
+    r"\{\{(IF|IFNOT):([a-zA-Z0-9_.\-]+)(?:=([^}]*))?\}\}(.*?)\{\{/IF\}\}", re.DOTALL)
 
 
 def _lookup(theme: dict[str, Any], dotted: str) -> Any:
@@ -62,10 +71,23 @@ def _truthy(theme: dict[str, Any], dotted: str) -> bool:
     return True
 
 
+def _equals(theme: dict[str, Any], dotted: str, expected: str) -> bool:
+    """str(token) == expected; a missing path counts as not-equal (no raise)."""
+    try:
+        value = _lookup(theme, dotted)
+    except KeyError:
+        return False
+    return str(value) == expected
+
+
 def _render_conditionals(tpl_text: str, theme: dict[str, Any]) -> str:
     def _sub(match: re.Match[str]) -> str:
-        kind, dotted, body = match.group(1), match.group(2), match.group(3)
-        keep = _truthy(theme, dotted)
+        kind, dotted, eq_value, body = (
+            match.group(1), match.group(2), match.group(3), match.group(4))
+        if eq_value is not None:
+            keep = _equals(theme, dotted, eq_value)
+        else:
+            keep = _truthy(theme, dotted)
         if kind == "IFNOT":
             keep = not keep
         return body if keep else ""

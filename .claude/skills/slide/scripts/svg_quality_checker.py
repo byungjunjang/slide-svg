@@ -25,6 +25,24 @@ except ImportError:
     ErrorHelper = None
 
 
+def _active_primary_font():
+    """Primary font name from the ACTIVE theme chain, or None if unavailable.
+
+    The font check validates against the active theme (theme-active.json) instead
+    of an obsolete system-UI allow-list, which warned on every themed slide because
+    no deck uses 'system-ui'/'-apple-system'. None ⇒ theme unreadable ⇒ skip the
+    check rather than emit a false warning.
+    """
+    try:
+        import json
+        theme_path = Path(__file__).resolve().parent.parent / "references" / "theme-active.json"
+        chain = json.loads(theme_path.read_text(encoding="utf-8"))["typography"]["font-chain"]
+    except Exception:
+        return None
+    first = chain.split(",")[0].strip().strip("'\"")
+    return first or None
+
+
 class SVGQualityChecker:
     """SVG quality checker"""
 
@@ -233,26 +251,26 @@ class SVGQualityChecker:
 
     def _check_fonts(self, content: str, result: Dict):
         """Check font usage"""
-        # Find font-family declarations
+        # Find font-family values in both SVG attribute (`font-family="…"`) and
+        # CSS (`font-family: "…"`) forms. Capture stops at the first inner quote,
+        # which is enough to read the primary (leading) family.
         font_matches = re.findall(
-            r'font-family[:\s]*["\']([^"\']+)["\']', content, re.IGNORECASE)
+            r'font-family\s*[:=]\s*["\']([^"\']+)', content, re.IGNORECASE)
 
         if font_matches:
             result['info']['fonts'] = list(set(font_matches))
 
-            # Check if system UI font stack is used
-            recommended_fonts = [
-                'system-ui', '-apple-system', 'BlinkMacSystemFont', 'Segoe UI']
-
-            for font_family in font_matches:
-                has_recommended = any(
-                    rec in font_family for rec in recommended_fonts)
-
-                if not has_recommended:
-                    result['warnings'].append(
-                        f"Recommend using system UI font stack, current: {font_family}"
-                    )
-                    break  # Only warn once
+            # Validate against the ACTIVE theme font chain, not a fixed system-UI
+            # allow-list. None ⇒ theme unreadable ⇒ skip (no false warning).
+            primary = _active_primary_font()
+            if primary:
+                for font_family in font_matches:
+                    if primary.lower() not in font_family.lower():
+                        result['warnings'].append(
+                            f"font-family does not lead with the active theme font "
+                            f"'{primary}': {font_family}"
+                        )
+                        break  # Only warn once
 
     def _check_dimensions(self, content: str, result: Dict):
         """Check width/height consistency with viewBox"""
