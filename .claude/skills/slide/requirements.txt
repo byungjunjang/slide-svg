@@ -99,11 +99,6 @@ curl_cffi>=0.7.0
 # theme-active.json 검증용 jsonschema 하나만 필요 — 테마 추출은 호출하는
 # 에이전트가 직접 수행하므로 Anthropic SDK/API key 불필요.
 jsonschema>=4.17.0
-#
-# Shell-composition preview (preview_shells.py) instances the variable Pretendard
-# font into a static glyf TTF so svglib/reportlab can render Hangul (otherwise it
-# shows as □ tofu). Pure-Python, wheels on every platform incl. 3.14.
-fonttools>=4.40.0
 
 # ─────────────────────────────────────────────────────────────
 # Dev / tests / 개발·테스트 (tests/test_theme_init.py)
