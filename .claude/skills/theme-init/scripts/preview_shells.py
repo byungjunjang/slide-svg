@@ -1,17 +1,20 @@
 #!/usr/bin/env python3
-"""Render the composed shells to reviewable PNGs for the Step 5 review checkpoint.
+"""Build a single self-contained HTML preview for the /theme-init approval gate.
 
-/theme-init Step 5 ("Shell Composition") is gated on a render-first review: the
-agent composes `_shell_src/`, render_layouts.py produces the final shells, then
-this script fills the content placeholders with neutral sample text and
-rasterizes each shell to a PNG so the agent (and user) see the ACTUAL composed
-geometry / band / typography — not an ASCII sketch. The agent then collects
-feedback, revises `_shell_src/`, and re-renders until approved.
+After the render chain finishes, this assembles ONE page
+(`templates/layouts/<theme>/_preview/index.html`) that shows:
 
-Rasterizer follows the project's documented fallback chain: cairosvg if present,
-else svglib + reportlab. Both are optional system deps (CLAUDE.md dual-mode
-note); if neither is installed the script writes the filled SVGs and tells the
-caller to open them in a browser instead.
+  1. a theme spec header — palette swatches + type scale from theme-active.json,
+  2. the four rendered boilerplate shells (cover / chapter / content / ending)
+     filled with neutral sample content, and
+  3. tokenized content-body samples (scripts/preview_samples/*.tpl.svg) rendered
+     in the active palette — so the user sees real body composition, not just
+     the shell frame.
+
+The SVG is inlined into the HTML, so the browser resolves the font chain itself
+(Pretendard -> Apple SD Gothic Neo -> Malgun Gothic -> Arial). That means Hangul
+renders correctly with NO rasterizer / fonttools dependency — the previous
+cairosvg/svglib tofu failure mode is gone by construction.
 
 Usage:
     python3 preview_shells.py
@@ -21,103 +24,27 @@ Usage:
 from __future__ import annotations
 
 import argparse
-import json
+import html
 import re
 import sys
 from pathlib import Path
 
+from _token_render import load_theme, render as render_tokens
+
 SKILL_ROOT = Path(__file__).resolve().parents[2] / "slide"
 DEFAULT_THEME = SKILL_ROOT / "references" / "theme-active.json"
 LAYOUTS_BASE = SKILL_ROOT / "templates" / "layouts"
-ASSETS_FONTS_DIR = Path(__file__).resolve().parents[4] / "assets" / "fonts"
+SAMPLES_DIR = Path(__file__).resolve().parent / "preview_samples"
 
 SHELL_FILES = ["01_cover.svg", "02_chapter.svg", "03_content.svg", "04_ending.svg"]
+SHELL_LABELS = {
+    "01_cover.svg": "Cover shell",
+    "02_chapter.svg": "Chapter divider shell",
+    "03_content.svg": "Content shell",
+    "04_ending.svg": "Ending shell",
+}
 
-
-def _ensure_static_ttf(var_ttf: Path) -> Path | None:
-    """Instance a (possibly variable) TTF to a static Regular-weight TTF and
-    cache it under the OS temp dir. reportlab/renderPM cannot rasterize the
-    bundled CFF/OTF weights, nor a raw variable font's glyphs (→ tofu); a static
-    glyf instance renders Hangul correctly. Returns the static path or None.
-    """
-    try:
-        import tempfile
-        from fontTools import ttLib  # type: ignore
-        from fontTools.varLib import instancer  # type: ignore
-    except Exception:
-        return None
-    cache_dir = Path(tempfile.gettempdir()) / "slide-svg-preview-fonts"
-    try:
-        cache_dir.mkdir(parents=True, exist_ok=True)
-        static = cache_dir / f"{var_ttf.stem}-static.ttf"
-        if static.exists() and static.stat().st_mtime >= var_ttf.stat().st_mtime:
-            return static
-        try:
-            f = ttLib.TTFont(str(var_ttf))
-            instancer.instantiateVariableFont(f, {"wght": 400}).save(str(static))
-        except Exception:
-            # Not a variable font (or instancing failed) — copy through as-is.
-            ttLib.TTFont(str(var_ttf)).save(str(static))
-        return static
-    except Exception:
-        return None
-
-
-def register_preview_fonts(theme: dict) -> str | None:
-    """Best-effort: make the svglib/reportlab fallback render Hangul instead of
-    tofu (□) in the Step 5 review PNGs.
-
-    Two things are required and easy to get wrong: (1) reportlab can't load the
-    bundled CFF/OTF weights or a raw variable TTF, so we instance a static TTF
-    (`_ensure_static_ttf`); (2) svglib IGNORES `pdfmetrics.registerFont` — its
-    text path resolves families through its own map, so we must call
-    `svglib.register_font`. cairosvg, when present, uses system fontconfig and
-    needs none of this. Returns the registered family name, or None when
-    svglib/fonttools or a usable .ttf is unavailable (then Hangul shows as □ and
-    the caller should point the reviewer at cairosvg / a browser).
-    """
-    try:
-        import svglib.svglib as svglib_mod  # type: ignore
-    except Exception:
-        return None
-    if not ASSETS_FONTS_DIR.is_dir():
-        return None
-    var_ttf = next(iter(sorted(ASSETS_FONTS_DIR.glob("*.ttf"))), None)
-    if var_ttf is None:
-        return None
-    static = _ensure_static_ttf(var_ttf)
-    if static is None:
-        return None
-    chain = (theme.get("typography") or {}).get("font-chain", "") or ""
-    families = [x.strip().strip("'\"") for x in chain.split(",") if x.strip()]
-    generic = {"sans-serif", "serif", "monospace", "arial"}
-    # The active theme's primary family (svglib resolves the first family) + a
-    # Pretendard alias as a CJK glyph source.
-    targets = [x for x in families if x.lower() not in generic][:1] + ["Pretendard"]
-    # svglib keys its FontMap by family + the RAW font-weight string, so a numeric
-    # weight in the SVG (font-weight="800") looks up "Family-800" — NOT "Family" or
-    # "Family-Bold". Even "400" becomes "Family-400". So register the static
-    # instance under every weight the active theme actually emits (plus
-    # normal/bold). One static instance backs all of them — preview weight is
-    # approximate, but Hangul renders for every text element instead of tofu.
-    typ = theme.get("typography") or {}
-    weights = {"normal", "bold"}
-    for scale in typ.values():
-        if isinstance(scale, dict) and scale.get("weight") is not None:
-            weights.add(str(scale["weight"]))
-    registered: str | None = None
-    for fam in dict.fromkeys(targets):
-        for weight in sorted(weights):
-            try:
-                svglib_mod.register_font(font_name=fam, font_path=str(static), weight=weight)
-                registered = registered or fam
-            except Exception:
-                pass
-    return registered
-
-# Neutral sample content so the composed shell reads as a real page. The body of
-# the content shell is intentionally left empty — Step 5 reviews the shell frame
-# (header / title / GM / footer / band), not body composition.
+# Neutral sample content so each shell reads as a real page.
 SAMPLE = {
     "EYEBROW": "강의 시리즈 · 01",
     "TITLE": "활성 테마 셸 구성 프리뷰",
@@ -141,42 +68,121 @@ SAMPLE = {
 
 
 def fill_sample(svg_text: str) -> str:
-    """Replace {{CONTENT}} placeholders with sample text; blank any leftovers."""
-    def sub(m: re.Match) -> str:
-        key = m.group(1)
-        return SAMPLE.get(key, "")
-    # Only non-TOKEN placeholders remain at this point (tokens were resolved by
-    # render_layouts); replace by exact key, default to empty string.
+    """Replace {{CONTENT}} placeholders with sample text; blank any leftovers.
+
+    Only non-TOKEN placeholders should remain when this runs (tokens are resolved
+    first). Replace by exact key from SAMPLE, default unknown keys to empty.
+    """
+    def sub(m: "re.Match") -> str:
+        return SAMPLE.get(m.group(1), "")
     return re.sub(r"\{\{([A-Z_]+)\}\}", sub, svg_text)
 
 
-def rasterize(svg_text: str, svg_path: Path, png_path: Path) -> str | None:
-    """Write filled SVG, rasterize to PNG. Returns renderer name or None."""
-    svg_path.write_text(svg_text, encoding="utf-8")
-    try:
-        import cairosvg  # type: ignore
-        cairosvg.svg2png(bytestring=svg_text.encode("utf-8"),
-                         write_to=str(png_path), output_width=1280, output_height=720)
-        return "cairosvg"
-    except ImportError:
-        pass
-    except Exception as e:  # missing native cairo lib, malformed SVG, etc.
-        print(f"  cairosvg unavailable on {svg_path.name}: {str(e).splitlines()[0]}", file=sys.stderr)
-    try:
-        from svglib.svglib import svg2rlg  # type: ignore
-        from reportlab.graphics import renderPM  # type: ignore
-        drawing = svg2rlg(str(svg_path))
-        if drawing is not None:
-            renderPM.drawToFile(drawing, str(png_path), fmt="PNG")
-            return "svglib"
-    except ImportError:
-        pass
-    except Exception as e:
-        print(f"  svglib unavailable on {svg_path.name}: {str(e).splitlines()[0]}", file=sys.stderr)
-    return None
+def _swatches_html(theme: dict) -> str:
+    colors = theme.get("colors") or {}
+    cells = []
+    for name, val in colors.items():
+        if not isinstance(val, str) or not val.startswith("#"):
+            continue
+        label = html.escape(f"{name}  {val}")
+        cells.append(
+            f'<div class="swatch"><span class="chip" style="background:{html.escape(val)}">'
+            f'</span><code>{label}</code></div>'
+        )
+    return "\n".join(cells)
 
 
-def main(argv: list[str] | None = None) -> int:
+def _typescale_html(theme: dict) -> str:
+    typ = theme.get("typography") or {}
+    rows = []
+    for name, scale in typ.items():
+        if not isinstance(scale, dict):
+            continue
+        size = scale.get("size")
+        weight = scale.get("weight")
+        if size is None:
+            continue
+        rows.append(
+            f'<tr><td>{html.escape(str(name))}</td>'
+            f'<td>{html.escape(str(size))}</td>'
+            f'<td>{html.escape(str(weight))}</td></tr>'
+        )
+    if not rows:
+        return ""
+    return ("<table class=\"typescale\"><thead><tr><th>tier</th><th>size</th>"
+            "<th>weight</th></tr></thead><tbody>" + "".join(rows) + "</tbody></table>")
+
+
+def _shell_cards(layouts_dir: Path) -> "tuple[list[str], list[str]]":
+    """Return (card-html list, missing-shell list) for the 4 rendered shells."""
+    cards, missing = [], []
+    for shell in SHELL_FILES:
+        src = layouts_dir / shell
+        if not src.exists():
+            missing.append(shell)
+            continue
+        svg = fill_sample(src.read_text(encoding="utf-8"))
+        label = html.escape(SHELL_LABELS.get(shell, shell))
+        cards.append(f'<figure class="page"><figcaption>{label}</figcaption>'
+                     f'<div class="frame">{svg}</div></figure>')
+    return cards, missing
+
+
+def _sample_cards(theme: dict) -> "list[str]":
+    """Render content-body samples: tokens first, then content placeholders."""
+    cards = []
+    for src in sorted(SAMPLES_DIR.glob("*.tpl.svg")):
+        svg = fill_sample(render_tokens(src.read_text(encoding="utf-8"), theme))
+        label = html.escape(src.stem.replace("_", " ") + " (sample content)")
+        cards.append(f'<figure class="page"><figcaption>{label}</figcaption>'
+                     f'<div class="frame">{svg}</div></figure>')
+    return cards
+
+
+def build_preview_html(theme: dict, layouts_dir: Path) -> "tuple[str, list[str]]":
+    """Assemble the self-contained preview page. Returns (html, missing_shells)."""
+    name = html.escape(str(theme.get("display_name") or theme.get("name") or "theme"))
+    accent = html.escape(str((theme.get("colors") or {}).get("accent", "")))
+    shell_cards, missing = _shell_cards(layouts_dir)
+    sample_cards = _sample_cards(theme)
+    doc = f"""<!doctype html>
+<html lang="ko"><head><meta charset="utf-8">
+<title>{name} — theme preview</title>
+<style>
+  body {{ margin:0; padding:32px; background:#11151a0d; font-family:system-ui,sans-serif; }}
+  h1 {{ font-size:22px; margin:0 0 4px; }}
+  .sub {{ color:#666; margin:0 0 24px; }}
+  .spec {{ display:flex; gap:32px; flex-wrap:wrap; margin-bottom:32px; }}
+  .swatches {{ display:flex; gap:12px; flex-wrap:wrap; }}
+  .swatch {{ display:flex; align-items:center; gap:8px; }}
+  .chip {{ width:28px; height:28px; border-radius:6px; border:1px solid #0002; display:inline-block; }}
+  code {{ font-size:12px; color:#333; }}
+  table.typescale {{ border-collapse:collapse; font-size:13px; }}
+  table.typescale th, table.typescale td {{ border:1px solid #ddd; padding:3px 10px; text-align:left; }}
+  .grid {{ display:grid; grid-template-columns:1fr 1fr; gap:24px; }}
+  figure.page {{ margin:0; }}
+  figcaption {{ font-size:13px; color:#555; margin-bottom:6px; }}
+  .frame {{ border:1px solid #ccc; box-shadow:0 1px 4px #0001; background:#fff; }}
+  .frame svg {{ display:block; width:100%; height:auto; }}
+  .missing {{ color:#b00; font-size:13px; }}
+  h2 {{ font-size:15px; margin:32px 0 12px; color:#444; }}
+</style></head><body>
+<h1>{name} — theme preview</h1>
+<p class="sub">활성 액센트 {accent} · 아래 셸과 샘플을 확인하고 승인/피드백을 주세요.</p>
+<div class="spec">
+  <div><strong>Palette</strong><div class="swatches">{_swatches_html(theme)}</div></div>
+  <div><strong>Type scale</strong>{_typescale_html(theme)}</div>
+</div>
+<h2>Boilerplate shells</h2>
+<div class="grid">{''.join(shell_cards)}</div>
+<h2>Sample content layouts</h2>
+<div class="grid">{''.join(sample_cards)}</div>
+{('<p class="missing">missing shells: ' + ', '.join(missing) + '</p>') if missing else ''}
+</body></html>"""
+    return doc, missing
+
+
+def main(argv: "list[str] | None" = None) -> int:
     ap = argparse.ArgumentParser(description=__doc__.splitlines()[0])
     ap.add_argument("--theme", type=Path, default=DEFAULT_THEME)
     ap.add_argument("--layouts-dir", type=Path, default=None)
@@ -185,10 +191,7 @@ def main(argv: list[str] | None = None) -> int:
     if not args.theme.exists():
         print(f"error: theme file not found: {args.theme}", file=sys.stderr)
         return 2
-    theme = json.loads(args.theme.read_text(encoding="utf-8"))
-    # Register a Hangul-capable font for the svglib fallback BEFORE rasterizing
-    # (no-op when cairosvg is present or no usable .ttf / fonttools is available).
-    font_family = register_preview_fonts(theme)
+    theme = load_theme(args.theme)
     layouts_dir = args.layouts_dir or (LAYOUTS_BASE / theme.get("name"))
     if not layouts_dir.is_dir():
         print(f"error: layout dir not found: {layouts_dir}", file=sys.stderr)
@@ -196,64 +199,16 @@ def main(argv: list[str] | None = None) -> int:
 
     preview_dir = layouts_dir / "_preview"
     preview_dir.mkdir(parents=True, exist_ok=True)
+    doc, missing = build_preview_html(theme, layouts_dir)
+    out = preview_dir / "index.html"
+    out.write_text(doc, encoding="utf-8")
 
-    pngs: list[Path] = []
-    svgs: list[Path] = []
-    renderer: str | None = None
-    for shell in SHELL_FILES:
-        src = layouts_dir / shell
-        if not src.exists():
-            print(f"  skip {shell}: not rendered yet", file=sys.stderr)
-            continue
-        filled = fill_sample(src.read_text(encoding="utf-8"))
-        stem = shell.replace(".svg", "")
-        svg_out = preview_dir / f"{stem}.svg"
-        png_out = preview_dir / f"{stem}.png"
-        r = rasterize(filled, svg_out, png_out)
-        svgs.append(svg_out)
-        if r:
-            renderer = r
-            pngs.append(png_out)
-
-    # Optional 2×2 montage when PNGs + PIL are available.
-    montage = None
-    if len(pngs) == 4:
-        try:
-            from PIL import Image  # type: ignore
-            tiles = [Image.open(p) for p in pngs]
-            w, h = tiles[0].size
-            board = Image.new("RGB", (w * 2, h * 2), "white")
-            for i, t in enumerate(tiles):
-                board.paste(t, ((i % 2) * w, (i // 2) * h))
-            montage = preview_dir / "shells.png"
-            board.save(montage)
-        except Exception:
-            montage = None
-
-    print(f"\n[preview_shells] preview written to {preview_dir}")
-    if renderer:
-        print(f"  renderer: {renderer}")
-        if renderer == "svglib":
-            if font_family:
-                print(f"  Hangul font registered for svglib: {font_family} (static instance)")
-            else:
-                print("  note: Hangul may render as □ (no svglib/fonttools or usable .ttf). "
-                      "For a faithful preview: pip install cairosvg, or open the filled SVGs "
-                      "in a browser (they carry the full font chain).")
-        for p in pngs:
-            print(f"  PNG: {p}")
-        if montage:
-            print(f"  montage (2×2): {montage}")
-        print("  → Read the montage (or per-shell PNGs) to review the composition, "
-              "then present it to the user for the Step 5 checkpoint.")
-    else:
-        print("  no SVG rasterizer (cairosvg / svglib) available — Step 5c PNG review is degraded.")
-        print("  → install one and re-run for PNG thumbnails:  pip install cairosvg")
-        print("     (or: pip install -r .claude/skills/slide/requirements.txt)")
-        print("  meanwhile, open the filled SVGs in a browser:")
-        for p in svgs:
-            print(f"  SVG: {p}")
-        print(f"  e.g.  python3 -m http.server -d {preview_dir} 8000")
+    print(f"\n[preview_shells] preview written to {out}")
+    if missing:
+        print(f"  note: {len(missing)} shell(s) not rendered yet: {', '.join(missing)}")
+    print("  -> open it for the Step 6.5 approval gate:")
+    print(f"     python3 -m http.server -d {preview_dir} 8000   # then http://localhost:8000/")
+    print("  (or open the file directly in a browser — it is self-contained)")
     return 0
 
 
