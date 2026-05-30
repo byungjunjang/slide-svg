@@ -5,13 +5,10 @@ PPT Master - Unified Configuration Management Module
 Centrally manages all project configuration items to ensure consistency and maintainability.
 
 Usage:
-    from config import Config, CANVAS_FORMATS, DESIGN_COLORS
+    from config import Config, CANVAS_FORMATS
 
     # Get canvas format
     ppt169 = Config.get_canvas_format('ppt169')
-
-    # Get color scheme
-    colors = Config.get_color_scheme('consulting')
 """
 
 from pathlib import Path
@@ -117,87 +114,6 @@ CANVAS_FORMATS = {
         'height': 1754,
         'aspect_ratio': '√2:1',
         'use_case': 'Print documents, PDF export'
-    }
-}
-
-
-# ============================================================
-# Design Color Configuration
-# ============================================================
-#
-# DEPRECATED / LEGACY (ppt-master upstream). No code imports DESIGN_COLORS,
-# DESIGN_FONTS, get_color_scheme, or get_design_colors — the active visual
-# language now comes entirely from references/theme-active.json (single-accent
-# lock) via the /theme-init render chain. These palettes (consulting/general/…)
-# predate the Jangpm single-theme model and are kept only to avoid touching the
-# shared config module; do not wire new code to them.
-
-DESIGN_COLORS = {
-    'consulting': {
-        'name': 'Consulting Style',
-        'primary': '#005587',
-        'secondary': '#0076A8',
-        'accent': '#F5A623',
-        'success': '#27AE60',
-        'warning': '#E74C3C',
-        'text_dark': '#1A252F',
-        'text_light': '#FFFFFF',
-        'text_muted': '#7F8C8D',
-        'background': '#FFFFFF',
-        'background_alt': '#F8F9FA'
-    },
-    'general': {
-        'name': 'General Flexible Style',
-        'primary': '#2196F3',
-        'secondary': '#4CAF50',
-        'accent': '#FF9800',
-        'purple': '#9C27B0',
-        'success': '#27AE60',
-        'warning': '#E74C3C',
-        'text_dark': '#2C3E50',
-        'text_light': '#FFFFFF',
-        'text_muted': '#7F8C8D',
-        'background': '#FFFFFF',
-        'background_alt': '#F8F9FA'
-    },
-    'tech': {
-        'name': 'Tech Style',
-        'primary': '#00D1FF',
-        'secondary': '#7B61FF',
-        'accent': '#00FF88',
-        'success': '#00FF88',
-        'warning': '#FF6B6B',
-        'text_dark': '#0A0E17',
-        'text_light': '#FFFFFF',
-        'text_muted': '#8892A0',
-        'background': '#0A0E17',
-        'background_alt': '#1A1F2E'
-    },
-    'academic': {
-        'name': 'Academic Style',
-        'primary': '#8B0000',
-        'secondary': '#1E3A5F',
-        'accent': '#C9B037',
-        'success': '#2E7D32',
-        'warning': '#D32F2F',
-        'text_dark': '#1A1A1A',
-        'text_light': '#FFFFFF',
-        'text_muted': '#666666',
-        'background': '#FFFFFF',
-        'background_alt': '#F5F5F5'
-    },
-    'government': {
-        'name': 'Government Style',
-        'primary': '#C41E3A',
-        'secondary': '#1E3A5F',
-        'accent': '#D4AF37',
-        'success': '#2E7D32',
-        'warning': '#B71C1C',
-        'text_dark': '#1A1A1A',
-        'text_light': '#FFFFFF',
-        'text_muted': '#555555',
-        'background': '#FFFFFF',
-        'background_alt': '#FFF8E1'
     }
 }
 
@@ -365,19 +281,6 @@ class Config:
         return CANVAS_FORMATS.copy()
 
     @staticmethod
-    def get_color_scheme(style: str) -> Optional[Dict]:
-        """
-        Get color scheme.
-
-        Args:
-            style: Style name (e.g. 'consulting', 'general', 'tech')
-
-        Returns:
-            Color scheme dict
-        """
-        return DESIGN_COLORS.get(style)
-
-    @staticmethod
     def get_layout_margins(format_key: str) -> Optional[Dict]:
         """
         Get layout margin configuration.
@@ -454,7 +357,6 @@ class Config:
         """
         config_data = {
             'canvas_formats': CANVAS_FORMATS,
-            'design_colors': DESIGN_COLORS,
             'fonts': FONTS,
             'font_sizes': FONT_SIZES,
             'svg_constraints': SVG_CONSTRAINTS
@@ -478,7 +380,6 @@ def main() -> None:
         print("PPT Master - Configuration Management Tool\n")
         print("Usage:")
         print("  python3 scripts/config.py list-formats     # List all canvas formats")
-        print("  python3 scripts/config.py list-colors      # List all color schemes")
         print("  python3 scripts/config.py export           # Export configuration to JSON")
         print("  python3 scripts/config.py format <key>     # View a specific canvas format")
         return
@@ -490,11 +391,6 @@ def main() -> None:
         for key, info in CANVAS_FORMATS.items():
             print(
                 f"  {key:15} | {info['name']:15} | {info['dimensions']:12} | {info['use_case']}")
-
-    elif command == 'list-colors':
-        print("\nColor Scheme List:\n")
-        for key, info in DESIGN_COLORS.items():
-            print(f"  {key:12} | {info['name']:15} | Primary: {info['primary']}")
 
     elif command == 'export':
         output_file = sys.argv[2] if len(
