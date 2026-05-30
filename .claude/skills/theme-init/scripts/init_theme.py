@@ -22,7 +22,8 @@ Steps:
    10. render_design_md.py    — render DESIGN.md skeleton for slide-plan
                                 (skipped if target file already exists; --force
                                  to overwrite hand-authored content)
-   11. preview_shells.py      — NON-fatal: rasterize shells for Step 5 review
+   11. preview_shells.py      — NON-fatal: build _preview/index.html for the
+                                Step 6.5 final-approval gate (4 shells + samples)
 
 Usage:
     # Agent wrote theme-active.json directly; run validate + full render:
@@ -193,9 +194,10 @@ def main() -> int:
             return 1
         _run(step, [sys.executable, str(path)] + extra)
 
-    # preview_shells is NON-fatal: it rasterizes the rendered shells for the
-    # Step 5 review checkpoint. Missing rasterizer (cairosvg/svglib) just yields
-    # filled SVGs to open in a browser — never a reason to fail the init.
+    # preview_shells is NON-fatal: it builds the single-page HTML approval
+    # preview (_preview/index.html). The browser renders the inlined SVG with
+    # the real font chain, so there is no rasterizer dependency — never a
+    # reason to fail the init.
     preview = SCRIPTS_DIR / "preview_shells.py"
     if preview.exists():
         print(f"\n=== preview_shells (non-fatal) ===")
@@ -203,8 +205,11 @@ def main() -> int:
 
     print(f"\n=== /theme-init complete ===")
     print(f"active theme: {after.get('display_name')} ({after.get('name')})")
-    print(f"tests to verify:")
-    print(f"  - python3 -m http.server -d .claude/skills/slide/references/jangpm-patterns 8000")
+    print(f"BLOCKING — Step 6.5 final approval:")
+    print(f"  - open templates/layouts/{after.get('name')}/_preview/index.html")
+    print(f"    (python3 -m http.server -d templates/layouts/{after.get('name')}/_preview 8000)")
+    print(f"  - present it to the user; wait for approval or feedback before done")
+    print(f"further checks:")
     print(f"  - generate a sample deck via /slide and confirm 5-page smoke build")
     return 0
 
