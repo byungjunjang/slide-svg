@@ -1881,3 +1881,9 @@ Use `.insight-bar` as a closing takeaway at the bottom of content slides. It rep
 | Position | Absolute bottom, border-top | Flex mt-auto, rounded card |
 | Purpose | Running commentary | Key takeaway |
 | Use frequency | Every content slide | Select slides with strong conclusions |
+
+---
+
+## Diagram Family (native SVG — see references/diagram-types.md)
+
+Beyond the chart / section / card patterns above, **diagrams** (architecture, flowchart, sequence, state, ER, timeline, swimlane, quadrant, nested, tree, org chart, layers, venn, pyramid) are a distinct layout family. For diagram slides, select a type and follow the grammar in `references/diagram-types.md` (theme-agnostic, strict SVG subset). It counts as its own family for the no-consecutive-identical / family-diversity rules above. Deep per-type conventions live in `.claude/skills/diagram-design/references/type-*.md`.

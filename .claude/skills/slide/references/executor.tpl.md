@@ -347,6 +347,16 @@ Extract layout coordinates, card structure, spacing rhythm as creative reference
 
 Full index: `templates/charts/charts_index.json` (56 chart types).
 
+### Diagrams (system / relationship / process visuals)
+
+When a slide's job is a **diagram** — architecture, flowchart, sequence, state machine, ER, timeline, swimlane, quadrant, nested, tree, org chart, layer stack, venn, pyramid — rather than a Chart.js chart, consult `references/diagram-types.md`:
+
+1. Pick the type from its §1 selection guide (if a table/paragraph says the same thing, don't draw).
+2. Obey that type's complexity budget + the single-accent focal rule (≤ 2 accent nodes).
+3. Emit native SVG per the §3 adaptation rules (inline attrs only, `<marker>` arrows, 4px grid, region on 1280×720, `.gm` line intact). Deep per-type conventions live in `.claude/skills/diagram-design/references/type-*.md`.
+
+This is the diagram counterpart to the chart handling above. It does NOT produce standalone HTML.
+
 ---
 
 ## 8. Image Handling

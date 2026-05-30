@@ -58,6 +58,7 @@ slide-svg/
 ├── README.md                          ← 짧은 프로젝트 README
 ├── LICENSE                            ← 프로젝트 MIT (Byungjun Jang)
 ├── LICENSE-ppt-master                 ← 업스트림 ppt-master MIT 고지 (MIT 의무 보존)
+├── LICENSE-diagram-design             ← 업스트림 diagram-design MIT 고지 (벤더링; MIT 의무 보존)
 ├── .gitignore, .env.example
 ├── .claude/
 │   ├── settings.json                  ← 스크립트 실행 allow-list
@@ -65,6 +66,7 @@ slide-svg/
 │       ├── slide-plan/                ← 선택적 plan 스킬 (체계적인 데크용)
 │       │   ├── SKILL.md               ← deck_type/arc/role/chart 어휘 + Layer 1 R1–R5
 │       │   └── scripts/validate_plan.py ← R1/R2/R4/R5 + enum + 진단 비율 검증기
+│       ├── diagram-design/           ← 벤더링된 다이어그램 레퍼런스 라이브러리 (lean clone, MIT). /slide가 슬라이드 다이어그램에 소비 (로컬 전용, claude.ai 번들 미포함)
 │       ├── slide/
 │       ├── SKILL.md                   ← 스킬 엔트리 (활성 테마 락, 직렬 파이프라인, dual-mode)
 │       ├── requirements.txt           ← 파이썬 런타임 의존성 (`pip install -r`)
@@ -78,6 +80,7 @@ slide-svg/
 │       │   ├── chart-rhetorical-roles.md ← 9 차트 수사적 역할 × charts_index.json 매핑 (slide-plan SSOT)
 │       │   ├── slide-role-enum.md     ← slide_role enum + deck_type별 확장 + 진단 비율 (slide-plan SSOT)
 │       │   ├── patterns.md            ← 30+ 레이아웃 패턴 레지스트리
+│       │   ├── diagram-types.md       ← 14종 다이어그램 타입 문법 브리지 (테마 비종속, strict SVG subset; Executor가 다이어그램 슬라이드에서 참조)
 │       │   ├── skeleton.md            ← HTML 프리뷰 스켈레톤
 │       │   ├── libraries.md           ← Reveal.js / Chart.js / Mermaid / Lucide
 │       │   ├── visual-assets.md       ← 일러스트 스타일
@@ -113,6 +116,10 @@ slide-svg/
     ├── faq.md
     └── technical-design.md
 ```
+
+## 다이어그램
+
+시스템·관계·프로세스 시각물(architecture / flowchart / sequence / state / ER / timeline / swimlane / quadrant / nested / tree / org / layers / venn / pyramid)은 `/slide` Executor가 `references/diagram-types.md`를 참조해 **네이티브 DrawingML SVG**로 그린다. 이 브리지는 벤더링된 `.claude/skills/diagram-design/`(lean clone, MIT — `cathrynlavery/diagram-design`) 레퍼런스 라이브러리의 14종 타입 관례를 strict SVG subset(`shared-standards.md`) + 활성 테마 토큰으로 재서술한 것이다. **슬라이드 전용** — 독립 HTML 출력은 쓰지 않으며(네이티브 파이프라인 락), 이미지 플래튼도 금지. 브리지는 테마 비종속이라 `/theme-init` 교체에도 그대로 유지된다. 깊은 타입별 관례는 `.claude/skills/diagram-design/references/type-*.md`. (기존 Mermaid 경로는 HTML 프리뷰 전용으로 유지 — `libraries.md`.)
 
 ## SVG 기술 제약 (요약)
 

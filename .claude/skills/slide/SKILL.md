@@ -542,6 +542,7 @@ Before switching roles, you **MUST first read** the corresponding reference file
 | Anti-slop structural rules (theme-agnostic) | `references/anti-slop-core.md` |
 | Anti-slop theme literals (regenerated on /theme-init) | `references/anti-slop-theme.md` |
 | Layout pattern registry (30+ patterns) | `references/patterns.md` |
+| Diagram type grammar (14 types, native SVG) | `references/diagram-types.md` |
 | HTML skeleton (for preview mode) | `references/skeleton.md` |
 | Library usage (Reveal.js, Chart.js, Mermaid, Lucide) | `references/libraries.md` |
 | Visual assets (illustration style) | `references/visual-assets.md` |
