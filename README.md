@@ -107,7 +107,7 @@ codex login status                 # "Logged in using ChatGPT" 표시되면 끝
 **스킬 위치:** `.claude/skills/codex-image/` (이 저장소에 vendored. 업스트림: [wjb127/codex-image](https://github.com/wjb127/codex-image))
 **비용:** ChatGPT Plus/Team/Enterprise 계정의 OpenAI 사용량에 청구 (`1024x1024 high` ≈ $0.04, `1024x1536 high` ≈ $0.06).
 
-codex-image preflight(`codex login status`)가 실패하면 슬라이드는 **네이티브 도형 + SVG 일러스트**로만 생성됩니다 (Jangpm 기본 동작에서도 임팩트 있는 데크가 됩니다). 필요하면 프롬프트가 `images/image_prompts.md`에 그대로 남으므로 다른 도구로 직접 만들어 슬롯에 떨궈도 됩니다.
+codex-image preflight(`codex login status`)가 실패하면 **AI 이미지 슬롯이 필요한 덱은 HALT**하고 `codex login`을 안내합니다. 이미지 슬롯이 없는 덱만 네이티브 도형 + SVG 다이어그램으로 계속 진행할 수 있습니다. placeholder, 단색 이미지, 다른 이미지 백엔드로 silent fallback 하지 않습니다.
 
 ---
 
@@ -204,7 +204,8 @@ This repo runs on both Claude Code and Codex (cloud/web).
   generated `.codex/skills/` mirror and enforces the same pipeline + gates.
 
 `.claude/skills/` is the single source of truth. `.codex/skills/` is generated —
-**never hand-edit it.** After editing any skill, regenerate the mirror:
+**never hand-edit it.** The mirror root includes `_GENERATED.md` as a reminder.
+After editing any skill, regenerate the mirror:
 
     .claude/skills/slide/scripts/_py.sh .claude/skills/slide/scripts/dev/sync_codex_mirror.py
 

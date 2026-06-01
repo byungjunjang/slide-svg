@@ -11,7 +11,8 @@ pipeline). Read it. These rules add Codex-side enforcement on top.
 ## Skill source (generated mirror)
 
 - **`.claude/skills/` is canonical. `.codex/skills/` is a generated mirror** —
-  byte-identical except `.claude/skills` paths are rewritten to `.codex/skills`.
+  byte-identical except `.claude/skills` paths are rewritten to `.codex/skills`
+  and the mirror root has a generated-marker file.
 - **Never hand-edit `.codex/skills/`.** Edit `.claude/skills/`, then run
   `python3 .claude/skills/slide/scripts/dev/sync_codex_mirror.py`.
 
@@ -24,6 +25,10 @@ When the user asks for slides ("슬라이드", "프레젠테이션", "생성PPT"
    `.codex/skills/slide/scripts/_py.sh .codex/skills/slide/scripts/preflight.py`
    (add `--needs-images` if the deck needs generated images). If it fails, STOP
    and fix the environment. Do not proceed with a broken toolchain.
+   First-time setup: run
+   `python3 -m pip install -r .claude/skills/slide/requirements.txt`; for image
+   decks install `@openai/codex`, run `codex login`, then confirm
+   `codex login status`.
 2. **Execute `.codex/skills/slide/SKILL.md` step by step.** Do NOT summarize it
    and improvise. **Forbidden:** reimplementing the pipeline yourself (hand-built
    PPTX, ad-hoc React/HTML, placeholder images). If a step's tool is unavailable,

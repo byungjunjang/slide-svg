@@ -13,7 +13,7 @@
 - **Claude Code 로컬**: 풀 라이브러리 모드. `.claude/skills/slide/` + 외부 `assets/icons/` (Tabler 6000+) + `assets/fonts/` (Pretendard) 모두 사용. 성능·완성도 100%.
 - **claude.ai 업로드**: essentials 모드. `.claude/skills/slide/scripts/_py.sh .claude/skills/slide/scripts/package_for_claude_ai.py`로 묶은 `output/slide-skill-claude-ai.zip`을 업로더에 드래그. 외부 `assets/icons/`는 번들에 포함 안 됨 — 스킬 안에 동봉된 ~20개 essentials 아이콘만 인라인되고 그 외는 graceful skip(`[WARN] Icon not found`). 폰트는 기본 미동봉 (claude.ai 환경엔 폰트 설치 권한 없어 데드웨이트). `/theme-init`은 새 디자인을 굽는 용도라 Claude Code 로컬 전용, `/upload-drive`는 Google 인증 필요해 로컬 전용.
 
-**듀얼 호스트 (Claude Code · Codex)**: Codex(클라우드/웹)는 루트 `AGENTS.md`를 읽어 생성형 `.codex/skills` 미러로 같은 파이프라인을 실행한다. `.claude/skills`가 정본이고 `.codex/skills`는 `sync_codex_mirror.py` 생성물이므로 손으로 편집하지 말 것. 설계: `docs/superpowers/specs/2026-06-01-codex-dual-host-design.md`.
+**듀얼 호스트 (Claude Code · Codex)**: Codex(클라우드/웹)는 루트 `AGENTS.md`를 읽어 생성형 `.codex/skills` 미러로 같은 파이프라인을 실행한다. `.claude/skills`가 정본이고 `.codex/skills`는 `sync_codex_mirror.py` 생성물이므로 손으로 편집하지 말 것.
 
 ## 핵심 제약 (non-negotiable)
 
@@ -113,10 +113,7 @@ slide-svg/
 ├── assets/
 │   ├── fonts/                         ← 공유 폰트 풀 (Pretendard 9 OTF + variable). theme-init이 이 디렉터리를 스캔해 @font-face를 동적 생성하고, 활성 테마의 primary 폰트가 없으면 Arial로 폴백
 │   └── icons/                         ← Tabler 풀 라이브러리 (tabler-outline/ 5000+ · tabler-filled/ 1000+ · icons_index.txt). Claude Code 전용 — 너무 커서 claude.ai 업로드 번들에 포함 안 됨
-├── output/                            ← 사용자 워크스페이스 (프로젝트 폴더는 주제명만, 예: `claude-mythos/`)
-└── docs/
-    ├── faq.md
-    └── technical-design.md
+└── output/                            ← 사용자 워크스페이스 (프로젝트 폴더는 주제명만, 예: `claude-mythos/`)
 ```
 
 ## 이미지 생성 백엔드
@@ -184,14 +181,11 @@ ls assets/icons/tabler-outline/ | grep <keyword>
 # 6d. dual-host 품질 게이트
 .claude/skills/slide/scripts/_py.sh .claude/skills/slide/scripts/preflight.py --needs-images
 .claude/skills/slide/scripts/_py.sh .claude/skills/slide/scripts/verify_deck.py output/<project>
-
-# 7. theme-init 파이프라인 회귀 테스트
-pytest tests/
 ```
 
 ## Troubleshooting
 
-`docs/faq.md`에 레이아웃 오버플로우, export 에러, 빈 이미지 등 알려진 이슈와 해결책. 실제 사용자 리포트 기반으로 지속 업데이트.
+레이아웃 오버플로우, export 에러, 빈 이미지 등 알려진 이슈는 GitHub Issues에서 보고·검색하세요.
 
 ## 참고
 

@@ -14,6 +14,7 @@ import argparse
 import re
 import subprocess
 import sys
+import zipfile
 from pathlib import Path
 
 HERE = Path(__file__).resolve().parent          # .../slide/scripts
@@ -22,6 +23,7 @@ SKILLS_DIR = HERE.parents[1]                     # .../skills (slide-plan lives 
 SYSTEMATIC_MIN_PAGES = 8
 GM_Y_RANGE = (655, 705)
 IMAGE_SUFFIXES = {".png", ".jpg", ".jpeg", ".webp"}
+NATIVE_SHAPE_TAGS = ("sp", "grpSp", "cxnSp", "graphicFrame")
 
 
 # ---- pure helpers -------------------------------------------------------
@@ -32,6 +34,60 @@ def _svgs(d: Path) -> list[Path]:
 
 def page_count(project: Path, sub: str) -> int:
     return len(_svgs(project / sub))
+
+
+def _pptx_files(project: Path) -> list[Path]:
+    """Find PPTX exports in the legacy root location and the current exports/ dir."""
+    paths = list(project.glob("*.pptx"))
+    exports_dir = project / "exports"
+    if exports_dir.is_dir():
+        paths.extend(exports_dir.glob("*.pptx"))
+    return sorted(set(paths))
+
+
+def _native_pptx_files(project: Path) -> list[Path]:
+    return [p for p in _pptx_files(project) if not p.stem.endswith("_svg")]
+
+
+def _tag_count(xml: str, local_name: str) -> int:
+    return len(re.findall(rf"<(?:\w+:)?{re.escape(local_name)}\b", xml))
+
+
+def validate_native_pptx(path: Path) -> list[str]:
+    """Validate a PPTX is readable and contains editable DrawingML per slide.
+
+    The exporter writes two decks by default: the primary native deck and a
+    *_svg reference deck. This check is intentionally focused on the native deck:
+    every slide must contain at least one editable DrawingML shape/table/group,
+    not only <p:pic> image nodes.
+    """
+    failures: list[str] = []
+    try:
+        with zipfile.ZipFile(path) as zf:
+            bad_member = zf.testzip()
+            if bad_member:
+                return [f"corrupt zip member: {bad_member}"]
+            slide_names = sorted(
+                n for n in zf.namelist()
+                if re.fullmatch(r"ppt/slides/slide\d+\.xml", n)
+            )
+            if not slide_names:
+                return ["no ppt/slides/slide*.xml entries"]
+            flattened: list[str] = []
+            for name in slide_names:
+                xml = zf.read(name).decode("utf-8", errors="replace")
+                native_count = sum(_tag_count(xml, tag) for tag in NATIVE_SHAPE_TAGS)
+                if native_count == 0:
+                    pic_count = _tag_count(xml, "pic")
+                    suffix = " (image-only)" if pic_count else ""
+                    flattened.append(f"{Path(name).name}{suffix}")
+            if flattened:
+                failures.append("slides lack editable DrawingML: " + ", ".join(flattened))
+    except zipfile.BadZipFile:
+        failures.append("not a valid PPTX zip")
+    except OSError as e:
+        failures.append(f"unreadable PPTX: {e}")
+    return failures
 
 
 def svg_has_gm(svg_text: str) -> bool:
@@ -57,9 +113,8 @@ def svg_canvas_ok(svg_text: str) -> bool:
 def image_is_placeholder(path: Path, min_bytes: int = 12_000, min_std: float = 6.0) -> bool:
     """Tiny OR near-uniform image ⇒ placeholder/degenerate.
 
-    A missing image-processing library is an environment problem (preflight owns
-    that check), not a deck failure — so ImportError yields False (cannot assess)
-    rather than a false flag. A missing/unreadable image file still returns True.
+    A missing image-processing library is an environment problem. Treat it as a
+    verification failure rather than allowing placeholder art to pass silently.
     """
     try:
         if path.stat().st_size < min_bytes:
@@ -70,7 +125,7 @@ def image_is_placeholder(path: Path, min_bytes: int = 12_000, min_std: float = 6
         from PIL import Image
         import numpy as np
     except ImportError:
-        return False  # cannot assess without PIL/numpy; preflight owns this check
+        return True
     try:
         with Image.open(path) as im:
             arr = np.asarray(im.convert("RGB"), dtype="float32")
@@ -132,8 +187,25 @@ def run_checks(project: Path) -> list[str]:
         failures.append(f"svg_final/ ({n_fin}) != svg_output/ ({n_out}) — finalize incomplete")
 
     # 3. native pptx + SVG quality
-    if not sorted(project.glob("*.pptx")):
+    pptx_files = _pptx_files(project)
+    native_pptx_files = _native_pptx_files(project)
+    if not pptx_files:
         failures.append("no .pptx export — run svg_to_pptx.py <project> -s final")
+    elif not native_pptx_files:
+        failures.append("no native .pptx export — *_svg.pptx reference decks are not enough")
+    else:
+        pptx_errors = []
+        for pptx in native_pptx_files:
+            errs = validate_native_pptx(pptx)
+            if not errs:
+                break
+            try:
+                label = str(pptx.relative_to(project))
+            except ValueError:
+                label = str(pptx)
+            pptx_errors.append(f"{label}: {', '.join(errs)}")
+        else:
+            failures.append("native .pptx validation failed — " + "; ".join(pptx_errors))
     if _run_quality_checker(out) != 0:
         failures.append("svg_quality_checker reported errors on svg_output")
 
@@ -149,10 +221,10 @@ def run_checks(project: Path) -> list[str]:
     if pages:
         gm = sum(1 for p in pages
                  if svg_has_gm(p.read_text(encoding="utf-8", errors="replace")))
-        floor = max(1, len(pages) // 2)
+        floor = len(pages)
         if gm < floor:
             failures.append(f"governing-message lines missing: {gm}/{len(pages)} "
-                            f"pages carry a .gm (need >= {floor})")
+                            f"pages carry a .gm (need {floor}/{len(pages)})")
 
     # 6. canvas
     bad_canvas = [p.name for p in pages

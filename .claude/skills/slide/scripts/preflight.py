@@ -20,11 +20,12 @@ REQUIREMENTS = HERE.parent / "requirements.txt"
 # Auth-confirmation phrases emitted by `codex login status`. Heuristic on external
 # CLI output — extend this tuple if a future codex build changes its wording.
 LOGIN_OK_PHRASES = ("logged in", "authenticated", "authorized")
+REQUIRED_PYTHON_MODULES = ("pptx", "PIL", "numpy")
 
 
 def check_python_deps() -> list[str]:
     fails = []
-    for mod in ("pptx", "PIL"):
+    for mod in REQUIRED_PYTHON_MODULES:
         try:
             __import__(mod)
         except Exception:
