@@ -1,0 +1,242 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1280 720" width="1280" height="720">
+    
+    
+    <defs>
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+    </defs>
+    
+    
+    <rect width="1280" height="720" fill="#FFFFFF"/>
+    
+    
+    <text x="60" y="80" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif" 
+          font-size="32" font-weight="bold" fill="#1A1A1A">
+        <tspan>产品发展路线图</tspan>
+    </text>
+    
+    <text x="60" y="115" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif" 
+          font-size="18" fill="#6B7280">
+        <tspan>2024年 - 2026年 · 关键里程碑</tspan>
+    </text>
+    
+    
+    <g id="timeline">
+        
+        <line x1="120" y1="360" x2="1160" y2="360" stroke="#E5E7EB" stroke-width="6" stroke-linecap="round"/>
+        
+        
+        <defs>
+            
+        </defs>
+        <line x1="120" y1="360" x2="640" y2="360" stroke="#4633E3" stroke-width="6" stroke-linecap="round"/>
+        
+        
+        
+        
+        
+        <g id="milestone1">
+            <circle cx="120" cy="360" r="18" fill="#4633E3" fill-opacity="0.6" stroke="#FFFFFF" stroke-width="3"/>
+            <path d="M 115,360 L 118,365 L 125,355" stroke="#FFFFFF" stroke-width="2.5" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+            
+            
+            <rect x="40" y="190" width="160" height="120" rx="8" fill="#FFFFFF" stroke="#4633E3" stroke-opacity="0.6" stroke-width="2"/>
+            <text x="120" y="220" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif" 
+                  font-size="14" font-weight="600" fill="#4633E3" fill-opacity="0.6" text-anchor="middle">
+                <tspan>2024 Q1</tspan>
+            </text>
+            <text x="120" y="245" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif" 
+                  font-size="16" font-weight="bold" fill="#1A1A1A" text-anchor="middle">
+                <tspan>产品立项</tspan>
+            </text>
+            <text x="120" y="270" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif" 
+                  font-size="13" fill="#6B7280" text-anchor="middle">
+                <tspan>完成需求分析</tspan>
+            </text>
+            <text x="120" y="290" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif" 
+                  font-size="13" fill="#6B7280" text-anchor="middle">
+                <tspan>制定技术方案</tspan>
+            </text>
+            <line x1="120" y1="310" x2="120" y2="340" stroke="#4633E3" stroke-opacity="0.6" stroke-width="2" stroke-dasharray="4,4"/>
+        </g>
+        
+        
+        <g id="milestone2">
+            <circle cx="328" cy="360" r="18" fill="#4633E3" fill-opacity="0.6" stroke="#FFFFFF" stroke-width="3"/>
+            <path d="M 323,360 L 326,365 L 333,355" stroke="#FFFFFF" stroke-width="2.5" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+            
+            
+            <rect x="248" y="430" width="160" height="120" rx="8" fill="#FFFFFF" stroke="#4633E3" stroke-opacity="0.6" stroke-width="2"/>
+            <text x="328" y="460" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif" 
+                  font-size="14" font-weight="600" fill="#4633E3" fill-opacity="0.6" text-anchor="middle">
+                <tspan>2024 Q2</tspan>
+            </text>
+            <text x="328" y="485" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif" 
+                  font-size="16" font-weight="bold" fill="#1A1A1A" text-anchor="middle">
+                <tspan>MVP开发</tspan>
+            </text>
+            <text x="328" y="510" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif" 
+                  font-size="13" fill="#6B7280" text-anchor="middle">
+                <tspan>核心功能上线</tspan>
+            </text>
+            <text x="328" y="530" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif" 
+                  font-size="13" fill="#6B7280" text-anchor="middle">
+                <tspan>内测验证</tspan>
+            </text>
+            <line x1="328" y1="380" x2="328" y2="410" stroke="#4633E3" stroke-opacity="0.6" stroke-width="2" stroke-dasharray="4,4"/>
+        </g>
+        
+        
+        <g id="milestone3">
+            <circle cx="536" cy="360" r="18" fill="#4633E3" fill-opacity="0.6" stroke="#FFFFFF" stroke-width="3"/>
+            <path d="M 531,360 L 534,365 L 541,355" stroke="#FFFFFF" stroke-width="2.5" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+            
+            
+            <rect x="456" y="190" width="160" height="120" rx="8" fill="#FFFFFF" stroke="#4633E3" stroke-opacity="0.6" stroke-width="2"/>
+            <text x="536" y="220" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif" 
+                  font-size="14" font-weight="600" fill="#4633E3" fill-opacity="0.6" text-anchor="middle">
+                <tspan>2024 Q3</tspan>
+            </text>
+            <text x="536" y="245" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif" 
+                  font-size="16" font-weight="bold" fill="#1A1A1A" text-anchor="middle">
+                <tspan>公测上线</tspan>
+            </text>
+            <text x="536" y="270" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif" 
+                  font-size="13" fill="#6B7280" text-anchor="middle">
+                <tspan>开放用户注册</tspan>
+            </text>
+            <text x="536" y="290" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif" 
+                  font-size="13" fill="#6B7280" text-anchor="middle">
+                <tspan>用户达5000+</tspan>
+            </text>
+            <line x1="536" y1="310" x2="536" y2="340" stroke="#4633E3" stroke-opacity="0.6" stroke-width="2" stroke-dasharray="4,4"/>
+        </g>
+        
+        
+        <g id="milestone4">
+            <circle cx="744" cy="360" r="20" fill="#4633E3" stroke="#FFFFFF" stroke-width="3"/>
+            <circle cx="744" cy="360" r="8" fill="#FFFFFF"/>
+            
+            
+            <rect x="664" y="430" width="160" height="120" rx="8" fill="#FFFFFF" stroke="#4633E3" stroke-width="2"/>
+            <rect x="664" y="430" width="160" height="6" rx="3" fill="#4633E3"/>
+            <text x="744" y="460" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif" 
+                  font-size="14" font-weight="600" fill="#4633E3" text-anchor="middle">
+                <tspan>2024 Q4</tspan>
+            </text>
+            <text x="744" y="485" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif" 
+                  font-size="16" font-weight="bold" fill="#1A1A1A" text-anchor="middle">
+                <tspan>功能迭代</tspan>
+            </text>
+            <text x="744" y="510" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif" 
+                  font-size="13" fill="#6B7280" text-anchor="middle">
+                <tspan>AI功能集成</tspan>
+            </text>
+            <text x="744" y="530" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif" 
+                  font-size="13" fill="#6B7280" text-anchor="middle">
+                <tspan>多端适配</tspan>
+            </text>
+            <line x1="744" y1="380" x2="744" y2="410" stroke="#4633E3" stroke-width="2" stroke-dasharray="4,4"/>
+            
+            
+            <rect x="714" y="568" width="60" height="22" rx="11" fill="#4633E3"/>
+            <text x="744" y="583" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif" 
+                  font-size="12" font-weight="600" fill="#FFFFFF" text-anchor="middle">
+                <tspan>进行中</tspan>
+            </text>
+        </g>
+        
+        
+        <g id="milestone5">
+            <circle cx="952" cy="360" r="16" fill="#E5E7EB" stroke="#FFFFFF" stroke-width="3"/>
+            <circle cx="952" cy="360" r="6" fill="#FFFFFF"/>
+            
+            
+            <rect x="872" y="190" width="160" height="120" rx="8" fill="#FFFFFF" stroke="#E5E7EB" stroke-width="2"/>
+            <text x="952" y="220" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif" 
+                  font-size="14" font-weight="600" fill="#6B7280" text-anchor="middle">
+                <tspan>2025 Q2</tspan>
+            </text>
+            <text x="952" y="245" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif" 
+                  font-size="16" font-weight="bold" fill="#6B7280" text-anchor="middle">
+                <tspan>商业化</tspan>
+            </text>
+            <text x="952" y="270" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif" 
+                  font-size="13" fill="#6B7280" text-anchor="middle">
+                <tspan>会员体系上线</tspan>
+            </text>
+            <text x="952" y="290" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif" 
+                  font-size="13" fill="#6B7280" text-anchor="middle">
+                <tspan>启动推广</tspan>
+            </text>
+            <line x1="952" y1="310" x2="952" y2="340" stroke="#E5E7EB" stroke-width="2" stroke-dasharray="4,4"/>
+        </g>
+        
+        
+        <g id="milestone6">
+            <circle cx="1160" cy="360" r="16" fill="#E5E7EB" stroke="#FFFFFF" stroke-width="3"/>
+            <circle cx="1160" cy="360" r="6" fill="#FFFFFF"/>
+            
+            
+            <rect x="1080" y="430" width="160" height="120" rx="8" fill="#FFFFFF" stroke="#E5E7EB" stroke-width="2"/>
+            <text x="1160" y="460" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif" 
+                  font-size="14" font-weight="600" fill="#6B7280" text-anchor="middle">
+                <tspan>2026 Q1</tspan>
+            </text>
+            <text x="1160" y="485" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif" 
+                  font-size="16" font-weight="bold" fill="#6B7280" text-anchor="middle">
+                <tspan>规模化</tspan>
+            </text>
+            <text x="1160" y="510" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif" 
+                  font-size="13" fill="#6B7280" text-anchor="middle">
+                <tspan>国际化扩张</tspan>
+            </text>
+            <text x="1160" y="530" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif" 
+                  font-size="13" fill="#6B7280" text-anchor="middle">
+                <tspan>生态建设</tspan>
+            </text>
+            <line x1="1160" y1="380" x2="1160" y2="410" stroke="#E5E7EB" stroke-width="2" stroke-dasharray="4,4"/>
+        </g>
+    </g>
+    
+    
+    <g id="legend">
+        <circle cx="80" cy="635" r="10" fill="#4633E3" fill-opacity="0.6"/>
+        <path d="M 75,635 L 78,640 L 85,625" stroke="#FFFFFF" stroke-width="2" fill="none" stroke-linecap="round"/>
+        <text x="100" y="640" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif" 
+              font-size="14" fill="#6B7280">
+            <tspan>已完成</tspan>
+        </text>
+        
+        <circle cx="200" cy="635" r="10" fill="#4633E3"/>
+        <circle cx="200" cy="635" r="4" fill="#FFFFFF"/>
+        <text x="220" y="640" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif" 
+              font-size="14" fill="#6B7280">
+            <tspan>进行中</tspan>
+        </text>
+        
+        <circle cx="310" cy="635" r="10" fill="#E5E7EB"/>
+        <circle cx="310" cy="635" r="4" fill="#FFFFFF"/>
+        <text x="330" y="640" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif" 
+              font-size="14" fill="#6B7280">
+            <tspan>计划中</tspan>
+        </text>
+    </g>
+    
+    
+    <text x="60" y="695" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif" 
+          font-size="14" fill="#6B7280">
+        <tspan>数据来源: 产品管理部门</tspan>
+    </text>
+</svg>
+

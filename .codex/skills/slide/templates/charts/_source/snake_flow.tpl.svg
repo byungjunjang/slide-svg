@@ -1,0 +1,124 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1280 720" width="1280" height="720">
+    
+
+    <defs>
+        
+    </defs>
+
+    <rect width="1280" height="720" fill="{{TOKEN:colors.surface}}"/>
+
+    
+    <text x="640" y="55" text-anchor="middle" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif"
+          font-size="30" font-weight="700" fill="{{TOKEN:colors.text}}">客户生命周期旅程</text>
+    <text x="640" y="82" text-anchor="middle" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif"
+          font-size="14" fill="{{TOKEN:colors.text-secondary}}">Customer Journey · 8个关键触点的蛇形流程</text>
+
+    
+    
+    <line x1="195" y1="195" x2="1085" y2="195" stroke="{{TOKEN:colors.border}}" stroke-width="3" stroke-linecap="round"/>
+    
+    <path d="M 1085,195 Q 1140,195 1140,270 Q 1140,345 1085,345" stroke="{{TOKEN:colors.border}}" stroke-width="3" fill="none"/>
+    
+    <line x1="1085" y1="345" x2="195" y2="345" stroke="{{TOKEN:colors.border}}" stroke-width="3" stroke-linecap="round"/>
+    
+    <path d="M 195,345 Q 140,345 140,420 Q 140,495 195,495" stroke="{{TOKEN:colors.border}}" stroke-width="3" fill="none"/>
+    
+    <line x1="195" y1="495" x2="790" y2="495" stroke="{{TOKEN:colors.border}}" stroke-width="3" stroke-linecap="round"/>
+
+    
+    
+    <polygon points="340,195 328,185 328,205" fill="{{TOKEN:colors.border}}"/>
+    <polygon points="637,195 625,185 625,205" fill="{{TOKEN:colors.border}}"/>
+    <polygon points="934,195 922,185 922,205" fill="{{TOKEN:colors.border}}"/>
+
+    
+    <polygon points="940,345 952,335 952,355" fill="{{TOKEN:colors.border}}"/>
+    <polygon points="643,345 655,335 655,355" fill="{{TOKEN:colors.border}}"/>
+    <polygon points="346,345 358,335 358,355" fill="{{TOKEN:colors.border}}"/>
+
+    
+    <polygon points="340,495 328,485 328,505" fill="{{TOKEN:colors.border}}"/>
+    <polygon points="637,495 625,485 625,505" fill="{{TOKEN:colors.border}}"/>
+
+    
+    <circle cx="195" cy="195" r="30" fill="{{TOKEN:colors.accent}}"/>
+    <text x="195" y="200" text-anchor="middle" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif"
+          font-size="18" font-weight="800" fill="{{TOKEN:colors.surface}}">01</text>
+    <text x="195" y="248" text-anchor="middle" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif"
+          font-size="13" font-weight="700" fill="{{TOKEN:colors.text}}">品牌认知</text>
+    <text x="195" y="266" text-anchor="middle" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif"
+          font-size="11" fill="{{TOKEN:colors.text-secondary}}">广告触达用户</text>
+
+    
+    <circle cx="492" cy="195" r="30" fill="{{TOKEN:colors.accent}}" fill-opacity="0.6"/>
+    <text x="492" y="200" text-anchor="middle" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif"
+          font-size="18" font-weight="800" fill="{{TOKEN:colors.surface}}">02</text>
+    <text x="492" y="248" text-anchor="middle" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif"
+          font-size="13" font-weight="700" fill="{{TOKEN:colors.text}}">兴趣激发</text>
+    <text x="492" y="266" text-anchor="middle" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif"
+          font-size="11" fill="{{TOKEN:colors.text-secondary}}">内容种草引导</text>
+
+    
+    <circle cx="789" cy="195" r="30" fill="{{TOKEN:colors.accent}}" fill-opacity="0.4"/>
+    <text x="789" y="200" text-anchor="middle" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif"
+          font-size="18" font-weight="800" fill="{{TOKEN:colors.surface}}">03</text>
+    <text x="789" y="248" text-anchor="middle" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif"
+          font-size="13" font-weight="700" fill="{{TOKEN:colors.text}}">考虑对比</text>
+    <text x="789" y="266" text-anchor="middle" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif"
+          font-size="11" fill="{{TOKEN:colors.text-secondary}}">产品评测对比</text>
+
+    
+    <circle cx="1086" cy="195" r="30" fill="{{TOKEN:colors.accent}}" fill-opacity="0.25"/>
+    <text x="1086" y="200" text-anchor="middle" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif"
+          font-size="18" font-weight="800" fill="{{TOKEN:colors.surface}}">04</text>
+    <text x="1086" y="248" text-anchor="middle" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif"
+          font-size="13" font-weight="700" fill="{{TOKEN:colors.text}}">首次购买</text>
+    <text x="1086" y="266" text-anchor="middle" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif"
+          font-size="11" fill="{{TOKEN:colors.text-secondary}}">下单转化</text>
+
+    
+    <circle cx="1086" cy="345" r="30" fill="{{TOKEN:colors.accent}}" fill-opacity="0.25"/>
+    <text x="1086" y="350" text-anchor="middle" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif"
+          font-size="18" font-weight="800" fill="{{TOKEN:colors.surface}}">05</text>
+    <text x="1086" y="398" text-anchor="middle" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif"
+          font-size="13" font-weight="700" fill="{{TOKEN:colors.text}}">使用体验</text>
+    <text x="1086" y="416" text-anchor="middle" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif"
+          font-size="11" fill="{{TOKEN:colors.text-secondary}}">产品交付使用</text>
+
+    
+    <circle cx="789" cy="345" r="30" fill="{{TOKEN:colors.accent}}" fill-opacity="0.25"/>
+    <text x="789" y="350" text-anchor="middle" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif"
+          font-size="18" font-weight="800" fill="{{TOKEN:colors.surface}}">06</text>
+    <text x="789" y="398" text-anchor="middle" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif"
+          font-size="13" font-weight="700" fill="{{TOKEN:colors.text}}">售后服务</text>
+    <text x="789" y="416" text-anchor="middle" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif"
+          font-size="11" fill="{{TOKEN:colors.text-secondary}}">问题响应解决</text>
+
+    
+    <circle cx="492" cy="345" r="30" fill="{{TOKEN:colors.accent}}" fill-opacity="0.25"/>
+    <text x="492" y="350" text-anchor="middle" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif"
+          font-size="18" font-weight="800" fill="{{TOKEN:colors.surface}}">07</text>
+    <text x="492" y="398" text-anchor="middle" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif"
+          font-size="13" font-weight="700" fill="{{TOKEN:colors.text}}">忠诚复购</text>
+    <text x="492" y="416" text-anchor="middle" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif"
+          font-size="11" fill="{{TOKEN:colors.text-secondary}}">二次购买转化</text>
+
+    
+    <circle cx="195" cy="345" r="30" fill="{{TOKEN:colors.accent}}" fill-opacity="0.25"/>
+    <text x="195" y="350" text-anchor="middle" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif"
+          font-size="18" font-weight="800" fill="{{TOKEN:colors.surface}}">08</text>
+    <text x="195" y="398" text-anchor="middle" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif"
+          font-size="13" font-weight="700" fill="{{TOKEN:colors.text}}">口碑传播</text>
+    <text x="195" y="416" text-anchor="middle" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif"
+          font-size="11" fill="{{TOKEN:colors.text-secondary}}">裂变推荐新客</text>
+
+    
+    <rect x="120" y="560" width="1040" height="65" rx="10" fill="{{TOKEN:colors.surface}}"/>
+    <text x="640" y="590" text-anchor="middle" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif"
+          font-size="15" font-weight="700" fill="{{TOKEN:colors.text}}">全生命周期闭环</text>
+    <text x="640" y="612" text-anchor="middle" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif"
+          font-size="12" fill="{{TOKEN:colors.text-secondary}}">从品牌认知到口碑传播，形成自增长飞轮，平均客户 LTV 提升 3.2 倍</text>
+
+    <text x="640" y="690" text-anchor="middle" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif"
+          font-size="12" fill="{{TOKEN:colors.border}}">每个触点的体验优化都会提升整体转化漏斗效率</text>
+</svg>

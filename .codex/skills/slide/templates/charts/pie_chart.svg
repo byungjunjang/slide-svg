@@ -1,0 +1,173 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1280 720" width="1280" height="720">
+    
+    
+    <defs>
+        
+        
+        
+        
+        
+        
+        
+        
+        
+    </defs>
+    
+    
+    <rect width="1280" height="720" fill="#FFFFFF"/>
+    
+    
+    <text x="60" y="80" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC', 'Microsoft YaHei', sans-serif" 
+          font-size="32" font-weight="bold" fill="#1A1A1A">
+        <tspan>市场份额分布</tspan>
+    </text>
+    
+    <text x="60" y="115" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC', 'Microsoft YaHei', sans-serif" 
+          font-size="18" fill="#6B7280">
+        <tspan>2025年第三季度 · 行业整体市场规模 120亿</tspan>
+    </text>
+    
+    
+    <g id="pieChart" transform="translate(420, 400)">
+        
+        
+        
+        <path d="M 0,0 L 0,-200 A 200,200 0 0,1 173.2,100 Z" 
+              fill="#4633E3"/>
+        
+        
+        <path d="M 0,0 L 173.2,100 A 200,200 0 0,1 -117.56,162.34 Z" 
+              fill="#4633E3" fill-opacity="0.6"/>
+        
+        
+        <path d="M 0,0 L -117.56,162.34 A 200,200 0 0,1 -195.63,-62.93 Z" 
+              fill="#4633E3" fill-opacity="0.4"/>
+        
+        
+        <path d="M 0,0 L -195.63,-62.93 A 200,200 0 0,1 -62.93,-189.87 Z" 
+              fill="#4633E3" fill-opacity="0.25"/>
+        
+        
+        <path d="M 0,0 L -62.93,-189.87 A 200,200 0 0,1 0,-200 Z" 
+              fill="#6B7280"/>
+    </g>
+    
+    
+    
+    <text x="500" y="320" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif" 
+          font-size="24" font-weight="bold" fill="#FFFFFF" text-anchor="middle">
+        <tspan>35%</tspan>
+    </text>
+    
+    
+    <text x="450" y="520" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif" 
+          font-size="22" font-weight="bold" fill="#FFFFFF" text-anchor="middle">
+        <tspan>25%</tspan>
+    </text>
+    
+    
+    <text x="280" y="480" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif" 
+          font-size="20" font-weight="bold" fill="#FFFFFF" text-anchor="middle">
+        <tspan>20%</tspan>
+    </text>
+    
+    
+    <text x="280" y="320" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif" 
+          font-size="18" font-weight="bold" fill="#FFFFFF" text-anchor="middle">
+        <tspan>12%</tspan>
+    </text>
+    
+    
+    <g>
+        <line x1="380" y1="220" x2="340" y2="170" stroke="#6B7280" stroke-width="1.5"/>
+        <circle cx="380" cy="220" r="3" fill="#6B7280"/>
+        <text x="330" y="165" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif" 
+              font-size="16" font-weight="600" fill="#6B7280" text-anchor="end">
+            <tspan>8%</tspan>
+        </text>
+    </g>
+    
+    
+    <g id="legend" transform="translate(720, 200)">
+        
+        <text x="0" y="0" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC', 'Microsoft YaHei', sans-serif" 
+              font-size="20" font-weight="600" fill="#1A1A1A">
+            <tspan>市场份额</tspan>
+        </text>
+        
+        
+        <rect x="0" y="30" width="24" height="24" rx="4" fill="#4633E3"/>
+        <text x="40" y="48" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC', 'Microsoft YaHei', sans-serif" 
+              font-size="18" fill="#6B7280">
+            <tspan>公司A</tspan>
+        </text>
+        <text x="460" y="48" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif" 
+              font-size="18" font-weight="600" fill="#1A1A1A" text-anchor="end">
+            <tspan>42亿 (35%)</tspan>
+        </text>
+        
+        
+        <rect x="0" y="70" width="24" height="24" rx="4" fill="#4633E3" fill-opacity="0.6"/>
+        <text x="40" y="88" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC', 'Microsoft YaHei', sans-serif" 
+              font-size="18" fill="#6B7280">
+            <tspan>公司B</tspan>
+        </text>
+        <text x="460" y="88" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif" 
+              font-size="18" font-weight="600" fill="#1A1A1A" text-anchor="end">
+            <tspan>30亿 (25%)</tspan>
+        </text>
+        
+        
+        <rect x="0" y="110" width="24" height="24" rx="4" fill="#4633E3" fill-opacity="0.4"/>
+        <text x="40" y="128" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC', 'Microsoft YaHei', sans-serif" 
+              font-size="18" fill="#6B7280">
+            <tspan>公司C</tspan>
+        </text>
+        <text x="460" y="128" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif" 
+              font-size="18" font-weight="600" fill="#1A1A1A" text-anchor="end">
+            <tspan>24亿 (20%)</tspan>
+        </text>
+        
+        
+        <rect x="0" y="150" width="24" height="24" rx="4" fill="#4633E3" fill-opacity="0.25"/>
+        <text x="40" y="168" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC', 'Microsoft YaHei', sans-serif" 
+              font-size="18" fill="#6B7280">
+            <tspan>公司D</tspan>
+        </text>
+        <text x="460" y="168" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif" 
+              font-size="18" font-weight="600" fill="#1A1A1A" text-anchor="end">
+            <tspan>14.4亿 (12%)</tspan>
+        </text>
+        
+        
+        <rect x="0" y="190" width="24" height="24" rx="4" fill="#6B7280"/>
+        <text x="40" y="208" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC', 'Microsoft YaHei', sans-serif" 
+              font-size="18" fill="#6B7280">
+            <tspan>其他</tspan>
+        </text>
+        <text x="460" y="208" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif" 
+              font-size="18" font-weight="600" fill="#1A1A1A" text-anchor="end">
+            <tspan>9.6亿 (8%)</tspan>
+        </text>
+        
+        
+        <line x1="0" y1="240" x2="460" y2="240" stroke="#E5E7EB" stroke-width="2"/>
+        
+        
+        <text x="0" y="270" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC', 'Microsoft YaHei', sans-serif" 
+              font-size="18" font-weight="600" fill="#1A1A1A">
+            <tspan>市场总规模</tspan>
+        </text>
+        <text x="460" y="270" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif" 
+              font-size="20" font-weight="bold" fill="#1A1A1A" text-anchor="end">
+            <tspan>120亿 (100%)</tspan>
+        </text>
+    </g>
+    
+    
+    <text x="60" y="695" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC', 'Microsoft YaHei', sans-serif" 
+          font-size="14" fill="#6B7280">
+        <tspan>数据来源: 行业研究报告</tspan>
+    </text>
+</svg>
+

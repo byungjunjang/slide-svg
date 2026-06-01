@@ -26,3 +26,15 @@ class TestTransform:
     def test_unicode_decode_error_falls_back_to_raw(self):
         raw = b"\xff\xfe.claude/skills"  # invalid UTF-8
         assert scm._transform_bytes(Path("x.md"), raw) == raw
+
+
+class TestMirrorInSync:
+    def test_codex_mirror_is_current(self):
+        """The committed .codex/skills must match a fresh regeneration.
+        Fails if someone edited .claude/skills without re-running sync."""
+        assert scm.check() == 0, (
+            "Run: python3 .claude/skills/slide/scripts/dev/sync_codex_mirror.py"
+        )
+
+    def test_mirror_root_exists(self):
+        assert (REPO_ROOT / ".codex" / "skills" / "slide" / "SKILL.md").is_file()

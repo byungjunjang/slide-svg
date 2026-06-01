@@ -1,0 +1,137 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1280 720" width="1280" height="720">
+    
+    
+    <defs>
+        
+        
+        
+        
+        
+        
+        
+    </defs>
+    
+    
+    <rect width="1280" height="720" fill="{{TOKEN:colors.surface}}"/>
+    
+    
+    <text x="60" y="70" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif" 
+          font-size="32" font-weight="bold" fill="{{TOKEN:colors.text}}">
+        <tspan>综合能力评估对比</tspan>
+    </text>
+    
+    <text x="60" y="105" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif" 
+          font-size="18" fill="{{TOKEN:colors.text-secondary}}">
+        <tspan>产品 A vs 产品 B · 六维度分析</tspan>
+    </text>
+    
+    
+    <g id="radarChart" transform="translate(640, 400)">
+        
+        
+        
+        <polygon points="0,-220 190.5,-110 190.5,110 0,220 -190.5,110 -190.5,-110" 
+                 fill="none" stroke="{{TOKEN:colors.border}}" stroke-width="1"/>
+        
+        <polygon points="0,-176 152.4,-88 152.4,88 0,176 -152.4,88 -152.4,-88" 
+                 fill="none" stroke="{{TOKEN:colors.border}}" stroke-width="1"/>
+        
+        <polygon points="0,-132 114.3,-66 114.3,66 0,132 -114.3,66 -114.3,-66" 
+                 fill="none" stroke="{{TOKEN:colors.border}}" stroke-width="1"/>
+        
+        <polygon points="0,-88 76.2,-44 76.2,44 0,88 -76.2,44 -76.2,-44" 
+                 fill="none" stroke="{{TOKEN:colors.border}}" stroke-width="1"/>
+        
+        <polygon points="0,-44 38.1,-22 38.1,22 0,44 -38.1,22 -38.1,-22" 
+                 fill="none" stroke="{{TOKEN:colors.border}}" stroke-width="1"/>
+        
+        
+        <line x1="0" y1="0" x2="0" y2="-220" stroke="{{TOKEN:colors.border}}" stroke-width="1"/>
+        <line x1="0" y1="0" x2="190.5" y2="-110" stroke="{{TOKEN:colors.border}}" stroke-width="1"/>
+        <line x1="0" y1="0" x2="190.5" y2="110" stroke="{{TOKEN:colors.border}}" stroke-width="1"/>
+        <line x1="0" y1="0" x2="0" y2="220" stroke="{{TOKEN:colors.border}}" stroke-width="1"/>
+        <line x1="0" y1="0" x2="-190.5" y2="110" stroke="{{TOKEN:colors.border}}" stroke-width="1"/>
+        <line x1="0" y1="0" x2="-190.5" y2="-110" stroke="{{TOKEN:colors.border}}" stroke-width="1"/>
+        
+        
+        
+        <polygon points="0,-198 162,-93.5 143,77 0,154 -152.4,88 -167.2,-96.8" 
+                 fill="{{TOKEN:colors.accent}}" stroke="{{TOKEN:colors.accent}}" stroke-width="2.5"/>
+        
+        
+        <circle cx="0" cy="-198" r="6" fill="{{TOKEN:colors.accent}}" stroke="{{TOKEN:colors.surface}}" stroke-width="2"/>
+        <circle cx="162" cy="-93.5" r="6" fill="{{TOKEN:colors.accent}}" stroke="{{TOKEN:colors.surface}}" stroke-width="2"/>
+        <circle cx="143" cy="77" r="6" fill="{{TOKEN:colors.accent}}" stroke="{{TOKEN:colors.surface}}" stroke-width="2"/>
+        <circle cx="0" cy="154" r="6" fill="{{TOKEN:colors.accent}}" stroke="{{TOKEN:colors.surface}}" stroke-width="2"/>
+        <circle cx="-152.4" cy="88" r="6" fill="{{TOKEN:colors.accent}}" stroke="{{TOKEN:colors.surface}}" stroke-width="2"/>
+        <circle cx="-167.2" cy="-96.8" r="6" fill="{{TOKEN:colors.accent}}" stroke="{{TOKEN:colors.surface}}" stroke-width="2"/>
+        
+        
+        
+        <polygon points="0,-165 171.5,-99 162,93.5 0,176 -133.4,77 -124,-71.5" 
+                 fill="{{TOKEN:colors.accent}}" fill-opacity="0.6" stroke="{{TOKEN:colors.accent}}" stroke-opacity="0.6" stroke-width="2.5"/>
+        
+        
+        <circle cx="0" cy="-165" r="6" fill="{{TOKEN:colors.accent}}" fill-opacity="0.6" stroke="{{TOKEN:colors.surface}}" stroke-width="2"/>
+        <circle cx="171.5" cy="-99" r="6" fill="{{TOKEN:colors.accent}}" fill-opacity="0.6" stroke="{{TOKEN:colors.surface}}" stroke-width="2"/>
+        <circle cx="162" cy="93.5" r="6" fill="{{TOKEN:colors.accent}}" fill-opacity="0.6" stroke="{{TOKEN:colors.surface}}" stroke-width="2"/>
+        <circle cx="0" cy="176" r="6" fill="{{TOKEN:colors.accent}}" fill-opacity="0.6" stroke="{{TOKEN:colors.surface}}" stroke-width="2"/>
+        <circle cx="-133.4" cy="77" r="6" fill="{{TOKEN:colors.accent}}" fill-opacity="0.6" stroke="{{TOKEN:colors.surface}}" stroke-width="2"/>
+        <circle cx="-124" cy="-71.5" r="6" fill="{{TOKEN:colors.accent}}" fill-opacity="0.6" stroke="{{TOKEN:colors.surface}}" stroke-width="2"/>
+    </g>
+    
+    
+    <text x="640" y="145" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif" 
+          font-size="16" font-weight="600" fill="{{TOKEN:colors.text}}" text-anchor="middle">
+        <tspan>性能</tspan>
+    </text>
+    <text x="870" y="270" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif" 
+          font-size="16" font-weight="600" fill="{{TOKEN:colors.text}}" text-anchor="start">
+        <tspan>安全性</tspan>
+    </text>
+    <text x="870" y="540" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif" 
+          font-size="16" font-weight="600" fill="{{TOKEN:colors.text}}" text-anchor="start">
+        <tspan>易用性</tspan>
+    </text>
+    <text x="640" y="660" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif" 
+          font-size="16" font-weight="600" fill="{{TOKEN:colors.text}}" text-anchor="middle">
+        <tspan>价格竞争力</tspan>
+    </text>
+    <text x="410" y="540" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif" 
+          font-size="16" font-weight="600" fill="{{TOKEN:colors.text}}" text-anchor="end">
+        <tspan>售后服务</tspan>
+    </text>
+    <text x="410" y="270" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif" 
+          font-size="16" font-weight="600" fill="{{TOKEN:colors.text}}" text-anchor="end">
+        <tspan>创新能力</tspan>
+    </text>
+    
+    
+    <g id="legend" transform="translate(1020, 150)">
+        <rect x="0" y="0" width="200" height="120" rx="8" fill="{{TOKEN:colors.surface}}" stroke="{{TOKEN:colors.border}}" stroke-width="1"/>
+        
+        <text x="100" y="30" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif" 
+              font-size="14" font-weight="600" fill="{{TOKEN:colors.text}}" text-anchor="middle">
+            <tspan>图例</tspan>
+        </text>
+        
+        <rect x="20" y="50" width="24" height="12" rx="2" fill="{{TOKEN:colors.accent}}" opacity="0.7"/>
+        <text x="55" y="60" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif" 
+              font-size="14" fill="{{TOKEN:colors.text-secondary}}">
+            <tspan>产品 A</tspan>
+        </text>
+        
+        <rect x="20" y="80" width="24" height="12" rx="2" fill="{{TOKEN:colors.accent}}" fill-opacity="0.6" opacity="0.6"/>
+        <text x="55" y="90" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif" 
+              font-size="14" fill="{{TOKEN:colors.text-secondary}}">
+            <tspan>产品 B</tspan>
+        </text>
+    </g>
+    
+    
+    <text x="60" y="695" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif" 
+          font-size="14" fill="{{TOKEN:colors.text-secondary}}">
+        <tspan>数据来源: 产品评估报告 2025</tspan>
+    </text>
+</svg>
+

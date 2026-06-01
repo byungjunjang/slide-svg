@@ -1,0 +1,288 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<title>Colors & Type Specimen — Jangpm</title>
+<link rel="stylesheet" href="colors_and_type.css">
+<style>
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    padding: 56px 64px 80px;
+    background: var(--bg);
+    color: var(--text);
+    font-family: var(--font-sans);
+    max-width: 1280px;
+    margin-left: auto;
+    margin-right: auto;
+  }
+  header.doc {
+    padding-bottom: var(--space-8);
+    border-bottom: 1px solid var(--border);
+    margin-bottom: var(--space-10);
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+  }
+  header.doc .title-block h1 {
+    font-size: 2.5rem;
+    font-weight: 800;
+    letter-spacing: -0.02em;
+    line-height: 1.1;
+  }
+  header.doc .title-block p {
+    margin-top: var(--space-3);
+    color: var(--text-secondary);
+    font-size: 1rem;
+    max-width: 560px;
+  }
+  header.doc .meta {
+    text-align: right;
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+    color: var(--text-secondary);
+    line-height: 1.7;
+  }
+  section.group { margin-bottom: var(--space-16); }
+  .section-head {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    margin-bottom: var(--space-6);
+    padding-bottom: var(--space-3);
+    border-bottom: 1px solid var(--border);
+  }
+  .section-head h2 {
+    font-size: 1rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+  }
+  .section-head .section-no {
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+    color: var(--text-secondary);
+  }
+  .mono { font-family: var(--font-mono); font-size: 0.75rem; color: var(--text-secondary); }
+
+  /* Color swatches */
+  .swatch-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: var(--space-4);
+  }
+  .swatch {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-2);
+  }
+  .swatch .chip {
+    height: 96px;
+    border-radius: var(--radius-md);
+    border: 1px solid var(--border);
+  }
+  .swatch .name { font-size: 0.85rem; font-weight: 600; }
+  .swatch .hex { font-family: var(--font-mono); font-size: 0.72rem; color: var(--text-secondary); }
+
+  /* Type specimens */
+  .type-row {
+    display: grid;
+    grid-template-columns: 140px 80px 1fr;
+    gap: var(--space-6);
+    align-items: baseline;
+    padding: var(--space-5) 0;
+    border-bottom: 1px solid var(--border);
+  }
+  .type-row:last-child { border-bottom: none; }
+  .type-row .label { font-family: var(--font-mono); font-size: 0.72rem; color: var(--text-secondary); }
+  .type-row .size { font-family: var(--font-mono); font-size: 0.72rem; color: var(--text-tertiary); }
+
+  /* Weight ladder */
+  .weight-ladder { display: flex; flex-direction: column; gap: var(--space-3); }
+  .weight-row { display: grid; grid-template-columns: 100px 1fr; gap: var(--space-5); align-items: baseline; }
+  .weight-row .k { font-family: var(--font-mono); font-size: 0.72rem; color: var(--text-secondary); }
+  .weight-row .s { font-size: 1.4rem; letter-spacing: -0.01em; }
+
+  /* Spacing */
+  .space-list { display: flex; flex-direction: column; gap: var(--space-2); }
+  .space-row { display: grid; grid-template-columns: 100px 80px 1fr; gap: var(--space-4); align-items: center; }
+  .space-row .k { font-family: var(--font-mono); font-size: 0.72rem; color: var(--text-secondary); }
+  .space-row .px { font-family: var(--font-mono); font-size: 0.72rem; color: var(--text-tertiary); }
+  .space-row .bar { height: 14px; background: var(--accent); border-radius: 2px; }
+
+  /* Radius */
+  .radius-grid { display: grid; grid-template-columns: repeat(6, 1fr); gap: var(--space-4); }
+  .radius-box { height: 80px; background: var(--surface); border: 1px solid var(--border); }
+
+  /* Shadow */
+  .shadow-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: var(--space-6); }
+  .shadow-box { height: 100px; background: var(--surface); border-radius: var(--card-radius); }
+
+  /* Semantic demo */
+  .sem-row { display: flex; gap: var(--space-4); flex-wrap: wrap; align-items: center; }
+  .sem-tag { padding: var(--space-2) var(--space-4); border-radius: var(--radius-sm); font-size: 0.9rem; font-weight: 600; }
+</style>
+</head>
+<body>
+
+<header class="doc">
+  <div class="title-block">
+    <h1>Colors & Type</h1>
+    <p>Jangpm Slide Design System — specimen document rendering every token defined in <span class="mono" style="color:var(--text);">colors_and_type.css</span>.</p>
+  </div>
+  <div class="meta">
+    <div>Pretendard · 9 weights</div>
+    <div>1 accent · #4633E3</div>
+    <div>v1.0 · 2026</div>
+  </div>
+</header>
+
+<!-- ====================== COLORS ====================== -->
+<section class="group">
+  <div class="section-head"><h2>Neutrals</h2><span class="section-no">01 / 05</span></div>
+  <div class="swatch-grid">
+    <div class="swatch"><div class="chip" style="background:var(--bg);"></div><span class="name">Background</span><span class="hex">--bg · #FAFAF9</span></div>
+    <div class="swatch"><div class="chip" style="background:var(--surface);"></div><span class="name">Surface</span><span class="hex">--surface · #FFFFFF</span></div>
+    <div class="swatch"><div class="chip" style="background:var(--surface-alt);"></div><span class="name">Surface Alt</span><span class="hex">--surface-alt · #F5F5F4</span></div>
+    <div class="swatch"><div class="chip" style="background:var(--border);"></div><span class="name">Border</span><span class="hex">--border · #E5E7EB</span></div>
+    <div class="swatch"><div class="chip" style="background:var(--border-strong);"></div><span class="name">Border Strong</span><span class="hex">--border-strong · #D4D4D4</span></div>
+    <div class="swatch"><div class="chip" style="background:var(--text-tertiary);"></div><span class="name">Text Tertiary</span><span class="hex">--text-tertiary · #9CA3AF</span></div>
+    <div class="swatch"><div class="chip" style="background:var(--text-secondary);"></div><span class="name">Text Secondary</span><span class="hex">--text-secondary · #6B7280</span></div>
+    <div class="swatch"><div class="chip" style="background:var(--text);"></div><span class="name" style="color:var(--text);">Text</span><span class="hex">--text · #1A1A1A</span></div>
+  </div>
+</section>
+
+<section class="group">
+  <div class="section-head"><h2>Accent · Single Indigo</h2><span class="section-no">02 / 05</span></div>
+  <div class="swatch-grid">
+    <div class="swatch"><div class="chip" style="background:var(--accent-soft);"></div><span class="name">Accent Soft</span><span class="hex">--accent-soft · #E8E5FC</span></div>
+    <div class="swatch"><div class="chip" style="background:var(--accent);"></div><span class="name" style="color:var(--accent);">Accent</span><span class="hex">--accent · #4633E3</span></div>
+    <div class="swatch"><div class="chip" style="background:var(--accent-ink);"></div><span class="name" style="color:var(--accent-ink);">Accent Ink</span><span class="hex">--accent-ink · #2E1FB3</span></div>
+    <div class="swatch">
+      <div class="chip" style="background:linear-gradient(to right, rgba(70,51,227,0.25) 0 25%, rgba(70,51,227,0.4) 25% 50%, rgba(70,51,227,0.6) 50% 75%, rgba(70,51,227,0.85) 75% 100%);"></div>
+      <span class="name">Chart Ladder</span><span class="hex">rgba(70,51,227, α) · 0.25–0.85</span>
+    </div>
+  </div>
+</section>
+
+<section class="group">
+  <div class="section-head"><h2>Semantic · Data-meaning only</h2><span class="section-no">03 / 05</span></div>
+  <div class="swatch-grid" style="margin-bottom: var(--space-6);">
+    <div class="swatch"><div class="chip" style="background:var(--positive-soft);"></div><span class="name">Positive Soft</span><span class="hex">--positive-soft · #ECFDF5</span></div>
+    <div class="swatch"><div class="chip" style="background:var(--positive);"></div><span class="name" style="color:var(--positive);">Positive</span><span class="hex">--positive · #059669</span></div>
+    <div class="swatch"><div class="chip" style="background:var(--negative-soft);"></div><span class="name">Negative Soft</span><span class="hex">--negative-soft · #FFF1F2</span></div>
+    <div class="swatch"><div class="chip" style="background:var(--negative);"></div><span class="name" style="color:var(--negative);">Negative</span><span class="hex">--negative · #E11D48</span></div>
+    <div class="swatch"><div class="chip" style="background:var(--warning-soft);"></div><span class="name">Warning Soft</span><span class="hex">--warning-soft · #FFFBEB</span></div>
+    <div class="swatch"><div class="chip" style="background:var(--warning);"></div><span class="name" style="color:var(--warning);">Warning</span><span class="hex">--warning · #D97706</span></div>
+  </div>
+  <div class="sem-row">
+    <span class="sem-tag" style="background:var(--positive-soft); color:var(--positive);">↑ +21% 성장률</span>
+    <span class="sem-tag" style="background:var(--negative-soft); color:var(--negative);">↓ -2% 재구매율</span>
+    <span class="sem-tag" style="background:var(--warning-soft); color:var(--warning);">⚠ 경고 기준 60점</span>
+    <span class="mono">→ Usage: data deltas, status badges, bounded warnings — never decorative.</span>
+  </div>
+</section>
+
+<!-- ====================== TYPE ====================== -->
+<section class="group">
+  <div class="section-head"><h2>Type Scale</h2><span class="section-no">04 / 05</span></div>
+
+  <div class="type-row">
+    <span class="label">.display</span>
+    <span class="size">56 / 800</span>
+    <span class="display">2030년 한눈에 보기</span>
+  </div>
+  <div class="type-row">
+    <span class="label">.display-sm</span>
+    <span class="size">40 / 800</span>
+    <span class="display-sm">58억 원 (+21%)</span>
+  </div>
+  <div class="type-row">
+    <span class="label">.headline · h2</span>
+    <span class="size">32 / 700</span>
+    <span class="headline">메타적 접근은 세 개의 루프로 구성됩니다.</span>
+  </div>
+  <div class="type-row">
+    <span class="label">.title</span>
+    <span class="size">18.4 / 600</span>
+    <span class="title">관찰 루프 — 기대를 먼저 적는다.</span>
+  </div>
+  <div class="type-row">
+    <span class="label">.body · p</span>
+    <span class="size">15.2 / 400</span>
+    <span class="body">도구는 답을 주지 않습니다. 좋은 질문을 가진 사람에게만 답에 가까운 것을 돌려줍니다. 본문 단락은 최대 4줄 이내, 한국어 정중체 종결로 마무리합니다.</span>
+  </div>
+  <div class="type-row">
+    <span class="label">.caption</span>
+    <span class="size">12.8 / 500</span>
+    <span class="caption">n=214 · 국내 중견기업 IT·마케팅 직군 · 2025년 관찰</span>
+  </div>
+  <div class="type-row">
+    <span class="label">.label-caption</span>
+    <span class="size">12.8 / 600 · uc</span>
+    <span class="label-caption">Section 02 · 핵심 프레임</span>
+  </div>
+  <div class="type-row">
+    <span class="label">code · .mono</span>
+    <span class="size">0.9em mono</span>
+    <span class="mono" style="color:var(--text); font-size: 0.9rem;">const accent = '#4633E3';</span>
+  </div>
+</section>
+
+<section class="group">
+  <div class="section-head"><h2>Pretendard — 9 Weight Ladder</h2><span class="section-no">05 / 05</span></div>
+  <div class="weight-ladder">
+    <div class="weight-row"><span class="k">100 · Thin</span>        <span class="s" style="font-weight:100;">메타적 접근 · Jangpm Slide System</span></div>
+    <div class="weight-row"><span class="k">200 · ExtraLight</span>  <span class="s" style="font-weight:200;">메타적 접근 · Jangpm Slide System</span></div>
+    <div class="weight-row"><span class="k">300 · Light</span>       <span class="s" style="font-weight:300;">메타적 접근 · Jangpm Slide System</span></div>
+    <div class="weight-row"><span class="k">400 · Regular</span>     <span class="s" style="font-weight:400;">메타적 접근 · Jangpm Slide System</span></div>
+    <div class="weight-row"><span class="k">500 · Medium</span>      <span class="s" style="font-weight:500;">메타적 접근 · Jangpm Slide System</span></div>
+    <div class="weight-row"><span class="k">600 · SemiBold</span>    <span class="s" style="font-weight:600;">메타적 접근 · Jangpm Slide System</span></div>
+    <div class="weight-row"><span class="k">700 · Bold</span>        <span class="s" style="font-weight:700;">메타적 접근 · Jangpm Slide System</span></div>
+    <div class="weight-row"><span class="k">800 · ExtraBold</span>   <span class="s" style="font-weight:800;">메타적 접근 · Jangpm Slide System</span></div>
+    <div class="weight-row"><span class="k">900 · Black</span>       <span class="s" style="font-weight:900;">메타적 접근 · Jangpm Slide System</span></div>
+  </div>
+</section>
+
+<!-- ====================== SPACING / RADIUS / SHADOW ====================== -->
+<section class="group">
+  <div class="section-head"><h2>Spacing · 8 px Grid</h2><span class="section-no">+ Tokens</span></div>
+  <div class="space-list">
+    <div class="space-row"><span class="k">--space-1</span><span class="px">4 px</span><div class="bar" style="width:4px;"></div></div>
+    <div class="space-row"><span class="k">--space-2</span><span class="px">8 px</span><div class="bar" style="width:8px;"></div></div>
+    <div class="space-row"><span class="k">--space-3</span><span class="px">12 px</span><div class="bar" style="width:12px;"></div></div>
+    <div class="space-row"><span class="k">--space-4</span><span class="px">16 px</span><div class="bar" style="width:16px;"></div></div>
+    <div class="space-row"><span class="k">--space-5</span><span class="px">20 px</span><div class="bar" style="width:20px;"></div></div>
+    <div class="space-row"><span class="k">--space-6</span><span class="px">24 px</span><div class="bar" style="width:24px;"></div></div>
+    <div class="space-row"><span class="k">--space-8</span><span class="px">32 px</span><div class="bar" style="width:32px;"></div></div>
+    <div class="space-row"><span class="k">--space-10</span><span class="px">40 px</span><div class="bar" style="width:40px;"></div></div>
+    <div class="space-row"><span class="k">--space-12</span><span class="px">48 px</span><div class="bar" style="width:48px;"></div></div>
+    <div class="space-row"><span class="k">--space-14</span><span class="px">56 px</span><div class="bar" style="width:56px;"></div></div>
+    <div class="space-row"><span class="k">--space-16</span><span class="px">64 px</span><div class="bar" style="width:64px;"></div></div>
+  </div>
+</section>
+
+<section class="group">
+  <div class="section-head"><h2>Radius</h2><span class="section-no">+ Tokens</span></div>
+  <div class="radius-grid">
+    <div><div class="radius-box" style="border-radius:var(--radius-xs);"></div><div class="mono" style="margin-top:8px;">xs · 4 px</div></div>
+    <div><div class="radius-box" style="border-radius:var(--radius-sm);"></div><div class="mono" style="margin-top:8px;">sm · 6 px</div></div>
+    <div><div class="radius-box" style="border-radius:var(--radius-md);"></div><div class="mono" style="margin-top:8px;">md · 8 px</div></div>
+    <div><div class="radius-box" style="border-radius:var(--radius-lg);"></div><div class="mono" style="margin-top:8px;">lg · 12 px · card</div></div>
+    <div><div class="radius-box" style="border-radius:var(--radius-xl);"></div><div class="mono" style="margin-top:8px;">xl · 16 px</div></div>
+    <div><div class="radius-box" style="border-radius:var(--radius-pill); background:var(--accent); border:none;"></div><div class="mono" style="margin-top:8px;">pill · full</div></div>
+  </div>
+</section>
+
+<section class="group">
+  <div class="section-head"><h2>Elevation · Used sparingly</h2><span class="section-no">+ Tokens</span></div>
+  <div class="shadow-grid">
+    <div><div class="shadow-box" style="box-shadow:var(--shadow-sm); border: 1px solid var(--border);"></div><div class="mono" style="margin-top:8px;">shadow-sm</div></div>
+    <div><div class="shadow-box" style="box-shadow:var(--shadow-md); border: 1px solid var(--border);"></div><div class="mono" style="margin-top:8px;">shadow-md</div></div>
+    <div><div class="shadow-box" style="box-shadow:var(--shadow-lg); border: 1px solid var(--border);"></div><div class="mono" style="margin-top:8px;">shadow-lg</div></div>
+  </div>
+  <p class="mono" style="margin-top: var(--space-4);">→ Default cards rely on border only. Shadows used only on KPI/hero cards.</p>
+</section>
+
+</body>
+</html>

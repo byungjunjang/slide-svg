@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" width="1280" height="720" viewBox="0 0 1280 720">
+  <!-- Lecture Deck — 02 Chapter / Section Divider (theme-parametric) -->
+
+  <rect width="1280" height="720" fill="{{TOKEN:colors.shell-bg}}"/>
+
+  <!-- Chapter number (large, accent) -->
+  <text x="56" y="260"
+        font-family="{{TOKEN:typography.font-chain}}"
+        font-size="{{TOKEN:typography.display-sm.size}}" font-weight="{{TOKEN:typography.display-sm.weight}}"
+        letter-spacing="{{TOKEN:typography.display-sm.letter-spacing}}"
+        fill="{{TOKEN:colors.shell-accent}}">
+    {{CHAPTER_NUMBER}}
+  </text>
+
+  <!-- Chapter label (uppercase eyebrow) -->
+  <text x="56" y="300"
+        font-family="{{TOKEN:typography.font-chain}}"
+        font-size="{{TOKEN:typography.label.size}}" font-weight="{{TOKEN:typography.label.weight}}"
+        letter-spacing="{{TOKEN:typography.label.letter-spacing}}"
+        fill="{{TOKEN:colors.shell-text-secondary}}">
+    {{CHAPTER_LABEL}}
+  </text>
+
+  <!-- Chapter title (Display) -->
+  <text x="56" y="400"
+        font-family="{{TOKEN:typography.font-chain}}"
+        font-size="{{TOKEN:typography.display.size}}" font-weight="{{TOKEN:typography.display.weight}}"
+        letter-spacing="{{TOKEN:typography.display.letter-spacing}}"
+        fill="{{TOKEN:colors.shell-text}}">
+    {{CHAPTER_TITLE}}
+  </text>
+
+  <!-- Supporting line (Title, secondary color) -->
+  <text x="56" y="450"
+        font-family="{{TOKEN:typography.font-chain}}"
+        font-size="{{TOKEN:typography.title.size}}" font-weight="{{TOKEN:typography.title.weight}}"
+        fill="{{TOKEN:colors.shell-text-secondary}}">
+    {{CHAPTER_SUMMARY}}
+  </text>
+
+  <!-- Structural divider -->
+  <line x1="56" y1="672" x2="1224" y2="672" stroke="{{TOKEN:colors.border}}" stroke-width="{{TOKEN:stroke.divider}}"/>
+
+  <!-- Page number (bottom right) -->
+  <text x="1224" y="696"
+        font-family="{{TOKEN:typography.font-chain}}"
+        font-size="{{TOKEN:typography.caption.size}}" font-weight="{{TOKEN:typography.caption.weight}}"
+        text-anchor="end"
+        fill="{{TOKEN:colors.text-tertiary}}">
+    {{PAGE_NUM}}
+  </text>
+</svg>

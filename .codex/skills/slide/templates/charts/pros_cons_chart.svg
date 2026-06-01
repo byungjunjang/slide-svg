@@ -1,0 +1,125 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1280 720" width="1280" height="720">
+    
+    
+    <defs>
+        
+        
+    </defs>
+    
+    
+    <rect width="1280" height="720" fill="#FFFFFF"/>
+    
+    
+    <text x="640" y="60" text-anchor="middle" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif" 
+          font-size="32" font-weight="700" fill="#1A1A1A" letter-spacing="-0.5">方案优劣势对比</text>
+    <text x="640" y="90" text-anchor="middle" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif" 
+          font-size="16" fill="#6B7280">Pros vs Cons Analysis · 客观评估决策依据</text>
+    
+    
+    <rect x="588" y="120" width="104" height="40" rx="20" fill="#4633E3"/>
+    <text x="640" y="146" text-anchor="middle" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif" 
+          font-size="16" font-weight="700" fill="#FFFFFF">PROS</text>
+    <polygon points="588,140 568,128 568,152" fill="#4633E3"/>
+
+    <rect x="588" y="172" width="104" height="40" rx="20" fill="#4633E3" fill-opacity="0.6"/>
+    <text x="640" y="198" text-anchor="middle" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif" 
+          font-size="16" font-weight="700" fill="#FFFFFF">CONS</text>
+    <polygon points="692,192 712,180 712,204" fill="#4633E3" fill-opacity="0.6"/>
+    
+    
+    <text x="280" y="146" text-anchor="middle" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif" 
+          font-size="22" font-weight="700" fill="#4633E3">优势</text>
+    
+    
+    <text x="1000" y="146" text-anchor="middle" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif" 
+          font-size="22" font-weight="700" fill="#4633E3" fill-opacity="0.6">劣势</text>
+    
+    
+    <g>
+        <rect x="60" y="230" width="510" height="100" rx="10" fill="#FFFFFF"/>
+        <rect x="60" y="230" width="6" height="100" rx="3" fill="#4633E3"/>
+        <circle cx="96" cy="268" r="18" fill="#4633E3" fill-opacity="0.12"/>
+        <text x="96" y="274" text-anchor="middle" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif" 
+              font-size="16" font-weight="700" fill="#4633E3">✓</text>
+        <text x="128" y="268" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif" 
+              font-size="16" font-weight="700" fill="#1A1A1A">产品质量领先</text>
+        <text x="128" y="296" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif" 
+              font-size="13" fill="#6B7280">核心技术自主可控，用户满意度持续高于行业均值15%</text>
+    </g>
+    
+    
+    <g>
+        <rect x="60" y="348" width="510" height="100" rx="10" fill="#FFFFFF"/>
+        <rect x="60" y="348" width="6" height="100" rx="3" fill="#4633E3"/>
+        <circle cx="96" cy="386" r="18" fill="#4633E3" fill-opacity="0.12"/>
+        <text x="96" y="392" text-anchor="middle" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif" 
+              font-size="16" font-weight="700" fill="#4633E3">✓</text>
+        <text x="128" y="386" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif" 
+              font-size="16" font-weight="700" fill="#1A1A1A">品牌认知度高</text>
+        <text x="128" y="414" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif" 
+              font-size="13" fill="#6B7280">全渠道覆盖率85%，品牌知名度位列细分市场TOP3</text>
+    </g>
+    
+    
+    <g>
+        <rect x="60" y="466" width="510" height="100" rx="10" fill="#FFFFFF"/>
+        <rect x="60" y="466" width="6" height="100" rx="3" fill="#4633E3"/>
+        <circle cx="96" cy="504" r="18" fill="#4633E3" fill-opacity="0.12"/>
+        <text x="96" y="510" text-anchor="middle" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif" 
+              font-size="16" font-weight="700" fill="#4633E3">✓</text>
+        <text x="128" y="504" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif" 
+              font-size="16" font-weight="700" fill="#1A1A1A">用户生态完善</text>
+        <text x="128" y="532" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif" 
+              font-size="13" fill="#6B7280">用户留存率/分享率/复购率远超行业平均水平</text>
+    </g>
+    
+    
+    <g>
+        <rect x="710" y="230" width="510" height="100" rx="10" fill="#FFFFFF"/>
+        <rect x="1214" y="230" width="6" height="100" rx="3" fill="#4633E3" fill-opacity="0.6"/>
+        <circle cx="1184" cy="268" r="18" fill="#4633E3" fill-opacity="0.6" fill-opacity="0.12"/>
+        <text x="1184" y="274" text-anchor="middle" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif" 
+              font-size="16" font-weight="700" fill="#4633E3" fill-opacity="0.6">✗</text>
+        <text x="730" y="268" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif" 
+              font-size="16" font-weight="700" fill="#1A1A1A">产品迭代周期长</text>
+        <text x="730" y="296" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif" 
+              font-size="13" fill="#6B7280">从用户反馈到功能上线平均需12周，竞品仅需6-8周</text>
+    </g>
+    
+    
+    <g>
+        <rect x="710" y="348" width="510" height="100" rx="10" fill="#FFFFFF"/>
+        <rect x="1214" y="348" width="6" height="100" rx="3" fill="#4633E3" fill-opacity="0.6"/>
+        <circle cx="1184" cy="386" r="18" fill="#4633E3" fill-opacity="0.6" fill-opacity="0.12"/>
+        <text x="1184" y="392" text-anchor="middle" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif" 
+              font-size="16" font-weight="700" fill="#4633E3" fill-opacity="0.6">✗</text>
+        <text x="730" y="386" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif" 
+              font-size="16" font-weight="700" fill="#1A1A1A">下沉市场薄弱</text>
+        <text x="730" y="414" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif" 
+              font-size="13" fill="#6B7280">二三线城市渗透率仅23%，经销商网络覆盖不足</text>
+    </g>
+    
+    
+    <g>
+        <rect x="710" y="466" width="510" height="100" rx="10" fill="#FFFFFF"/>
+        <rect x="1214" y="466" width="6" height="100" rx="3" fill="#4633E3" fill-opacity="0.6"/>
+        <circle cx="1184" cy="504" r="18" fill="#4633E3" fill-opacity="0.6" fill-opacity="0.12"/>
+        <text x="1184" y="510" text-anchor="middle" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif" 
+              font-size="16" font-weight="700" fill="#4633E3" fill-opacity="0.6">✗</text>
+        <text x="730" y="504" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif" 
+              font-size="16" font-weight="700" fill="#1A1A1A">服务响应待提升</text>
+        <text x="730" y="532" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif" 
+              font-size="13" fill="#6B7280">售后工单平均响应时长48h，客户流失风险增大</text>
+    </g>
+    
+    
+    <rect x="60" y="610" width="1160" height="70" rx="10" fill="#FFFFFF"/>
+    <text x="640" y="642" text-anchor="middle" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif" 
+          font-size="15" font-weight="700" fill="#1A1A1A">建议策略</text>
+    <text x="640" y="665" text-anchor="middle" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif" 
+          font-size="13" fill="#6B7280">巩固产品与品牌优势，同步加速迭代节奏、拓展下沉渠道、强化售后响应体系</text>
+    
+    
+    <rect x="60" y="696" width="580" height="4" rx="2" fill="#4633E3" fill-opacity="0.25"/>
+    <rect x="640" y="696" width="580" height="4" rx="2" fill="#4633E3" fill-opacity="0.6" fill-opacity="0.25"/>
+</svg>

@@ -1,0 +1,285 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1280 720" width="1280" height="720">
+    
+    
+    <defs>
+        
+        
+    </defs>
+    
+    
+    <rect width="1280" height="720" fill="{{TOKEN:colors.surface}}"/>
+    
+    
+    <text x="60" y="70" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif" 
+          font-size="32" font-weight="bold" fill="{{TOKEN:colors.text}}">
+        <tspan>温湿度测试循环曲线</tspan>
+    </text>
+    
+    <text x="60" y="105" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif" 
+          font-size="16" fill="{{TOKEN:colors.text-secondary}}">
+        <tspan>环境测试 · 总时长：720分钟（12小时）</tspan>
+    </text>
+    
+    
+    <rect x="140" y="130" width="158" height="40" fill="{{TOKEN:colors.surface}}" stroke="{{TOKEN:colors.border}}" stroke-width="1" rx="4"/>
+    <rect x="298" y="130" width="237" height="40" fill="{{TOKEN:colors.surface}}" stroke="{{TOKEN:colors.border}}" stroke-width="1" rx="4"/>
+    <rect x="535" y="130" width="158" height="40" fill="{{TOKEN:colors.surface}}" stroke="{{TOKEN:colors.border}}" stroke-width="1" rx="4"/>
+    <rect x="693" y="130" width="237" height="40" fill="{{TOKEN:colors.surface}}" stroke="{{TOKEN:colors.border}}" stroke-width="1" rx="4"/>
+    <rect x="930" y="130" width="158" height="40" fill="{{TOKEN:colors.surface}}" stroke="{{TOKEN:colors.border}}" stroke-width="1" rx="4"/>
+    
+    
+    <text x="219" y="155" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif" 
+          font-size="13" font-weight="600" fill="{{TOKEN:colors.text}}" text-anchor="middle">
+        <tspan>1.升温(60min)</tspan>
+    </text>
+    
+    <text x="416.5" y="155" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif" 
+          font-size="13" font-weight="600" fill="{{TOKEN:colors.text}}" text-anchor="middle">
+        <tspan>2.高温保持(240min)</tspan>
+    </text>
+    
+    <text x="614" y="155" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif" 
+          font-size="13" font-weight="600" fill="{{TOKEN:colors.text}}" text-anchor="middle">
+        <tspan>3.降温(120min)</tspan>
+    </text>
+    
+    <text x="811.5" y="155" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif" 
+          font-size="13" font-weight="600" fill="{{TOKEN:colors.text}}" text-anchor="middle">
+        <tspan>4.低温保持(240min)</tspan>
+    </text>
+    
+    <text x="1009" y="155" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif" 
+          font-size="13" font-weight="600" fill="{{TOKEN:colors.text}}" text-anchor="middle">
+        <tspan>5.复位(60min)</tspan>
+    </text>
+    
+    
+    <g id="chartArea">
+        
+        <line x1="298" y1="190" x2="298" y2="580" stroke="{{TOKEN:colors.border}}" stroke-width="1.5" stroke-dasharray="5,5"/>
+        <line x1="535" y1="190" x2="535" y2="580" stroke="{{TOKEN:colors.border}}" stroke-width="1.5" stroke-dasharray="5,5"/>
+        <line x1="693" y1="190" x2="693" y2="580" stroke="{{TOKEN:colors.border}}" stroke-width="1.5" stroke-dasharray="5,5"/>
+        <line x1="930" y1="190" x2="930" y2="580" stroke="{{TOKEN:colors.border}}" stroke-width="1.5" stroke-dasharray="5,5"/>
+        
+        
+        
+        <line x1="140" y1="580" x2="1088" y2="580" stroke="{{TOKEN:colors.border}}" stroke-width="1.5"/>
+        
+        <line x1="140" y1="502" x2="1088" y2="502" stroke="{{TOKEN:colors.border}}" stroke-width="1" stroke-dasharray="4,4"/>
+        
+        <line x1="140" y1="424" x2="1088" y2="424" stroke="{{TOKEN:colors.border}}" stroke-width="1" stroke-dasharray="4,4"/>
+        
+        <line x1="140" y1="346" x2="1088" y2="346" stroke="{{TOKEN:colors.border}}" stroke-width="1" stroke-dasharray="4,4"/>
+        
+        <line x1="140" y1="268" x2="1088" y2="268" stroke="{{TOKEN:colors.border}}" stroke-width="1" stroke-dasharray="4,4"/>
+        
+        <line x1="140" y1="190" x2="1088" y2="190" stroke="{{TOKEN:colors.border}}" stroke-width="1.5"/>
+        
+        
+        <text x="50" y="585" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif" 
+              font-size="14" font-weight="600" fill="{{TOKEN:colors.text}}" text-anchor="middle">
+            <tspan>-60</tspan>
+        </text>
+        <text x="50" y="507" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif" 
+              font-size="14" fill="{{TOKEN:colors.text}}" text-anchor="middle">
+              <tspan>-30</tspan>
+        </text>
+        <text x="50" y="429" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif" 
+              font-size="14" fill="{{TOKEN:colors.text}}" text-anchor="middle">
+            <tspan>0</tspan>
+        </text>
+        <text x="50" y="351" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif" 
+              font-size="14" fill="{{TOKEN:colors.text}}" text-anchor="middle">
+            <tspan>30</tspan>
+        </text>
+        <text x="50" y="273" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif" 
+              font-size="14" fill="{{TOKEN:colors.text}}" text-anchor="middle">
+            <tspan>60</tspan>
+        </text>
+        <text x="50" y="195" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif" 
+              font-size="14" font-weight="600" fill="{{TOKEN:colors.text}}" text-anchor="middle">
+            <tspan>90</tspan>
+        </text>
+        
+        
+        <text x="30" y="385" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif" 
+              font-size="16" font-weight="bold" fill="{{TOKEN:colors.text}}" text-anchor="middle" transform="rotate(-90, 30, 385)">
+            <tspan>温度 (℃)</tspan>
+        </text>
+        
+        
+        <text x="1190" y="585" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif" 
+              font-size="14" font-weight="600" fill="{{TOKEN:colors.text}}" text-anchor="middle">
+            <tspan>0%</tspan>
+        </text>
+        <text x="1190" y="507" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif" 
+              font-size="14" fill="{{TOKEN:colors.text}}" text-anchor="middle">
+            <tspan>20%</tspan>
+        </text>
+        <text x="1190" y="429" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif" 
+              font-size="14" fill="{{TOKEN:colors.text}}" text-anchor="middle">
+            <tspan>40%</tspan>
+        </text>
+        <text x="1190" y="351" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif" 
+              font-size="14" fill="{{TOKEN:colors.text}}" text-anchor="middle">
+            <tspan>60%</tspan>
+        </text>
+        <text x="1190" y="273" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif" 
+              font-size="14" fill="{{TOKEN:colors.text}}" text-anchor="middle">
+            <tspan>80%</tspan>
+        </text>
+        <text x="1190" y="195" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif" 
+              font-size="14" font-weight="600" fill="{{TOKEN:colors.text}}" text-anchor="middle">
+            <tspan>100%</tspan>
+        </text>
+        
+        
+        <text x="1250" y="385" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif" 
+              font-size="16" font-weight="bold" fill="{{TOKEN:colors.text}}" text-anchor="middle" transform="rotate(90, 1250, 385)">
+            <tspan>相对湿度 (%)</tspan>
+        </text>
+        
+        
+        <line x1="140" y1="190" x2="140" y2="580" stroke="{{TOKEN:colors.text-secondary}}" stroke-width="2"/>
+        <line x1="140" y1="580" x2="1088" y2="580" stroke="{{TOKEN:colors.text-secondary}}" stroke-width="2"/>
+        <line x1="1088" y1="190" x2="1088" y2="580" stroke="{{TOKEN:colors.text-secondary}}" stroke-width="2"/>
+        
+        
+        <text x="140" y="610" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif" 
+              font-size="13" fill="{{TOKEN:colors.text}}" text-anchor="middle">
+            <tspan>0</tspan>
+        </text>
+        <text x="298" y="610" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif" 
+              font-size="13" fill="{{TOKEN:colors.text}}" text-anchor="middle">
+            <tspan>60</tspan>
+        </text>
+        <text x="535" y="610" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif" 
+              font-size="13" fill="{{TOKEN:colors.text}}" text-anchor="middle">
+            <tspan>300</tspan>
+        </text>
+        <text x="693" y="610" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif" 
+              font-size="13" fill="{{TOKEN:colors.text}}" text-anchor="middle">
+            <tspan>420</tspan>
+        </text>
+        <text x="930" y="610" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif" 
+              font-size="13" fill="{{TOKEN:colors.text}}" text-anchor="middle">
+            <tspan>660</tspan>
+        </text>
+        <text x="1088" y="610" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif" 
+              font-size="13" fill="{{TOKEN:colors.text}}" text-anchor="middle">
+            <tspan>720</tspan>
+        </text>
+        
+        
+        <text x="614" y="640" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif" 
+              font-size="16" font-weight="bold" fill="{{TOKEN:colors.text}}" text-anchor="middle">
+            <tspan>时间 (min)</tspan>
+        </text>
+        
+        
+        
+        <polyline points="140,372 298,203 535,203 693,528 930,528 1088,372" 
+                  fill="none" stroke="{{TOKEN:colors.text}}" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+        
+        
+        <circle cx="140" cy="372" r="5" fill="{{TOKEN:colors.text}}" stroke="{{TOKEN:colors.surface}}" stroke-width="2"/>
+        <circle cx="298" cy="203" r="5" fill="{{TOKEN:colors.text}}" stroke="{{TOKEN:colors.surface}}" stroke-width="2"/>
+        <circle cx="535" cy="203" r="5" fill="{{TOKEN:colors.text}}" stroke="{{TOKEN:colors.surface}}" stroke-width="2"/>
+        <circle cx="693" cy="528" r="5" fill="{{TOKEN:colors.text}}" stroke="{{TOKEN:colors.surface}}" stroke-width="2"/>
+        <circle cx="930" cy="528" r="5" fill="{{TOKEN:colors.text}}" stroke="{{TOKEN:colors.surface}}" stroke-width="2"/>
+        <circle cx="1088" cy="372" r="5" fill="{{TOKEN:colors.text}}" stroke="{{TOKEN:colors.surface}}" stroke-width="2"/>
+        
+        
+        
+        <polyline points="140,327 298,248 535,248 693,463 930,463 1088,327" 
+                  fill="none" stroke="{{TOKEN:colors.text-secondary}}" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" stroke-dasharray="8,5"/>
+        
+        
+        <rect x="135" y="322" width="10" height="10" fill="{{TOKEN:colors.text-secondary}}" stroke="{{TOKEN:colors.surface}}" stroke-width="2"/>
+        <rect x="293" y="243" width="10" height="10" fill="{{TOKEN:colors.text-secondary}}" stroke="{{TOKEN:colors.surface}}" stroke-width="2"/>
+        <rect x="530" y="243" width="10" height="10" fill="{{TOKEN:colors.text-secondary}}" stroke="{{TOKEN:colors.surface}}" stroke-width="2"/>
+        <rect x="688" y="458" width="10" height="10" fill="{{TOKEN:colors.text-secondary}}" stroke="{{TOKEN:colors.surface}}" stroke-width="2"/>
+        <rect x="925" y="458" width="10" height="10" fill="{{TOKEN:colors.text-secondary}}" stroke="{{TOKEN:colors.surface}}" stroke-width="2"/>
+        <rect x="1083" y="322" width="10" height="10" fill="{{TOKEN:colors.text-secondary}}" stroke="{{TOKEN:colors.surface}}" stroke-width="2"/>
+        
+        
+        
+        
+        <rect x="145" y="357" width="42" height="20" fill="{{TOKEN:colors.surface}}" stroke="{{TOKEN:colors.text}}" stroke-width="0.5" rx="3" opacity="0.9"/>
+        <text x="166" y="370" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif" 
+              font-size="11" font-weight="600" fill="{{TOKEN:colors.text}}" text-anchor="middle">
+            <tspan>20℃</tspan>
+        </text>
+        
+        
+        <rect x="145" y="312" width="42" height="20" fill="{{TOKEN:colors.surface}}" stroke="{{TOKEN:colors.text-secondary}}" stroke-width="0.5" rx="3" opacity="0.9"/>
+        <text x="166" y="325" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif" 
+              font-size="11" font-weight="600" fill="{{TOKEN:colors.text-secondary}}" text-anchor="middle">
+            <tspan>65%</tspan>
+        </text>
+        
+        
+        <rect x="303" y="188" width="42" height="20" fill="{{TOKEN:colors.surface}}" stroke="{{TOKEN:colors.text}}" stroke-width="0.5" rx="3" opacity="0.9"/>
+        <text x="324" y="201" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif" 
+              font-size="11" font-weight="600" fill="{{TOKEN:colors.text}}" text-anchor="middle">
+            <tspan>85℃</tspan>
+        </text>
+        
+        
+        <rect x="395" y="233" width="42" height="20" fill="{{TOKEN:colors.surface}}" stroke="{{TOKEN:colors.text-secondary}}" stroke-width="0.5" rx="3" opacity="0.9"/>
+        <text x="416" y="246" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif" 
+              font-size="11" font-weight="600" fill="{{TOKEN:colors.text-secondary}}" text-anchor="middle">
+            <tspan>85%</tspan>
+        </text>
+        
+        
+        <rect x="698" y="513" width="48" height="20" fill="{{TOKEN:colors.surface}}" stroke="{{TOKEN:colors.text}}" stroke-width="0.5" rx="3" opacity="0.9"/>
+        <text x="722" y="526" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif" 
+              font-size="11" font-weight="600" fill="{{TOKEN:colors.text}}" text-anchor="middle">
+            <tspan>-40℃</tspan>
+        </text>
+        
+        
+        <rect x="790" y="448" width="42" height="20" fill="{{TOKEN:colors.surface}}" stroke="{{TOKEN:colors.text-secondary}}" stroke-width="0.5" rx="3" opacity="0.9"/>
+        <text x="811" y="461" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif" 
+              font-size="11" font-weight="600" fill="{{TOKEN:colors.text-secondary}}" text-anchor="middle">
+            <tspan>30%</tspan>
+        </text>
+        
+        
+        <rect x="1020" y="357" width="42" height="20" fill="{{TOKEN:colors.surface}}" stroke="{{TOKEN:colors.text}}" stroke-width="0.5" rx="3" opacity="0.9"/>
+        <text x="1041" y="370" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif" 
+              font-size="11" font-weight="600" fill="{{TOKEN:colors.text}}" text-anchor="middle">
+            <tspan>20℃</tspan>
+        </text>
+        
+        
+        <rect x="1020" y="312" width="42" height="20" fill="{{TOKEN:colors.surface}}" stroke="{{TOKEN:colors.text-secondary}}" stroke-width="0.5" rx="3" opacity="0.9"/>
+        <text x="1041" y="325" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif" 
+              font-size="11" font-weight="600" fill="{{TOKEN:colors.text-secondary}}" text-anchor="middle">
+            <tspan>65%</tspan>
+        </text>
+    </g>
+    
+    
+    <g id="legend">
+        <rect x="420" y="660" width="440" height="45" fill="{{TOKEN:colors.surface}}" stroke="{{TOKEN:colors.border}}" stroke-width="1" rx="6"/>
+        
+        
+        <line x1="450" y1="682" x2="490" y2="682" stroke="{{TOKEN:colors.text}}" stroke-width="3"/>
+        <circle cx="470" cy="682" r="5" fill="{{TOKEN:colors.text}}" stroke="{{TOKEN:colors.surface}}" stroke-width="2"/>
+        <text x="505" y="687" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif" 
+              font-size="15" font-weight="600" fill="{{TOKEN:colors.text}}">
+            <tspan>温度 (℃)</tspan>
+        </text>
+        
+        
+        <line x1="650" y1="682" x2="690" y2="682" stroke="{{TOKEN:colors.text-secondary}}" stroke-width="2.5" stroke-dasharray="8,5"/>
+        <rect x="665" y="677" width="10" height="10" fill="{{TOKEN:colors.text-secondary}}" stroke="{{TOKEN:colors.surface}}" stroke-width="2"/>
+        <text x="705" y="687" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif" 
+              font-size="15" font-weight="600" fill="{{TOKEN:colors.text-secondary}}">
+            <tspan>相对湿度 (%)</tspan>
+        </text>
+    </g>
+</svg>
+

@@ -1,0 +1,190 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "slide-svg/theme-init/token-contract/v1",
+  "title": "slide-svg theme token contract v1",
+  "description": "Locked token NAMES for slide-svg themes. Values are theme-specific and provided via theme-active.json. Adding/removing names is a major version bump.",
+  "type": "object",
+  "required": ["version", "name", "colors", "typography", "radius", "stroke", "spacing", "assets", "voice"],
+  "additionalProperties": false,
+  "properties": {
+    "version": { "const": "1.0" },
+    "name": {
+      "type": "string",
+      "description": "Theme identifier, lowercase-kebab. Used as directory name under templates/layouts/<name>/.",
+      "pattern": "^[a-z][a-z0-9-]*$"
+    },
+    "display_name": {
+      "type": "string",
+      "description": "Human-readable theme name for UI display (e.g., \"Jangpm\")."
+    },
+    "description": {
+      "type": "string",
+      "description": "One-sentence summary of the theme's editorial intent."
+    },
+    "colors": {
+      "type": "object",
+      "required": ["bg", "surface", "surface-alt", "text", "text-secondary", "text-tertiary", "border", "border-strong", "accent", "accent-soft", "accent-ink", "positive", "positive-soft", "negative", "negative-soft", "warning", "warning-soft"],
+      "additionalProperties": false,
+      "properties": {
+        "bg":              { "$ref": "#/$defs/hex", "description": "Page background (warm off-white typical)." },
+        "surface":         { "$ref": "#/$defs/hex", "description": "Card / container background." },
+        "surface-alt":     { "$ref": "#/$defs/hex", "description": "Subtle grouped background." },
+        "text":            { "$ref": "#/$defs/hex", "description": "Primary text (never pure black)." },
+        "text-secondary":  { "$ref": "#/$defs/hex", "description": "Secondary text, GM line." },
+        "text-tertiary":   { "$ref": "#/$defs/hex", "description": "Captions, page numbers." },
+        "border":          { "$ref": "#/$defs/hex", "description": "Default dividers, card borders." },
+        "border-strong":   { "$ref": "#/$defs/hex", "description": "Stronger divider." },
+        "accent":          { "$ref": "#/$defs/hex", "description": "Single primary accent. Max 1-2 events per slide." },
+        "accent-soft":     { "$ref": "#/$defs/hex", "description": "Accent-tinted background / highlight column." },
+        "accent-ink":      { "$ref": "#/$defs/hex", "description": "Accent pressed / darker variant." },
+        "positive":        { "$ref": "#/$defs/hex", "description": "Growth / success (data contexts only)." },
+        "positive-soft":   { "$ref": "#/$defs/hex" },
+        "negative":        { "$ref": "#/$defs/hex", "description": "Decline / error (data contexts only)." },
+        "negative-soft":   { "$ref": "#/$defs/hex" },
+        "warning":         { "$ref": "#/$defs/hex", "description": "Caution (data contexts only)." },
+        "warning-soft":    { "$ref": "#/$defs/hex" },
+        "shell-bg":             { "$ref": "#/$defs/hexOrNull", "description": "OPTIONAL (v1.1, additive). Narrative-shell band fill — cover / chapter / closing ONLY. null = light shell, no band (stock behavior). Content shell must never use this." },
+        "shell-text":           { "$ref": "#/$defs/hexOrNull", "description": "OPTIONAL. Text color on the narrative-shell band. null falls back to `text` at render time." },
+        "shell-text-secondary": { "$ref": "#/$defs/hexOrNull", "description": "OPTIONAL. Muted text on the band. null falls back to `text-secondary`." },
+        "shell-accent":         { "$ref": "#/$defs/hexOrNull", "description": "OPTIONAL. Accent / CTA on the band (e.g., a brighter brand hue legible on the dark fill). null falls back to `accent`." },
+        "shell-spectrum":       { "$ref": "#/$defs/hexList",   "description": "OPTIONAL. Ordered decorative brand-spectrum hues for narrative shells ONLY (e.g., a row of brand dots). [] = none. Decorative-only and exempt from the content accent budget; never used on content slides." }
+      }
+    },
+    "typography": {
+      "type": "object",
+      "required": ["font-chain", "display", "display-sm", "headline", "title", "body", "caption", "label"],
+      "additionalProperties": false,
+      "properties": {
+        "font-chain": {
+          "type": "string",
+          "description": "Full CSS font-family chain with fallbacks. Written verbatim into every SVG <text> font-family attribute."
+        },
+        "display":    { "$ref": "#/$defs/typeScale", "description": "Title slide large text." },
+        "display-sm": { "$ref": "#/$defs/typeScale", "description": "Hero stat, closing accent." },
+        "headline":   { "$ref": "#/$defs/typeScale", "description": "Content slide titles." },
+        "title":      { "$ref": "#/$defs/typeScale", "description": "Card titles, subtitles." },
+        "body":       { "$ref": "#/$defs/typeScale", "description": "Body text baseline." },
+        "caption":    { "$ref": "#/$defs/typeScale", "description": "Labels, annotations." },
+        "label":      { "$ref": "#/$defs/typeScale", "description": "Uppercase taxonomy labels (eyebrow)." }
+      }
+    },
+    "radius": {
+      "type": "object",
+      "required": ["xs", "sm", "md", "lg", "xl", "pill"],
+      "additionalProperties": false,
+      "properties": {
+        "xs":   { "type": "number", "minimum": 0 },
+        "sm":   { "type": "number", "minimum": 0 },
+        "md":   { "type": "number", "minimum": 0 },
+        "lg":   { "type": "number", "minimum": 0 },
+        "xl":   { "type": "number", "minimum": 0 },
+        "pill": { "type": "number", "minimum": 0 }
+      }
+    },
+    "stroke": {
+      "type": "object",
+      "required": ["icon", "divider", "emphasis"],
+      "additionalProperties": false,
+      "properties": {
+        "icon":     { "type": "number", "description": "Line-art icon stroke width in px (e.g., 2)." },
+        "divider":  { "type": "number", "description": "Default structural divider stroke width." },
+        "emphasis": { "type": "number", "description": "Emphasis divider (accent rule, highlights)." }
+      }
+    },
+    "spacing": {
+      "type": "object",
+      "description": "8px-grid spacing scale. Keys are pixel values written as strings.",
+      "required": ["1", "2", "3", "4", "5", "6", "8", "10", "12", "14", "16"],
+      "additionalProperties": false,
+      "patternProperties": {
+        "^[0-9]+$": { "type": "number", "minimum": 0 }
+      }
+    },
+    "assets": {
+      "type": "object",
+      "required": ["icon-pack-default"],
+      "additionalProperties": false,
+      "properties": {
+        "icon-pack-default": {
+          "type": "string",
+          "enum": ["tabler-outline", "tabler-filled"],
+          "description": "Default icon library used by finalize_svg.py. Slide-level override via <use data-icon=\"<pack>/<name>\"> remains allowed."
+        },
+        "icon-pack-fallback": {
+          "type": ["string", "null"],
+          "enum": ["tabler-outline", "tabler-filled", null]
+        },
+        "character": {
+          "type": ["string", "null"],
+          "description": "Optional path to a brand-character illustration, relative to repo root. null to skip."
+        }
+      }
+    },
+    "voice": {
+      "type": "object",
+      "required": ["tone", "pov", "register"],
+      "additionalProperties": false,
+      "properties": {
+        "tone":     { "type": "string", "description": "e.g., \"editorial, analytical, declarative\"." },
+        "pov":      { "type": "string", "description": "e.g., \"third-person institutional\" or \"second-person direct\"." },
+        "register": { "type": "string", "description": "e.g., \"Korean lecture / report\", \"English briefing\"." },
+        "forbidden_phrases": {
+          "type": "array",
+          "items": { "type": "string" },
+          "description": "Phrases to avoid in GM and speaker notes (e.g., \"여러분\", marketing tone)."
+        },
+        "gm_style_hint": {
+          "type": "string",
+          "description": "One-sentence hint the Executor uses when composing .gm lines."
+        }
+      }
+    },
+    "surface": {
+      "type": "object",
+      "description": "OPTIONAL (v1.1, additive). Card / container treatment. Absent ⇒ hairline (1px-border card on a surface fill) — the stock behaviour. Token NAME matches the slide-html / slide-pencil contracts.",
+      "additionalProperties": false,
+      "required": ["card_style"],
+      "properties": {
+        "card_style": {
+          "type": "string",
+          "enum": ["filled", "hairline", "borderless"],
+          "description": "filled = surface-alt/surface fill, no border. hairline = 1px border on a surface fill (default). borderless = no rect card; group with whitespace + a single hairline rule."
+        }
+      }
+    },
+    "palette_mode": {
+      "type": "string",
+      "enum": ["chromatic", "monochrome"],
+      "description": "OPTIONAL (v1.1, additive). chromatic (default) ⇒ unspecified semantic positive/negative/warning fill green/red/orange. monochrome ⇒ a hue-free brand; fill_theme_defaults derives null semantic tokens from ink tones instead. Never relaxes the single-accent lock."
+    }
+  },
+  "$defs": {
+    "hex": {
+      "type": "string",
+      "pattern": "^#([0-9A-F]{6}|[0-9A-F]{8})$",
+      "description": "Hex color, 6 or 8 digits (RGB or RGBA). Uppercase enforced — lowercase is rejected so validate_theme's hint can guide the agent toward the canonical form."
+    },
+    "hexOrNull": {
+      "oneOf": [ { "$ref": "#/$defs/hex" }, { "type": "null" } ],
+      "description": "Optional hex color or null (token absent / falls back to a base token at render time)."
+    },
+    "hexList": {
+      "type": "array",
+      "items": { "$ref": "#/$defs/hex" },
+      "maxItems": 6,
+      "description": "Ordered list of hex colors (decorative spectrum). Max 6 to keep the spectrum legible."
+    },
+    "typeScale": {
+      "type": "object",
+      "required": ["size", "weight", "line-height"],
+      "additionalProperties": false,
+      "properties": {
+        "size":          { "type": "number", "exclusiveMinimum": 0, "description": "Font size in px." },
+        "weight":        { "type": "integer", "minimum": 100, "maximum": 900 },
+        "line-height":   { "type": "number", "exclusiveMinimum": 0 },
+        "letter-spacing": { "type": "number", "description": "px (not em). SVG writes this directly." },
+        "transform":     { "type": "string", "enum": ["none", "uppercase"] }
+      }
+    }
+  }
+}

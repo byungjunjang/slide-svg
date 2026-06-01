@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" width="1280" height="720" viewBox="0 0 1280 720">
+  <!-- Lecture Deck — 04 Ending (theme-parametric) -->
+
+  <rect width="1280" height="720" fill="{{TOKEN:colors.shell-bg}}"/>
+
+  <!-- Accent rule -->
+  <rect x="56" y="140" width="80" height="3" fill="{{TOKEN:colors.shell-accent}}"/>
+
+  <!-- Eyebrow -->
+  <text x="56" y="180"
+        font-family="{{TOKEN:typography.font-chain}}"
+        font-size="{{TOKEN:typography.label.size}}" font-weight="{{TOKEN:typography.label.weight}}"
+        letter-spacing="{{TOKEN:typography.label.letter-spacing}}"
+        fill="{{TOKEN:colors.shell-text-secondary}}">
+    {{CLOSING_LABEL}}
+  </text>
+
+  <!-- Primary closing message (Display) -->
+  <text x="56" y="340"
+        font-family="{{TOKEN:typography.font-chain}}"
+        font-size="{{TOKEN:typography.display.size}}" font-weight="{{TOKEN:typography.display.weight}}"
+        letter-spacing="{{TOKEN:typography.display.letter-spacing}}"
+        fill="{{TOKEN:colors.shell-text}}">
+    {{CLOSING_HEADLINE}}
+  </text>
+
+  <!-- Secondary line (accent) -->
+  <text x="56" y="410"
+        font-family="{{TOKEN:typography.font-chain}}"
+        font-size="{{TOKEN:typography.display-sm.size}}" font-weight="{{TOKEN:typography.display-sm.weight}}"
+        letter-spacing="{{TOKEN:typography.display-sm.letter-spacing}}"
+        fill="{{TOKEN:colors.shell-accent}}">
+    {{CLOSING_ACCENT}}
+  </text>
+
+  <!-- Contact / follow-up (Title) -->
+  <text x="56" y="470"
+        font-family="{{TOKEN:typography.font-chain}}"
+        font-size="{{TOKEN:typography.title.size}}" font-weight="{{TOKEN:typography.title.weight}}"
+        fill="{{TOKEN:colors.shell-text}}">
+    {{CONTACT_LINE}}
+  </text>
+
+  <!-- Divider -->
+  <line x1="56" y1="672" x2="1224" y2="672" stroke="{{TOKEN:colors.border}}" stroke-width="{{TOKEN:stroke.divider}}"/>
+
+  <!-- Presenter footer -->
+  <text x="56" y="696"
+        font-family="{{TOKEN:typography.font-chain}}"
+        font-size="{{TOKEN:typography.caption.size}}" font-weight="{{TOKEN:typography.caption.weight}}"
+        fill="{{TOKEN:colors.text-tertiary}}">
+    {{PRESENTER}} · {{DATE}}
+  </text>
+</svg>

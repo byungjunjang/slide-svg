@@ -1,0 +1,139 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1280 720" width="1280" height="720">
+    
+    
+    <defs>
+        
+        
+        
+        
+        
+    </defs>
+    
+    
+    <rect width="1280" height="720" fill="#FFFFFF"/>
+    
+    
+    <text x="60" y="70" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif" 
+          font-size="32" font-weight="700" fill="#1A1A1A" letter-spacing="-0.5">持续改进循环</text>
+    <text x="60" y="100" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif" 
+          font-size="16" fill="#6B7280">Continuous Improvement Cycle · 五阶段闭环驱动</text>
+    
+    
+    <circle cx="480" cy="410" r="200" fill="none" stroke="#E5E7EB" stroke-width="2" stroke-dasharray="8,4"/>
+    <circle cx="480" cy="410" r="130" fill="none" stroke="#E5E7EB" stroke-width="1" stroke-dasharray="4,4"/>
+    
+    
+    <text x="480" y="400" text-anchor="middle" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif" 
+          font-size="20" font-weight="800" fill="#1A1A1A">持续循环</text>
+    <text x="480" y="425" text-anchor="middle" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif" 
+          font-size="13" fill="#6B7280">Continuous Loop</text>
+    
+    
+    
+    
+    
+    
+    <path d="M 510,220 Q 620,240 650,340" stroke="#4633E3" stroke-width="2.5" fill="none" stroke-opacity="0.5"/>
+    <polygon points="655,340 645,332 648,348" fill="#4633E3" fill-opacity="0.6"/>
+    
+    
+    <path d="M 670,380 Q 680,480 610,555" stroke="#4633E3" stroke-opacity="0.6" stroke-width="2.5" fill="none" stroke-opacity="0.5"/>
+    <polygon points="605,558 618,552 610,565" fill="#4633E3" fill-opacity="0.6" fill-opacity="0.6"/>
+    
+    
+    <path d="M 575,580 Q 480,620 375,575" stroke="#4633E3" stroke-opacity="0.4" stroke-width="2.5" fill="none" stroke-opacity="0.5"/>
+    <polygon points="372,572 380,584 368,580" fill="#4633E3" fill-opacity="0.4" fill-opacity="0.6"/>
+    
+    
+    <path d="M 340,555 Q 280,470 285,365" stroke="#4633E3" stroke-opacity="0.25" stroke-width="2.5" fill="none" stroke-opacity="0.5"/>
+    <polygon points="287,360 278,372 294,368" fill="#4633E3" fill-opacity="0.25" fill-opacity="0.6"/>
+    
+    
+    <path d="M 310,340 Q 340,250 460,215" stroke="#4633E3" stroke-opacity="0.25" stroke-width="2.5" fill="none" stroke-opacity="0.5"/>
+    <polygon points="462,213 452,206 454,222" fill="#4633E3" fill-opacity="0.25" fill-opacity="0.6"/>
+    
+    
+    <circle cx="480" cy="210" r="45" fill="#4633E3"/>
+    <text x="480" y="205" text-anchor="middle" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif" 
+          font-size="28" font-weight="700" fill="#FFFFFF">01</text>
+    <text x="480" y="228" text-anchor="middle" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif" 
+          font-size="11" font-weight="600" fill="#FFFFFF" fill-opacity="0.85">调研分析</text>
+    
+    
+    <circle cx="670" cy="355" r="45" fill="#4633E3" fill-opacity="0.6"/>
+    <text x="670" y="350" text-anchor="middle" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif" 
+          font-size="28" font-weight="700" fill="#FFFFFF">02</text>
+    <text x="670" y="373" text-anchor="middle" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif" 
+          font-size="11" font-weight="600" fill="#FFFFFF" fill-opacity="0.85">方案设计</text>
+    
+    
+    <circle cx="600" cy="570" r="45" fill="#4633E3" fill-opacity="0.4"/>
+    <text x="600" y="565" text-anchor="middle" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif" 
+          font-size="28" font-weight="700" fill="#FFFFFF">03</text>
+    <text x="600" y="588" text-anchor="middle" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif" 
+          font-size="11" font-weight="600" fill="#FFFFFF" fill-opacity="0.85">执行落地</text>
+    
+    
+    <circle cx="360" cy="570" r="45" fill="#4633E3" fill-opacity="0.25"/>
+    <text x="360" y="565" text-anchor="middle" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif" 
+          font-size="28" font-weight="700" fill="#FFFFFF">04</text>
+    <text x="360" y="588" text-anchor="middle" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif" 
+          font-size="11" font-weight="600" fill="#FFFFFF" fill-opacity="0.85">效果评估</text>
+    
+    
+    <circle cx="290" cy="355" r="45" fill="#4633E3" fill-opacity="0.25"/>
+    <text x="290" y="350" text-anchor="middle" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif" 
+          font-size="28" font-weight="700" fill="#FFFFFF">05</text>
+    <text x="290" y="373" text-anchor="middle" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif" 
+          font-size="11" font-weight="600" fill="#FFFFFF" fill-opacity="0.85">迭代优化</text>
+    
+    
+    <g>
+        <rect x="780" y="150" width="440" height="75" rx="8" fill="#FFFFFF"/>
+        <rect x="780" y="150" width="5" height="75" rx="3" fill="#4633E3"/>
+        <text x="802" y="178" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif" 
+              font-size="15" font-weight="700" fill="#4633E3">01 调研分析</text>
+        <text x="802" y="202" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif" 
+              font-size="12" fill="#6B7280">深入了解现状，收集数据与用户反馈</text>
+    </g>
+    
+    <g>
+        <rect x="780" y="240" width="440" height="75" rx="8" fill="#FFFFFF"/>
+        <rect x="780" y="240" width="5" height="75" rx="3" fill="#4633E3" fill-opacity="0.6"/>
+        <text x="802" y="268" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif" 
+              font-size="15" font-weight="700" fill="#4633E3" fill-opacity="0.6">02 方案设计</text>
+        <text x="802" y="292" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif" 
+              font-size="12" fill="#6B7280">制定改进方案，明确目标与关键路径</text>
+    </g>
+    
+    <g>
+        <rect x="780" y="330" width="440" height="75" rx="8" fill="#FFFFFF"/>
+        <rect x="780" y="330" width="5" height="75" rx="3" fill="#4633E3" fill-opacity="0.4"/>
+        <text x="802" y="358" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif" 
+              font-size="15" font-weight="700" fill="#4633E3" fill-opacity="0.25">03 执行落地</text>
+        <text x="802" y="382" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif" 
+              font-size="12" fill="#6B7280">推进方案实施，协调资源与跟踪进度</text>
+    </g>
+    
+    <g>
+        <rect x="780" y="420" width="440" height="75" rx="8" fill="#FFFFFF"/>
+        <rect x="780" y="420" width="5" height="75" rx="3" fill="#4633E3" fill-opacity="0.25"/>
+        <text x="802" y="448" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif" 
+              font-size="15" font-weight="700" fill="#4633E3" fill-opacity="0.25">04 效果评估</text>
+        <text x="802" y="472" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif" 
+              font-size="12" fill="#6B7280">量化成果输出，对比目标达成率</text>
+    </g>
+    
+    <g>
+        <rect x="780" y="510" width="440" height="75" rx="8" fill="#FFFFFF"/>
+        <rect x="780" y="510" width="5" height="75" rx="3" fill="#4633E3" fill-opacity="0.25"/>
+        <text x="802" y="538" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif" 
+              font-size="15" font-weight="700" fill="#4633E3" fill-opacity="0.25">05 迭代优化</text>
+        <text x="802" y="562" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif" 
+              font-size="12" fill="#6B7280">总结经验教训，进入下一轮改进循环</text>
+    </g>
+
+    
+    <text x="60" y="690" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif" 
+          font-size="12" fill="#E5E7EB">每完成一个循环，整体能力向上跃迁一个台阶</text>
+</svg>

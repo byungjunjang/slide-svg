@@ -1,0 +1,301 @@
+<!doctype html>
+<html lang="ko"><head><meta charset="utf-8">
+<title>Jangpm — theme preview</title>
+<style>
+  body { margin:0; padding:32px; background:#11151a0d; font-family:system-ui,sans-serif; }
+  h1 { font-size:22px; margin:0 0 4px; }
+  .sub { color:#666; margin:0 0 24px; }
+  .spec { display:flex; gap:32px; flex-wrap:wrap; margin-bottom:32px; }
+  .swatches { display:flex; gap:12px; flex-wrap:wrap; }
+  .swatch { display:flex; align-items:center; gap:8px; }
+  .chip { width:28px; height:28px; border-radius:6px; border:1px solid #0002; display:inline-block; }
+  code { font-size:12px; color:#333; }
+  table.typescale { border-collapse:collapse; font-size:13px; }
+  table.typescale th, table.typescale td { border:1px solid #ddd; padding:3px 10px; text-align:left; }
+  .grid { display:grid; grid-template-columns:1fr 1fr; gap:24px; }
+  figure.page { margin:0; }
+  figcaption { font-size:13px; color:#555; margin-bottom:6px; }
+  .frame { border:1px solid #ccc; box-shadow:0 1px 4px #0001; background:#fff; }
+  .frame svg { display:block; width:100%; height:auto; }
+  .missing { color:#b00; font-size:13px; }
+  h2 { font-size:15px; margin:32px 0 12px; color:#444; }
+</style></head><body>
+<h1>Jangpm — theme preview</h1>
+<p class="sub">활성 액센트 #4633E3 · 아래 셸과 샘플을 확인하고 승인/피드백을 주세요.</p>
+<div class="spec">
+  <div><strong>Palette</strong><div class="swatches"><div class="swatch"><span class="chip" style="background:#FAFAF9"></span><code>bg  #FAFAF9</code></div>
+<div class="swatch"><span class="chip" style="background:#FFFFFF"></span><code>surface  #FFFFFF</code></div>
+<div class="swatch"><span class="chip" style="background:#F5F5F4"></span><code>surface-alt  #F5F5F4</code></div>
+<div class="swatch"><span class="chip" style="background:#1A1A1A"></span><code>text  #1A1A1A</code></div>
+<div class="swatch"><span class="chip" style="background:#6B7280"></span><code>text-secondary  #6B7280</code></div>
+<div class="swatch"><span class="chip" style="background:#9CA3AF"></span><code>text-tertiary  #9CA3AF</code></div>
+<div class="swatch"><span class="chip" style="background:#E5E7EB"></span><code>border  #E5E7EB</code></div>
+<div class="swatch"><span class="chip" style="background:#D4D4D4"></span><code>border-strong  #D4D4D4</code></div>
+<div class="swatch"><span class="chip" style="background:#4633E3"></span><code>accent  #4633E3</code></div>
+<div class="swatch"><span class="chip" style="background:#E8E5FC"></span><code>accent-soft  #E8E5FC</code></div>
+<div class="swatch"><span class="chip" style="background:#2E1FB3"></span><code>accent-ink  #2E1FB3</code></div>
+<div class="swatch"><span class="chip" style="background:#059669"></span><code>positive  #059669</code></div>
+<div class="swatch"><span class="chip" style="background:#ECFDF5"></span><code>positive-soft  #ECFDF5</code></div>
+<div class="swatch"><span class="chip" style="background:#E11D48"></span><code>negative  #E11D48</code></div>
+<div class="swatch"><span class="chip" style="background:#FFF1F2"></span><code>negative-soft  #FFF1F2</code></div>
+<div class="swatch"><span class="chip" style="background:#D97706"></span><code>warning  #D97706</code></div>
+<div class="swatch"><span class="chip" style="background:#FFFBEB"></span><code>warning-soft  #FFFBEB</code></div></div></div>
+  <div><strong>Type scale</strong><table class="typescale"><thead><tr><th>tier</th><th>size</th><th>weight</th></tr></thead><tbody><tr><td>display</td><td>56</td><td>800</td></tr><tr><td>display-sm</td><td>40</td><td>800</td></tr><tr><td>headline</td><td>32</td><td>700</td></tr><tr><td>title</td><td>18.4</td><td>600</td></tr><tr><td>body</td><td>15.2</td><td>400</td></tr><tr><td>caption</td><td>12.8</td><td>500</td></tr><tr><td>label</td><td>12.8</td><td>600</td></tr></tbody></table></div>
+</div>
+<h2>Boilerplate shells</h2>
+<div class="grid"><figure class="page"><figcaption>Cover shell</figcaption><div class="frame"><?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" width="1280" height="720" viewBox="0 0 1280 720">
+  <!-- Lecture Deck — 01 Cover (theme-parametric) -->
+  <!-- Theme tokens resolved at render time from references/theme-active.json -->
+
+  <!-- Page background -->
+  <rect width="1280" height="720" fill="#FAFAF9"/>
+
+  <!-- Accent rule (single editorial cue) -->
+  <rect x="56" y="140" width="80" height="3" fill="#4633E3"/>
+
+  <!-- Eyebrow / program label -->
+  <text x="56" y="180"
+        font-family="Pretendard, 'Apple SD Gothic Neo', 'Malgun Gothic', Arial, sans-serif"
+        font-size="12.8" font-weight="600"
+        letter-spacing="0.64"
+        fill="#6B7280">
+    강의 시리즈 · 01
+  </text>
+
+  <!-- Primary title (Display) -->
+  <text x="56" y="340"
+        font-family="Pretendard, 'Apple SD Gothic Neo', 'Malgun Gothic', Arial, sans-serif"
+        font-size="56" font-weight="800"
+        letter-spacing="-1.68"
+        fill="#1A1A1A">
+    활성 테마 셸 구성 프리뷰
+  </text>
+
+  <!-- Optional secondary line (Display-sm, accent) -->
+  <text x="56" y="410"
+        font-family="Pretendard, 'Apple SD Gothic Neo', 'Malgun Gothic', Arial, sans-serif"
+        font-size="40" font-weight="800"
+        letter-spacing="-0.8"
+        fill="#4633E3">
+    Shell Composition
+  </text>
+
+  <!-- Subtitle (Title) -->
+  <text x="56" y="470"
+        font-family="Pretendard, 'Apple SD Gothic Neo', 'Malgun Gothic', Arial, sans-serif"
+        font-size="18.4" font-weight="600"
+        fill="#1A1A1A">
+    내러티브 셸 밴드와 콘텐츠 라이트 셸을 함께 확인
+  </text>
+
+  <!-- Presenter / date line (Body) -->
+  <text x="56" y="656"
+        font-family="Pretendard, 'Apple SD Gothic Neo', 'Malgun Gothic', Arial, sans-serif"
+        font-size="15.2" font-weight="400"
+        fill="#6B7280">
+    장병준 · 2026
+  </text>
+
+  <!-- Thin divider at the bottom edge (structural) -->
+  <line x1="56" y1="672" x2="1224" y2="672" stroke="#E5E7EB" stroke-width="1"/>
+</svg>
+</div></figure><figure class="page"><figcaption>Chapter divider shell</figcaption><div class="frame"><?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" width="1280" height="720" viewBox="0 0 1280 720">
+  <!-- Lecture Deck — 02 Chapter / Section Divider (theme-parametric) -->
+
+  <rect width="1280" height="720" fill="#FAFAF9"/>
+
+  <!-- Chapter number (large, accent) -->
+  <text x="56" y="260"
+        font-family="Pretendard, 'Apple SD Gothic Neo', 'Malgun Gothic', Arial, sans-serif"
+        font-size="40" font-weight="800"
+        letter-spacing="-0.8"
+        fill="#4633E3">
+    01
+  </text>
+
+  <!-- Chapter label (uppercase eyebrow) -->
+  <text x="56" y="300"
+        font-family="Pretendard, 'Apple SD Gothic Neo', 'Malgun Gothic', Arial, sans-serif"
+        font-size="12.8" font-weight="600"
+        letter-spacing="0.64"
+        fill="#6B7280">
+    SECTION
+  </text>
+
+  <!-- Chapter title (Display) -->
+  <text x="56" y="400"
+        font-family="Pretendard, 'Apple SD Gothic Neo', 'Malgun Gothic', Arial, sans-serif"
+        font-size="56" font-weight="800"
+        letter-spacing="-1.68"
+        fill="#1A1A1A">
+    챕터 디바이더 셸
+  </text>
+
+  <!-- Supporting line (Title, secondary color) -->
+  <text x="56" y="450"
+        font-family="Pretendard, 'Apple SD Gothic Neo', 'Malgun Gothic', Arial, sans-serif"
+        font-size="18.4" font-weight="600"
+        fill="#6B7280">
+    섹션 전환을 알리는 내러티브 셸
+  </text>
+
+  <!-- Structural divider -->
+  <line x1="56" y1="672" x2="1224" y2="672" stroke="#E5E7EB" stroke-width="1"/>
+
+  <!-- Page number (bottom right) -->
+  <text x="1224" y="696"
+        font-family="Pretendard, 'Apple SD Gothic Neo', 'Malgun Gothic', Arial, sans-serif"
+        font-size="12.8" font-weight="500"
+        text-anchor="end"
+        fill="#9CA3AF">
+    03 / 12
+  </text>
+</svg>
+</div></figure><figure class="page"><figcaption>Content shell</figcaption><div class="frame"><?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" width="1280" height="720" viewBox="0 0 1280 720">
+  <!-- Lecture Deck — 03 Content (theme-parametric; header/footer shell only; body composed by Executor) -->
+
+  <rect width="1280" height="720" fill="#FAFAF9"/>
+
+  <!-- Headline bar: title at top (Headline) -->
+  <text x="56" y="96"
+        font-family="Pretendard, 'Apple SD Gothic Neo', 'Malgun Gothic', Arial, sans-serif"
+        font-size="32" font-weight="700"
+        letter-spacing="-0.64"
+        fill="#1A1A1A">
+    콘텐츠 셸 헤더라인
+  </text>
+
+  <!-- Optional subtitle under headline (Label, uppercase, tracked) -->
+  <text x="56" y="124"
+        font-family="Pretendard, 'Apple SD Gothic Neo', 'Malgun Gothic', Arial, sans-serif"
+        font-size="12.8" font-weight="600"
+        letter-spacing="0.64"
+        fill="#6B7280">
+    CONTENT
+  </text>
+
+  <!-- Thin accent rule under headline (editorial) -->
+  <rect x="56" y="140" width="48" height="2" fill="#4633E3"/>
+
+  <!-- CONTENT AREA (Executor fills this region freely) -->
+  <!-- x=56, y=160, w=1168, h=480 — everything above GM, below headline -->
+
+  <!-- Governing Message (GM) — mandatory on every content slide, centered, bottom 64px -->
+  <text x="640" y="680"
+        font-family="Pretendard, 'Apple SD Gothic Neo', 'Malgun Gothic', Arial, sans-serif"
+        font-size="15.2" font-weight="700"
+        text-anchor="middle"
+        fill="#6B7280">
+    거버닝 메시지는 모든 콘텐츠 슬라이드 하단에 한 줄
+  </text>
+
+  <!-- Page number (bottom right, caption) -->
+  <text x="1224" y="696"
+        font-family="Pretendard, 'Apple SD Gothic Neo', 'Malgun Gothic', Arial, sans-serif"
+        font-size="12.8" font-weight="500"
+        text-anchor="end"
+        fill="#9CA3AF">
+    03 / 12
+  </text>
+</svg>
+</div></figure><figure class="page"><figcaption>Ending shell</figcaption><div class="frame"><?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" width="1280" height="720" viewBox="0 0 1280 720">
+  <!-- Lecture Deck — 04 Ending (theme-parametric) -->
+
+  <rect width="1280" height="720" fill="#FAFAF9"/>
+
+  <!-- Accent rule -->
+  <rect x="56" y="140" width="80" height="3" fill="#4633E3"/>
+
+  <!-- Eyebrow -->
+  <text x="56" y="180"
+        font-family="Pretendard, 'Apple SD Gothic Neo', 'Malgun Gothic', Arial, sans-serif"
+        font-size="12.8" font-weight="600"
+        letter-spacing="0.64"
+        fill="#6B7280">
+    CLOSING
+  </text>
+
+  <!-- Primary closing message (Display) -->
+  <text x="56" y="340"
+        font-family="Pretendard, 'Apple SD Gothic Neo', 'Malgun Gothic', Arial, sans-serif"
+        font-size="56" font-weight="800"
+        letter-spacing="-1.68"
+        fill="#1A1A1A">
+    마무리 셸
+  </text>
+
+  <!-- Secondary line (accent) -->
+  <text x="56" y="410"
+        font-family="Pretendard, 'Apple SD Gothic Neo', 'Malgun Gothic', Arial, sans-serif"
+        font-size="40" font-weight="800"
+        letter-spacing="-0.8"
+        fill="#4633E3">
+    Thank you
+  </text>
+
+  <!-- Contact / follow-up (Title) -->
+  <text x="56" y="470"
+        font-family="Pretendard, 'Apple SD Gothic Neo', 'Malgun Gothic', Arial, sans-serif"
+        font-size="18.4" font-weight="600"
+        fill="#1A1A1A">
+    contact@example.com
+  </text>
+
+  <!-- Divider -->
+  <line x1="56" y1="672" x2="1224" y2="672" stroke="#E5E7EB" stroke-width="1"/>
+
+  <!-- Presenter footer -->
+  <text x="56" y="696"
+        font-family="Pretendard, 'Apple SD Gothic Neo', 'Malgun Gothic', Arial, sans-serif"
+        font-size="12.8" font-weight="500"
+        fill="#9CA3AF">
+    장병준 · 2026
+  </text>
+</svg>
+</div></figure></div>
+<h2>Sample content layouts</h2>
+<div class="grid"><figure class="page"><figcaption>stat row.tpl (sample content)</figcaption><div class="frame"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1280 720" width="1280" height="720">
+  <rect x="0" y="0" width="1280" height="720" fill="#FAFAF9"/>
+  <text x="56" y="92" font-family='Pretendard, 'Apple SD Gothic Neo', 'Malgun Gothic', Arial, sans-serif' font-size="20" font-weight="500" fill="#6B7280" letter-spacing="2">CONTENT · 샘플 레이아웃</text>
+  <text x="56" y="150" font-family='Pretendard, 'Apple SD Gothic Neo', 'Malgun Gothic', Arial, sans-serif' font-size="44" font-weight="700" fill="#1A1A1A">핵심 지표 세 가지</text>
+  <rect x="56" y="226" width="360" height="280" rx="16" fill="#FFFFFF"/>
+  <text x="92" y="338" font-family='Pretendard, 'Apple SD Gothic Neo', 'Malgun Gothic', Arial, sans-serif' font-size="76" font-weight="800" fill="#4633E3">87%</text>
+  <text x="92" y="392" font-family='Pretendard, 'Apple SD Gothic Neo', 'Malgun Gothic', Arial, sans-serif' font-size="24" font-weight="600" fill="#1A1A1A">도입 후 만족도</text>
+  <text x="92" y="430" font-family='Pretendard, 'Apple SD Gothic Neo', 'Malgun Gothic', Arial, sans-serif' font-size="18" font-weight="400" fill="#6B7280">전년 대비 +12%p</text>
+  <rect x="460" y="226" width="360" height="280" rx="16" fill="#FFFFFF"/>
+  <text x="496" y="338" font-family='Pretendard, 'Apple SD Gothic Neo', 'Malgun Gothic', Arial, sans-serif' font-size="76" font-weight="800" fill="#4633E3">3.2x</text>
+  <text x="496" y="392" font-family='Pretendard, 'Apple SD Gothic Neo', 'Malgun Gothic', Arial, sans-serif' font-size="24" font-weight="600" fill="#1A1A1A">처리 속도 향상</text>
+  <text x="496" y="430" font-family='Pretendard, 'Apple SD Gothic Neo', 'Malgun Gothic', Arial, sans-serif' font-size="18" font-weight="400" fill="#6B7280">수작업 대비</text>
+  <rect x="864" y="226" width="360" height="280" rx="16" fill="#FFFFFF"/>
+  <text x="900" y="338" font-family='Pretendard, 'Apple SD Gothic Neo', 'Malgun Gothic', Arial, sans-serif' font-size="76" font-weight="800" fill="#4633E3">42h</text>
+  <text x="900" y="392" font-family='Pretendard, 'Apple SD Gothic Neo', 'Malgun Gothic', Arial, sans-serif' font-size="24" font-weight="600" fill="#1A1A1A">주당 절감 시간</text>
+  <text x="900" y="430" font-family='Pretendard, 'Apple SD Gothic Neo', 'Malgun Gothic', Arial, sans-serif' font-size="18" font-weight="400" fill="#6B7280">팀 8인 기준</text>
+  <line x1="56" y1="636" x2="1224" y2="636" stroke="#6B7280" stroke-opacity="0.2" stroke-width="1"/>
+  <text x="56" y="678" font-family='Pretendard, 'Apple SD Gothic Neo', 'Malgun Gothic', Arial, sans-serif' font-size="18" font-weight="500" fill="#6B7280">거버닝 메시지는 모든 콘텐츠 슬라이드 하단에 한 줄</text>
+</svg>
+</div></figure><figure class="page"><figcaption>two column.tpl (sample content)</figcaption><div class="frame"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1280 720" width="1280" height="720">
+  <rect x="0" y="0" width="1280" height="720" fill="#FAFAF9"/>
+  <text x="56" y="92" font-family='Pretendard, 'Apple SD Gothic Neo', 'Malgun Gothic', Arial, sans-serif' font-size="20" font-weight="500" fill="#6B7280" letter-spacing="2">CONTENT · 샘플 레이아웃</text>
+  <text x="56" y="150" font-family='Pretendard, 'Apple SD Gothic Neo', 'Malgun Gothic', Arial, sans-serif' font-size="44" font-weight="700" fill="#1A1A1A">좌우 2단 구성</text>
+  <text x="56" y="244" font-family='Pretendard, 'Apple SD Gothic Neo', 'Malgun Gothic', Arial, sans-serif' font-size="26" font-weight="600" fill="#1A1A1A">왜 지금인가</text>
+  <text x="56" y="296" font-family='Pretendard, 'Apple SD Gothic Neo', 'Malgun Gothic', Arial, sans-serif' font-size="20" font-weight="400" fill="#6B7280">시장 전환이 가속되며 의사결정 창이</text>
+  <text x="56" y="326" font-family='Pretendard, 'Apple SD Gothic Neo', 'Malgun Gothic', Arial, sans-serif' font-size="20" font-weight="400" fill="#6B7280">좁아지고 있다. 지금이 진입 적기다.</text>
+  <rect x="660" y="226" width="564" height="300" rx="16" fill="#FFFFFF"/>
+  <circle cx="700" cy="280" r="5" fill="#4633E3"/>
+  <text x="724" y="288" font-family='Pretendard, 'Apple SD Gothic Neo', 'Malgun Gothic', Arial, sans-serif' font-size="22" font-weight="500" fill="#1A1A1A">경쟁사 대비 6개월 선행</text>
+  <circle cx="700" cy="338" r="5" fill="#4633E3"/>
+  <text x="724" y="346" font-family='Pretendard, 'Apple SD Gothic Neo', 'Malgun Gothic', Arial, sans-serif' font-size="22" font-weight="500" fill="#1A1A1A">초기 도입 비용 회수 9개월</text>
+  <circle cx="700" cy="396" r="5" fill="#4633E3"/>
+  <text x="724" y="404" font-family='Pretendard, 'Apple SD Gothic Neo', 'Malgun Gothic', Arial, sans-serif' font-size="22" font-weight="500" fill="#1A1A1A">기존 워크플로우와 호환</text>
+  <circle cx="700" cy="454" r="5" fill="#4633E3"/>
+  <text x="724" y="462" font-family='Pretendard, 'Apple SD Gothic Neo', 'Malgun Gothic', Arial, sans-serif' font-size="22" font-weight="500" fill="#1A1A1A">단계적 롤아웃 가능</text>
+  <line x1="56" y1="636" x2="1224" y2="636" stroke="#6B7280" stroke-opacity="0.2" stroke-width="1"/>
+  <text x="56" y="678" font-family='Pretendard, 'Apple SD Gothic Neo', 'Malgun Gothic', Arial, sans-serif' font-size="18" font-weight="500" fill="#6B7280">거버닝 메시지는 모든 콘텐츠 슬라이드 하단에 한 줄</text>
+</svg>
+</div></figure></div>
+
+</body></html>

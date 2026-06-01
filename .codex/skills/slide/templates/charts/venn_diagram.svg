@@ -1,0 +1,103 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1280 720" width="1280" height="720">
+    
+    
+    <defs>
+        
+        
+    </defs>
+    
+    
+    <rect width="1280" height="720" fill="#FFFFFF"/>
+    
+    
+    <text x="60" y="70" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif" 
+          font-size="32" font-weight="700" fill="#1A1A1A" letter-spacing="-0.5">核心能力交叉分析</text>
+    <text x="60" y="100" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif" 
+          font-size="16" fill="#6B7280">Core Competency Intersection · 三大领域的协同关系</text>
+    
+    
+    
+    <circle cx="420" cy="350" r="175" fill="#4633E3" fill-opacity="0.15" stroke="#4633E3" stroke-width="2.5" stroke-opacity="0.6"/>
+    <text x="340" y="280" text-anchor="middle" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif" 
+          font-size="20" font-weight="700" fill="#4633E3" fill-opacity="0.6">技术</text>
+    <text x="340" y="305" text-anchor="middle" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif" 
+          font-size="13" fill="#6B7280">Technology</text>
+    
+    
+    <circle cx="540" cy="350" r="175" fill="#4633E3" fill-opacity="0.4" fill-opacity="0.15" stroke="#4633E3" stroke-opacity="0.4" stroke-width="2.5" stroke-opacity="0.6"/>
+    <text x="620" y="280" text-anchor="middle" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif" 
+          font-size="20" font-weight="700" fill="#4633E3" fill-opacity="0.25">市场</text>
+    <text x="620" y="305" text-anchor="middle" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif" 
+          font-size="13" fill="#6B7280">Market</text>
+    
+    
+    <circle cx="480" cy="460" r="175" fill="#4633E3" fill-opacity="0.25" fill-opacity="0.15" stroke="#4633E3" stroke-opacity="0.25" stroke-width="2.5" stroke-opacity="0.6"/>
+    <text x="480" y="560" text-anchor="middle" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif" 
+          font-size="20" font-weight="700" fill="#4633E3" fill-opacity="0.25">运营</text>
+    <text x="480" y="585" text-anchor="middle" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif" 
+          font-size="13" fill="#6B7280">Operations</text>
+    
+    
+    <text x="480" y="310" text-anchor="middle" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif" 
+          font-size="12" font-weight="600" fill="#4633E3" fill-opacity="0.25">产品创新</text>
+    
+    
+    <text x="415" y="440" text-anchor="middle" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif" 
+          font-size="12" font-weight="600" fill="#4633E3" fill-opacity="0.25">技术运维</text>
+    
+    
+    <text x="545" y="440" text-anchor="middle" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif" 
+          font-size="12" font-weight="600" fill="#4633E3" fill-opacity="0.25">客户运营</text>
+    
+    
+    <text x="480" y="388" text-anchor="middle" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif" 
+          font-size="15" font-weight="800" fill="#1A1A1A">核心竞争力</text>
+    
+    
+    <g>
+        <rect x="740" y="140" width="480" height="90" rx="10" fill="#FFFFFF"/>
+        <rect x="740" y="140" width="6" height="90" rx="3" fill="#4633E3"/>
+        <circle cx="768" cy="168" r="10" fill="#4633E3" fill-opacity="0.2"/>
+        <circle cx="768" cy="168" r="5" fill="#4633E3"/>
+        <text x="790" y="172" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif" 
+              font-size="15" font-weight="700" fill="#1A1A1A">技术能力</text>
+        <text x="768" y="200" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif" 
+              font-size="13" fill="#6B7280">自主研发引擎 · AI算法 · 云原生架构</text>
+    </g>
+    
+    <g>
+        <rect x="740" y="248" width="480" height="90" rx="10" fill="#FFFFFF"/>
+        <rect x="740" y="248" width="6" height="90" rx="3" fill="#4633E3" fill-opacity="0.4"/>
+        <circle cx="768" cy="276" r="10" fill="#4633E3" fill-opacity="0.4" fill-opacity="0.2"/>
+        <circle cx="768" cy="276" r="5" fill="#4633E3" fill-opacity="0.4"/>
+        <text x="790" y="280" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif" 
+              font-size="15" font-weight="700" fill="#1A1A1A">市场洞察</text>
+        <text x="768" y="308" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif" 
+              font-size="13" fill="#6B7280">全渠道覆盖 · 品牌认知领先 · 用户增长飞轮</text>
+    </g>
+    
+    <g>
+        <rect x="740" y="356" width="480" height="90" rx="10" fill="#FFFFFF"/>
+        <rect x="740" y="356" width="6" height="90" rx="3" fill="#4633E3" fill-opacity="0.25"/>
+        <circle cx="768" cy="384" r="10" fill="#4633E3" fill-opacity="0.25" fill-opacity="0.2"/>
+        <circle cx="768" cy="384" r="5" fill="#4633E3" fill-opacity="0.25"/>
+        <text x="790" y="388" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif" 
+              font-size="15" font-weight="700" fill="#1A1A1A">运营效率</text>
+        <text x="768" y="416" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif" 
+              font-size="13" fill="#6B7280">供应链优化 · 智能仓储 · 精细化成本管控</text>
+    </g>
+    
+    
+    <g>
+        <rect x="740" y="480" width="480" height="80" rx="10" fill="#FFFFFF"/>
+        <rect x="740" y="480" width="480" height="6" rx="3" fill="#4633E3" fill-opacity="0.25"/>
+        <text x="980" y="515" text-anchor="middle" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif" 
+              font-size="15" font-weight="700" fill="#4633E3" fill-opacity="0.25">核心竞争力 = 技术 × 市场 × 运营</text>
+        <text x="980" y="540" text-anchor="middle" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif" 
+              font-size="13" fill="#6B7280">三大能力的深度融合构成不可复制的竞争壁垒</text>
+    </g>
+
+    
+    <text x="60" y="680" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif" 
+          font-size="12" fill="#E5E7EB">圆形面积表示能力覆盖范围，交叉区域表示协同价值</text>
+</svg>

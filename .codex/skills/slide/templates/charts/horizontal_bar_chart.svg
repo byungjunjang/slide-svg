@@ -1,0 +1,188 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1280 720" width="1280" height="720">
+    
+    
+    <defs>
+        
+        
+        
+        
+        
+        
+        
+        
+        
+    </defs>
+    
+    
+    <rect width="1280" height="720" fill="#FFFFFF"/>
+    
+    
+    <text x="60" y="70" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC', 'Microsoft YaHei', sans-serif" 
+          font-size="32" font-weight="bold" fill="#1A1A1A">
+        <tspan>品牌认知度排行榜</tspan>
+    </text>
+    
+    <text x="60" y="105" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC', 'Microsoft YaHei', sans-serif" 
+          font-size="18" fill="#6B7280">
+        <tspan>2025年消费者调研报告 · 样本量 N=5,000</tspan>
+    </text>
+    
+    
+    <g id="chartArea">
+        
+        <line x1="300" y1="140" x2="300" y2="620" stroke="#E5E7EB" stroke-width="1" stroke-dasharray="4,4"/>
+        <line x1="480" y1="140" x2="480" y2="620" stroke="#E5E7EB" stroke-width="1" stroke-dasharray="4,4"/>
+        <line x1="660" y1="140" x2="660" y2="620" stroke="#E5E7EB" stroke-width="1" stroke-dasharray="4,4"/>
+        <line x1="840" y1="140" x2="840" y2="620" stroke="#E5E7EB" stroke-width="1" stroke-dasharray="4,4"/>
+        <line x1="1020" y1="140" x2="1020" y2="620" stroke="#E5E7EB" stroke-width="1" stroke-dasharray="4,4"/>
+        <line x1="1200" y1="140" x2="1200" y2="620" stroke="#E5E7EB" stroke-width="1" stroke-dasharray="4,4"/>
+        
+        
+        <text x="300" y="650" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif" 
+              font-size="14" fill="#6B7280" text-anchor="middle">
+            <tspan>0%</tspan>
+        </text>
+        <text x="480" y="650" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif" 
+              font-size="14" fill="#6B7280" text-anchor="middle">
+            <tspan>20%</tspan>
+        </text>
+        <text x="660" y="650" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif" 
+              font-size="14" fill="#6B7280" text-anchor="middle">
+            <tspan>40%</tspan>
+        </text>
+        <text x="840" y="650" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif" 
+              font-size="14" fill="#6B7280" text-anchor="middle">
+            <tspan>60%</tspan>
+        </text>
+        <text x="1020" y="650" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif" 
+              font-size="14" fill="#6B7280" text-anchor="middle">
+            <tspan>80%</tspan>
+        </text>
+        <text x="1200" y="650" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif" 
+              font-size="14" fill="#6B7280" text-anchor="middle">
+            <tspan>100%</tspan>
+        </text>
+        
+        
+        <line x1="300" y1="140" x2="300" y2="620" stroke="#6B7280" stroke-width="2"/>
+        <line x1="300" y1="620" x2="1200" y2="620" stroke="#6B7280" stroke-width="2"/>
+        
+        
+        
+        
+        <text x="290" y="175" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC', 'Microsoft YaHei', sans-serif" 
+              font-size="16" fill="#1A1A1A" text-anchor="end">
+            <tspan>品牌A (市场领导者)</tspan>
+        </text>
+        <rect x="300" y="155" width="828" height="36" rx="4" fill="#4633E3"/>
+        <text x="1138" y="179" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif" 
+              font-size="16" font-weight="600" fill="#1A1A1A">
+            <tspan>92%</tspan>
+        </text>
+        
+        
+        <text x="290" y="235" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC', 'Microsoft YaHei', sans-serif" 
+              font-size="16" fill="#1A1A1A" text-anchor="end">
+            <tspan>品牌B (新锐品牌)</tspan>
+        </text>
+        <rect x="300" y="215" width="702" height="36" rx="4" fill="#4633E3"/>
+        <text x="1012" y="239" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif" 
+              font-size="16" font-weight="600" fill="#1A1A1A">
+            <tspan>78%</tspan>
+        </text>
+        
+        
+        <text x="290" y="295" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC', 'Microsoft YaHei', sans-serif" 
+              font-size="16" fill="#1A1A1A" text-anchor="end">
+            <tspan>品牌C (经典品牌)</tspan>
+        </text>
+        <rect x="300" y="275" width="585" height="36" rx="4" fill="#4633E3"/>
+        <text x="895" y="299" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif" 
+              font-size="16" font-weight="600" fill="#1A1A1A">
+            <tspan>65%</tspan>
+        </text>
+        
+        
+        <text x="290" y="355" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC', 'Microsoft YaHei', sans-serif" 
+              font-size="16" fill="#1A1A1A" text-anchor="end">
+            <tspan>品牌D (区域品牌)</tspan>
+        </text>
+        <rect x="300" y="335" width="468" height="36" rx="4" fill="#4633E3" fill-opacity="0.6"/>
+        <text x="778" y="359" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif" 
+              font-size="16" font-weight="600" fill="#1A1A1A">
+            <tspan>52%</tspan>
+        </text>
+        
+        
+        <text x="290" y="415" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC', 'Microsoft YaHei', sans-serif" 
+              font-size="16" fill="#1A1A1A" text-anchor="end">
+            <tspan>品牌E (性价比品牌)</tspan>
+        </text>
+        <rect x="300" y="395" width="405" height="36" rx="4" fill="#4633E3" fill-opacity="0.6"/>
+        <text x="715" y="419" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif" 
+              font-size="16" font-weight="600" fill="#1A1A1A">
+            <tspan>45%</tspan>
+        </text>
+        
+        
+        <text x="290" y="475" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC', 'Microsoft YaHei', sans-serif" 
+              font-size="16" fill="#1A1A1A" text-anchor="end">
+            <tspan>品牌F (高端品牌)</tspan>
+        </text>
+        <rect x="300" y="455" width="342" height="36" rx="4" fill="#4633E3" fill-opacity="0.6"/>
+        <text x="652" y="479" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif" 
+              font-size="16" font-weight="600" fill="#1A1A1A">
+            <tspan>38%</tspan>
+        </text>
+        
+        
+        <text x="290" y="535" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC', 'Microsoft YaHei', sans-serif" 
+              font-size="16" fill="#1A1A1A" text-anchor="end">
+            <tspan>品牌G (新进入者)</tspan>
+        </text>
+        <rect x="300" y="515" width="225" height="36" rx="4" fill="#4633E3" fill-opacity="0.4"/>
+        <text x="535" y="539" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif" 
+              font-size="16" font-weight="600" fill="#1A1A1A">
+            <tspan>25%</tspan>
+        </text>
+        
+        
+        <text x="290" y="595" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC', 'Microsoft YaHei', sans-serif" 
+              font-size="16" fill="#1A1A1A" text-anchor="end">
+            <tspan>其他品牌</tspan>
+        </text>
+        <rect x="300" y="575" width="108" height="36" rx="4" fill="#4633E3" fill-opacity="0.4"/>
+        <text x="418" y="599" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif" 
+              font-size="16" font-weight="600" fill="#1A1A1A">
+            <tspan>12%</tspan>
+        </text>
+    </g>
+    
+    
+    <g id="legend">
+        <rect x="60" y="660" width="16" height="16" rx="2" fill="#4633E3"/>
+        <text x="85" y="673" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC', 'Microsoft YaHei', sans-serif" 
+              font-size="14" fill="#6B7280">
+            <tspan>高认知度 (≥50%)</tspan>
+        </text>
+        
+        <rect x="240" y="660" width="16" height="16" rx="2" fill="#4633E3" fill-opacity="0.6"/>
+        <text x="265" y="673" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC', 'Microsoft YaHei', sans-serif" 
+              font-size="14" fill="#6B7280">
+            <tspan>中等认知度 (30-50%)</tspan>
+        </text>
+        
+        <rect x="450" y="660" width="16" height="16" rx="2" fill="#4633E3" fill-opacity="0.4"/>
+        <text x="475" y="673" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC', 'Microsoft YaHei', sans-serif" 
+              font-size="14" fill="#6B7280">
+            <tspan>低认知度 (&lt;30%)</tspan>
+        </text>
+    </g>
+    
+    
+    <text x="1220" y="695" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC', 'Microsoft YaHei', sans-serif" 
+          font-size="14" fill="#6B7280" text-anchor="end">
+        <tspan>数据来源: 市场研究部门</tspan>
+    </text>
+</svg>
+

@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" width="1280" height="720" viewBox="0 0 1280 720">
+  <!-- Lecture Deck — 03 Content (theme-parametric; header/footer shell only; body composed by Executor) -->
+
+  <rect width="1280" height="720" fill="{{TOKEN:colors.bg}}"/>
+
+  <!-- Headline bar: title at top (Headline) -->
+  <text x="56" y="96"
+        font-family="{{TOKEN:typography.font-chain}}"
+        font-size="{{TOKEN:typography.headline.size}}" font-weight="{{TOKEN:typography.headline.weight}}"
+        letter-spacing="{{TOKEN:typography.headline.letter-spacing}}"
+        fill="{{TOKEN:colors.text}}">
+    {{PAGE_TITLE}}
+  </text>
+
+  <!-- Optional subtitle under headline (Label, uppercase, tracked) -->
+  <text x="56" y="124"
+        font-family="{{TOKEN:typography.font-chain}}"
+        font-size="{{TOKEN:typography.label.size}}" font-weight="{{TOKEN:typography.label.weight}}"
+        letter-spacing="{{TOKEN:typography.label.letter-spacing}}"
+        fill="{{TOKEN:colors.text-secondary}}">
+    {{PAGE_EYEBROW}}
+  </text>
+
+  <!-- Thin accent rule under headline (editorial) -->
+  <rect x="56" y="140" width="48" height="2" fill="{{TOKEN:colors.accent}}"/>
+
+  <!-- CONTENT AREA (Executor fills this region freely) -->
+  <!-- x=56, y=160, w=1168, h=480 — everything above GM, below headline -->
+
+  <!-- Governing Message (GM) — mandatory on every content slide, centered, bottom 64px -->
+  <text x="640" y="680"
+        font-family="{{TOKEN:typography.font-chain}}"
+        font-size="{{TOKEN:typography.body.size}}" font-weight="700"
+        text-anchor="middle"
+        fill="{{TOKEN:colors.text-secondary}}">
+    {{GOVERNING_MESSAGE}}
+  </text>
+
+  <!-- Page number (bottom right, caption) -->
+  <text x="1224" y="696"
+        font-family="{{TOKEN:typography.font-chain}}"
+        font-size="{{TOKEN:typography.caption.size}}" font-weight="{{TOKEN:typography.caption.weight}}"
+        text-anchor="end"
+        fill="{{TOKEN:colors.text-tertiary}}">
+    {{PAGE_NUM}}
+  </text>
+</svg>

@@ -1,0 +1,266 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1280 720" width="1280" height="720">
+    
+    
+    <defs>
+        
+        
+        
+        
+        
+        
+        
+        
+        
+    </defs>
+    
+    
+    <rect width="1280" height="720" fill="#FFFFFF"/>
+    
+    
+    <text x="60" y="55" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC', 'Microsoft YaHei', sans-serif" 
+          font-size="32" font-weight="bold" fill="#1A1A1A">
+        <tspan>各部门薪资分布分析</tspan>
+    </text>
+    
+    <text x="60" y="90" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC', 'Microsoft YaHei', sans-serif" 
+          font-size="18" fill="#6B7280">
+        <tspan>2025年度薪酬报告 · 单位：万元/年</tspan>
+    </text>
+    
+    
+    <g id="chartArea">
+        
+        <line x1="140" y1="550" x2="1000" y2="550" stroke="#E5E7EB" stroke-width="1" stroke-dasharray="4,4"/>
+        <line x1="140" y1="480" x2="1000" y2="480" stroke="#E5E7EB" stroke-width="1" stroke-dasharray="4,4"/>
+        <line x1="140" y1="410" x2="1000" y2="410" stroke="#E5E7EB" stroke-width="1" stroke-dasharray="4,4"/>
+        <line x1="140" y1="340" x2="1000" y2="340" stroke="#E5E7EB" stroke-width="1" stroke-dasharray="4,4"/>
+        <line x1="140" y1="270" x2="1000" y2="270" stroke="#E5E7EB" stroke-width="1" stroke-dasharray="4,4"/>
+        <line x1="140" y1="200" x2="1000" y2="200" stroke="#E5E7EB" stroke-width="1" stroke-dasharray="4,4"/>
+        <line x1="140" y1="130" x2="1000" y2="130" stroke="#E5E7EB" stroke-width="1" stroke-dasharray="4,4"/>
+        
+        
+        <text x="125" y="555" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif" 
+              font-size="13" fill="#6B7280" text-anchor="end"><tspan>0</tspan></text>
+        <text x="125" y="485" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif" 
+              font-size="13" fill="#6B7280" text-anchor="end"><tspan>10</tspan></text>
+        <text x="125" y="415" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif" 
+              font-size="13" fill="#6B7280" text-anchor="end"><tspan>20</tspan></text>
+        <text x="125" y="345" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif" 
+              font-size="13" fill="#6B7280" text-anchor="end"><tspan>30</tspan></text>
+        <text x="125" y="275" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif" 
+              font-size="13" fill="#6B7280" text-anchor="end"><tspan>40</tspan></text>
+        <text x="125" y="205" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif" 
+              font-size="13" fill="#6B7280" text-anchor="end"><tspan>50</tspan></text>
+        <text x="125" y="135" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif" 
+              font-size="13" fill="#6B7280" text-anchor="end"><tspan>60</tspan></text>
+        
+        
+        <text x="45" y="340" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC', 'Microsoft YaHei', sans-serif" 
+              font-size="15" fill="#6B7280" text-anchor="middle" transform="rotate(-90, 45, 340)">
+            <tspan>年薪（万元）</tspan>
+        </text>
+        
+        
+        <line x1="140" y1="130" x2="140" y2="550" stroke="#6B7280" stroke-width="2"/>
+        <line x1="140" y1="550" x2="1000" y2="550" stroke="#6B7280" stroke-width="2"/>
+        
+        
+        
+        
+        <g id="box1" transform="translate(230, 0)">
+            
+            <line x1="0" y1="143.4" x2="0" y2="235" stroke="#4633E3" stroke-width="2"/>
+            <line x1="-20" y1="143.4" x2="20" y2="143.4" stroke="#4633E3" stroke-width="2"/>
+            
+            
+            <rect x="-40" y="235" width="80" height="140" rx="4" fill="#4633E3" fill-opacity="0.6"/>
+            
+            
+            <line x1="-40" y1="305" x2="40" y2="305" stroke="#FFFFFF" stroke-width="3"/>
+            
+            
+            <line x1="0" y1="375" x2="0" y2="445" stroke="#4633E3" stroke-width="2"/>
+            <line x1="-20" y1="445" x2="20" y2="445" stroke="#4633E3" stroke-width="2"/>
+            
+            
+            <circle cx="0" cy="494" r="6" fill="#FFFFFF" stroke="#4633E3" stroke-width="2"/>
+            
+            
+            <text x="0" y="590" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC', 'Microsoft YaHei', sans-serif" 
+                  font-size="15" font-weight="600" fill="#4633E3" text-anchor="middle"><tspan>技术部</tspan></text>
+            
+            
+            <text x="50" y="148" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif" 
+                  font-size="11" fill="#6B7280"><tspan>58</tspan></text>
+            <text x="50" y="240" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif" 
+                  font-size="11" fill="#6B7280"><tspan>45</tspan></text>
+            <text x="50" y="310" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif" 
+                  font-size="11" fill="#4633E3" fill-opacity="0.4"><tspan>35</tspan></text>
+            <text x="50" y="380" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif" 
+                  font-size="11" fill="#6B7280"><tspan>25</tspan></text>
+            <text x="50" y="450" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif" 
+                  font-size="11" fill="#6B7280"><tspan>15</tspan></text>
+        </g>
+        
+        
+        <g id="box2" transform="translate(400, 0)">
+            
+            <line x1="0" y1="200" x2="0" y2="284" stroke="#4633E3" stroke-opacity="0.25" stroke-width="2"/>
+            <line x1="-20" y1="200" x2="20" y2="200" stroke="#4633E3" stroke-opacity="0.25" stroke-width="2"/>
+            
+            
+            <rect x="-40" y="284" width="80" height="112" rx="4" fill="#4633E3" fill-opacity="0.25"/>
+            
+            
+            <line x1="-40" y1="354" x2="40" y2="354" stroke="#FFFFFF" stroke-width="3"/>
+            
+            
+            <line x1="0" y1="396" x2="0" y2="466" stroke="#4633E3" stroke-opacity="0.25" stroke-width="2"/>
+            <line x1="-20" y1="466" x2="20" y2="466" stroke="#4633E3" stroke-opacity="0.25" stroke-width="2"/>
+            
+            
+            <text x="0" y="590" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC', 'Microsoft YaHei', sans-serif" 
+                  font-size="15" font-weight="600" fill="#4633E3" fill-opacity="0.25" text-anchor="middle"><tspan>产品部</tspan></text>
+        </g>
+        
+        
+        <g id="box3" transform="translate(570, 0)">
+            
+            <line x1="0" y1="256" x2="0" y2="326" stroke="#4633E3" stroke-opacity="0.25" stroke-width="2"/>
+            <line x1="-20" y1="256" x2="20" y2="256" stroke="#4633E3" stroke-opacity="0.25" stroke-width="2"/>
+            
+            
+            <rect x="-40" y="326" width="80" height="98" rx="4" fill="#4633E3" fill-opacity="0.25"/>
+            
+            
+            <line x1="-40" y1="382" x2="40" y2="382" stroke="#FFFFFF" stroke-width="3"/>
+            
+            
+            <line x1="0" y1="424" x2="0" y2="480" stroke="#4633E3" stroke-opacity="0.25" stroke-width="2"/>
+            <line x1="-20" y1="480" x2="20" y2="480" stroke="#4633E3" stroke-opacity="0.25" stroke-width="2"/>
+            
+            
+            <text x="0" y="590" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC', 'Microsoft YaHei', sans-serif" 
+                  font-size="15" font-weight="600" fill="#4633E3" fill-opacity="0.25" text-anchor="middle"><tspan>设计部</tspan></text>
+        </g>
+        
+        
+        <g id="box4" transform="translate(740, 0)">
+            
+            <line x1="0" y1="235" x2="0" y2="340" stroke="#4633E3" stroke-opacity="0.25" stroke-width="2"/>
+            <line x1="-20" y1="235" x2="20" y2="235" stroke="#4633E3" stroke-opacity="0.25" stroke-width="2"/>
+            
+            
+            <rect x="-40" y="340" width="80" height="105" rx="4" fill="#4633E3" fill-opacity="0.25"/>
+            
+            
+            <line x1="-40" y1="396" x2="40" y2="396" stroke="#FFFFFF" stroke-width="3"/>
+            
+            
+            <line x1="0" y1="445" x2="0" y2="494" stroke="#4633E3" stroke-opacity="0.25" stroke-width="2"/>
+            <line x1="-20" y1="494" x2="20" y2="494" stroke="#4633E3" stroke-opacity="0.25" stroke-width="2"/>
+            
+            
+            <circle cx="0" cy="165" r="6" fill="#FFFFFF" stroke="#4633E3" stroke-opacity="0.25" stroke-width="2"/>
+            
+            
+            <text x="0" y="590" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC', 'Microsoft YaHei', sans-serif" 
+                  font-size="15" font-weight="600" fill="#4633E3" fill-opacity="0.25" text-anchor="middle"><tspan>市场部</tspan></text>
+        </g>
+        
+        
+        <g id="box5" transform="translate(910, 0)">
+            
+            <line x1="0" y1="284" x2="0" y2="368" stroke="#4633E3" stroke-opacity="0.25" stroke-width="2"/>
+            <line x1="-20" y1="284" x2="20" y2="284" stroke="#4633E3" stroke-opacity="0.25" stroke-width="2"/>
+            
+            
+            <rect x="-40" y="368" width="80" height="84" rx="4" fill="#4633E3" fill-opacity="0.25"/>
+            
+            
+            <line x1="-40" y1="410" x2="40" y2="410" stroke="#FFFFFF" stroke-width="3"/>
+            
+            
+            <line x1="0" y1="452" x2="0" y2="494" stroke="#4633E3" stroke-opacity="0.25" stroke-width="2"/>
+            <line x1="-20" y1="494" x2="20" y2="494" stroke="#4633E3" stroke-opacity="0.25" stroke-width="2"/>
+            
+            
+            <text x="0" y="590" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC', 'Microsoft YaHei', sans-serif" 
+                  font-size="15" font-weight="600" fill="#4633E3" fill-opacity="0.25" text-anchor="middle"><tspan>运营部</tspan></text>
+        </g>
+    </g>
+    
+    
+    <g id="boxLegend" transform="translate(1040, 130)">
+        <rect x="0" y="0" width="200" height="240" rx="8" fill="#FFFFFF" stroke="#E5E7EB" stroke-width="1"/>
+        
+        <text x="100" y="28" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC', 'Microsoft YaHei', sans-serif" 
+              font-size="14" font-weight="600" fill="#1A1A1A" text-anchor="middle"><tspan>图例说明</tspan></text>
+        
+        <line x1="15" y1="42" x2="185" y2="42" stroke="#E5E7EB" stroke-width="1"/>
+        
+        
+        <g transform="translate(30, 60)">
+            
+            <line x1="30" y1="0" x2="30" y2="25" stroke="#6B7280" stroke-width="2"/>
+            <line x1="20" y1="0" x2="40" y2="0" stroke="#6B7280" stroke-width="2"/>
+            <text x="70" y="5" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif" 
+                  font-size="11" fill="#6B7280"><tspan>最大值</tspan></text>
+            
+            
+            <rect x="10" y="25" width="40" height="60" rx="3" fill="#E5E7EB"/>
+            <text x="70" y="35" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif" 
+                  font-size="11" fill="#6B7280"><tspan>Q3 (75%)</tspan></text>
+            
+            
+            <line x1="10" y1="55" x2="50" y2="55" stroke="#1A1A1A" stroke-width="2"/>
+            <text x="70" y="60" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif" 
+                  font-size="11" fill="#1A1A1A"><tspan>中位数</tspan></text>
+            
+            <text x="70" y="85" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif" 
+                  font-size="11" fill="#6B7280"><tspan>Q1 (25%)</tspan></text>
+            
+            
+            <line x1="30" y1="85" x2="30" y2="110" stroke="#6B7280" stroke-width="2"/>
+            <line x1="20" y1="110" x2="40" y2="110" stroke="#6B7280" stroke-width="2"/>
+            <text x="70" y="115" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif" 
+                  font-size="11" fill="#6B7280"><tspan>最小值</tspan></text>
+            
+            
+            <circle cx="30" cy="135" r="5" fill="#FFFFFF" stroke="#6B7280" stroke-width="2"/>
+            <text x="70" y="140" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif" 
+                  font-size="11" fill="#4633E3" fill-opacity="0.25"><tspan>异常值</tspan></text>
+        </g>
+        
+        <text x="15" y="220" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif" 
+              font-size="10" fill="#6B7280"><tspan>IQR = Q3 - Q1</tspan></text>
+        <text x="15" y="232" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif" 
+              font-size="10" fill="#6B7280"><tspan>异常值 > Q3+1.5*IQR</tspan></text>
+    </g>
+    
+    
+    <g id="statsSummary" transform="translate(1040, 390)">
+        <rect x="0" y="0" width="200" height="160" rx="8" fill="#4633E3" fill-opacity="0.25" stroke="#4633E3" stroke-opacity="0.25" stroke-width="1"/>
+        
+        <text x="15" y="25" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC', 'Microsoft YaHei', sans-serif" 
+              font-size="13" font-weight="600" fill="#4633E3" fill-opacity="0.25"><tspan>📊 统计摘要</tspan></text>
+        
+        <text x="15" y="50" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC', 'Microsoft YaHei', sans-serif" 
+              font-size="12" fill="#6B7280"><tspan>最高中位数: 技术部 35万</tspan></text>
+        <text x="15" y="70" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC', 'Microsoft YaHei', sans-serif" 
+              font-size="12" fill="#6B7280"><tspan>最低中位数: 运营部 20万</tspan></text>
+        <text x="15" y="95" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC', 'Microsoft YaHei', sans-serif" 
+              font-size="12" fill="#6B7280"><tspan>分布最广: 技术部</tspan></text>
+        <text x="15" y="115" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC', 'Microsoft YaHei', sans-serif" 
+              font-size="12" fill="#6B7280"><tspan>分布最集中: 运营部</tspan></text>
+        <text x="15" y="140" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC', 'Microsoft YaHei', sans-serif" 
+              font-size="12" fill="#4633E3" fill-opacity="0.25"><tspan>发现异常值: 2个</tspan></text>
+    </g>
+    
+    
+    <text x="60" y="695" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC', 'Microsoft YaHei', sans-serif" 
+          font-size="14" fill="#6B7280">
+        <tspan>数据来源: 人力资源部门薪酬统计</tspan>
+    </text>
+</svg>
+
