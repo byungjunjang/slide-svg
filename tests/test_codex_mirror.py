@@ -51,3 +51,17 @@ class TestAgentsMd:
         agents = (REPO_ROOT / "AGENTS.md").read_text(encoding="utf-8")
         for needle in ("slide-plan", "verify_deck.py", "HALT", "preflight.py"):
             assert needle in agents, f"AGENTS.md missing enforcement of: {needle}"
+
+
+class TestCodexTreeSmoke:
+    def test_mirror_scripts_have_same_depth(self):
+        c = REPO_ROOT / ".claude" / "skills" / "slide" / "scripts" / "verify_deck.py"
+        x = REPO_ROOT / ".codex" / "skills" / "slide" / "scripts" / "verify_deck.py"
+        assert c.is_file() and x.is_file()
+        # repo root is parents[4] from either copy → identical walk-up
+        assert c.resolve().parents[4] == x.resolve().parents[4] == REPO_ROOT
+
+    def test_mirror_rewrote_invocation_paths(self):
+        skill = (REPO_ROOT / ".codex" / "skills" / "slide" / "SKILL.md").read_text(encoding="utf-8")
+        assert ".codex/skills/slide" in skill
+        assert ".claude/skills/slide" not in skill
