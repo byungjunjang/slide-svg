@@ -14,8 +14,12 @@ import sys
 from pathlib import Path
 
 HERE = Path(__file__).resolve().parent     # .../slide/scripts
-REPO_ROOT = HERE.parents[3]                 # scripts->slide->skills->.claude->repo
+REPO_ROOT = HERE.parents[3]                 # HERE=scripts → slide → skills → .claude → repo (4 hops)
 REQUIREMENTS = HERE.parent / "requirements.txt"
+
+# Auth-confirmation phrases emitted by `codex login status`. Heuristic on external
+# CLI output — extend this tuple if a future codex build changes its wording.
+LOGIN_OK_PHRASES = ("logged in", "authenticated", "authorized")
 
 
 def check_python_deps() -> list[str]:
@@ -50,14 +54,21 @@ def check_codex_image() -> list[str]:
     except Exception as e:  # noqa: BLE001
         return [f"`codex login status` failed to run: {e}"]
     blob = (r.stdout + r.stderr).lower()
-    if r.returncode != 0 or "logged in" not in blob:
+    if r.returncode != 0 or not any(p in blob for p in LOGIN_OK_PHRASES):
         return ["codex not logged in — run `codex login` (no placeholder fallback allowed)"]
     return []
 
 
 def check_mirror() -> list[str]:
     sync = HERE / "dev" / "sync_codex_mirror.py"
-    if sync.exists() and subprocess.run([sys.executable, str(sync), "--check"]).returncode != 0:
+    if not sync.exists():
+        return []
+    try:
+        r = subprocess.run([sys.executable, str(sync), "--check"],
+                           capture_output=True, timeout=60)
+    except Exception as e:  # noqa: BLE001
+        return [f"mirror check failed to run: {e}"]
+    if r.returncode != 0:
         return [".codex/skills mirror stale — run sync_codex_mirror.py"]
     return []
 
