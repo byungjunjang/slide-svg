@@ -1,20 +1,7 @@
-# ─────────────────────────────────────────────────────────────
-# Line endings — keep shell scripts LF even on Windows checkouts.
+# Keep shell scripts LF even on Windows checkouts.
 #
-# This repo's `_py.sh` wrapper (and any other *.sh) MUST stay LF: with
-# core.autocrlf=true a Windows clone would otherwise get CRLF, and bash
-# then fails with `bad interpreter: /usr/bin/env bash^M`. eol=lf overrides
-# autocrlf so these files are always checked out with LF. (Only shell
-# scripts need this — Python/.gitignore tolerate CRLF, so they are left
-# alone to avoid a noisy whole-repo renormalization.)
+# The `_py.sh` python launcher (and any other *.sh) MUST stay LF: with
+# core.autocrlf=true a Windows clone would otherwise get CRLF, and bash then
+# fails with `bad interpreter: /usr/bin/env bash^M`. eol=lf overrides autocrlf
+# so these files are always checked out with LF.
 *.sh text eol=lf
-# ─────────────────────────────────────────────────────────────
-
-# Internal-only trees — excluded from `git archive` exports.
-#
-# NOTE: the public (byungjunjang/slide-svg) mirror is a MANUAL diff-only process
-# (see docs/superpowers handoff). `export-ignore` only affects archive-based
-# exports — it does NOT block `git push`. This file documents intent and protects
-# archive consumers; the push-based mirror still excludes these trees by hand.
-docs/superpowers/ export-ignore
-tests/ export-ignore

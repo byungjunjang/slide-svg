@@ -24,6 +24,10 @@ SYSTEMATIC_MIN_PAGES = 8
 GM_Y_RANGE = (655, 705)
 IMAGE_SUFFIXES = {".png", ".jpg", ".jpeg", ".webp"}
 NATIVE_SHAPE_TAGS = ("sp", "grpSp", "cxnSp", "graphicFrame")
+NON_CONTENT_SLIDE_RE = re.compile(
+    r"(^|[_\-\s])(cover|title|chapter|ending|closing|close|thanks|thank_you|appendix)([_\-\s]|$)",
+    re.IGNORECASE,
+)
 
 
 # ---- pure helpers -------------------------------------------------------
@@ -34,6 +38,16 @@ def _svgs(d: Path) -> list[Path]:
 
 def page_count(project: Path, sub: str) -> int:
     return len(_svgs(project / sub))
+
+
+def is_content_slide(svg_path: Path) -> bool:
+    """Infer whether a slide is content-bearing from the filename.
+
+    Executor docs require .gm on content pages only. Cover/chapter/ending style
+    pages intentionally omit it, and generated files commonly encode that role
+    in the stem (for example 01_cover.svg or 04_ending.svg).
+    """
+    return NON_CONTENT_SLIDE_RE.search(svg_path.stem) is None
 
 
 def _pptx_files(project: Path) -> list[Path]:
@@ -219,12 +233,13 @@ def run_checks(project: Path) -> list[str]:
 
     # 5. governing-message discipline (svg_output, pre-flatten)
     if pages:
-        gm = sum(1 for p in pages
+        content_pages = [p for p in pages if is_content_slide(p)]
+        gm = sum(1 for p in content_pages
                  if svg_has_gm(p.read_text(encoding="utf-8", errors="replace")))
-        floor = len(pages)
+        floor = len(content_pages)
         if gm < floor:
-            failures.append(f"governing-message lines missing: {gm}/{len(pages)} "
-                            f"pages carry a .gm (need {floor}/{len(pages)})")
+            failures.append(f"governing-message lines missing: {gm}/{floor} "
+                            f"content pages carry a .gm (need {floor}/{floor})")
 
     # 6. canvas
     bad_canvas = [p.name for p in pages

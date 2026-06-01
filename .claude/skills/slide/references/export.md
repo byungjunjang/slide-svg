@@ -126,4 +126,4 @@ Check: 1280×720 frame fits without overflow, `.gm` line is present on every con
 
 ## Troubleshooting
 
-Common export issues and fixes are in `docs/faq.md` (at the project root). If a slide renders correctly as SVG but gets mangled in the native PPTX, the `*_svg.pptx` fallback is the escape hatch — ship that, file a fix to `svg_to_pptx.py`.
+Common export issues and fixes are tracked in the project's GitHub Issues. If a slide renders correctly as SVG but gets mangled in the native PPTX, the `*_svg.pptx` fallback is the escape hatch — ship that, file a fix to `svg_to_pptx.py`.
