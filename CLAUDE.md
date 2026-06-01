@@ -13,6 +13,8 @@
 - **Claude Code 로컬**: 풀 라이브러리 모드. `.claude/skills/slide/` + 외부 `assets/icons/` (Tabler 6000+) + `assets/fonts/` (Pretendard) 모두 사용. 성능·완성도 100%.
 - **claude.ai 업로드**: essentials 모드. `.claude/skills/slide/scripts/_py.sh .claude/skills/slide/scripts/package_for_claude_ai.py`로 묶은 `output/slide-skill-claude-ai.zip`을 업로더에 드래그. 외부 `assets/icons/`는 번들에 포함 안 됨 — 스킬 안에 동봉된 ~20개 essentials 아이콘만 인라인되고 그 외는 graceful skip(`[WARN] Icon not found`). 폰트는 기본 미동봉 (claude.ai 환경엔 폰트 설치 권한 없어 데드웨이트). `/theme-init`은 새 디자인을 굽는 용도라 Claude Code 로컬 전용, `/upload-drive`는 Google 인증 필요해 로컬 전용.
 
+**듀얼 호스트 (Claude Code · Codex)**: Codex(클라우드/웹)는 루트 `AGENTS.md`를 읽어 생성형 `.codex/skills` 미러로 같은 파이프라인을 실행한다. `.claude/skills`가 정본이고 `.codex/skills`는 `sync_codex_mirror.py` 생성물이므로 손으로 편집하지 말 것. 설계: `docs/superpowers/specs/2026-06-01-codex-dual-host-design.md`.
+
 ## 핵심 제약 (non-negotiable)
 
 다음 제약은 **테마에 관계없이 영구 락**이다. 테마를 바꿔도 이 규칙들은 그대로 적용된다.
@@ -177,6 +179,14 @@ ls assets/icons/tabler-outline/ | grep <keyword>
 # 6b. claude.ai 번들 빌드 (output/slide-skill-claude-ai.zip)
 .claude/skills/slide/scripts/_py.sh .claude/skills/slide/scripts/package_for_claude_ai.py
 
+# 6c. Codex 미러 재생성 (.claude/skills 수정 후 필수)
+.claude/skills/slide/scripts/_py.sh .claude/skills/slide/scripts/dev/sync_codex_mirror.py
+# 6d. dual-host 품질 게이트
+.claude/skills/slide/scripts/_py.sh .claude/skills/slide/scripts/preflight.py --needs-images
+.claude/skills/slide/scripts/_py.sh .claude/skills/slide/scripts/verify_deck.py output/<project>
+
+# 7. theme-init 파이프라인 회귀 테스트
+pytest tests/
 ```
 
 ## Troubleshooting

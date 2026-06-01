@@ -195,6 +195,28 @@ claude.ai 업로드 후 첫 사용 시 `pip install -r requirements.txt`로 Pyth
 
 ---
 
+## Dual-host: Claude Code · Codex
+
+This repo runs on both Claude Code and Codex (cloud/web).
+
+- **Claude Code** loads `.claude/skills/` via its Skill runtime (canonical, unchanged).
+- **Codex** reads root `AGENTS.md`, which routes slide requests through the
+  generated `.codex/skills/` mirror and enforces the same pipeline + gates.
+
+`.claude/skills/` is the single source of truth. `.codex/skills/` is generated —
+**never hand-edit it.** After editing any skill, regenerate the mirror:
+
+    .claude/skills/slide/scripts/_py.sh .claude/skills/slide/scripts/dev/sync_codex_mirror.py
+
+Quality gates (run on either host):
+
+    # before starting a deck
+    .claude/skills/slide/scripts/_py.sh .claude/skills/slide/scripts/preflight.py --needs-images
+    # before declaring a deck done
+    .claude/skills/slide/scripts/_py.sh .claude/skills/slide/scripts/verify_deck.py output/<project>
+
+---
+
 ## 실전 가이드 — 폴더 정리 & 시나리오
 
 ### 폴더 정리 방법
