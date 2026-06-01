@@ -61,7 +61,7 @@ slide-svg/
 ├── LICENSE                            ← 프로젝트 MIT (Byungjun Jang)
 ├── LICENSE-ppt-master                 ← 업스트림 ppt-master MIT 고지 (MIT 의무 보존)
 ├── LICENSE-diagram-design             ← 업스트림 diagram-design MIT 고지 (벤더링; MIT 의무 보존)
-├── .gitignore, .env.example
+├── .gitignore
 ├── .claude/
 │   ├── settings.json                  ← 스크립트 실행 allow-list
 │   └── skills/
