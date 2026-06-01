@@ -38,3 +38,16 @@ class TestMirrorInSync:
 
     def test_mirror_root_exists(self):
         assert (REPO_ROOT / ".codex" / "skills" / "slide" / "SKILL.md").is_file()
+
+
+class TestAgentsMd:
+    def test_agents_md_exists_and_points_to_mirror_skill(self):
+        agents = (REPO_ROOT / "AGENTS.md").read_text(encoding="utf-8")
+        assert ".codex/skills/slide/SKILL.md" in agents
+        # the path it points at must actually exist in the mirror
+        assert (REPO_ROOT / ".codex" / "skills" / "slide" / "SKILL.md").is_file()
+
+    def test_agents_md_enforces_key_gates(self):
+        agents = (REPO_ROOT / "AGENTS.md").read_text(encoding="utf-8")
+        for needle in ("slide-plan", "verify_deck.py", "HALT", "preflight.py"):
+            assert needle in agents, f"AGENTS.md missing enforcement of: {needle}"
