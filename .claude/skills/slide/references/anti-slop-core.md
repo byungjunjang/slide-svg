@@ -619,6 +619,102 @@ See `templates/layouts/<theme>/DESIGN.md` §5.1 (Hybrid Pattern Catalog) for the
 
 ---
 
+## Rule 20: No Decorative Step-Flow / Process Chrome
+
+> **Sibling to Rule 15 (No Card-First Layouts).** Where Rule 15 forbids the card grid as a default container, Rule 20 forbids the *step / process strip* as a default for non-sequential content.
+
+**Forbidden** (a row of ordinal chips implying a sequence the content does not have):
+
+```
+[ 01 ▸ Discovery ] → [ 02 ▸ Analysis ] → [ 03 ▸ Delivery ]   ← but the three items are PARALLEL, not a process
+```
+
+In SVG terms: ≥3 congruent `<rect>` chips at a constant `Δx`, each carrying an ordinal badge (`01/02/03`, `1·2·3`) and joined by `→`/chevron/`snake_flow` arrows, used merely to enumerate points that have no time or causal order.
+
+**Correct alternative:**
+
+- If the items are **not** a real sequence → text blocks + rule lines (Rule 15), or a plain list. No numbers, no arrows.
+- Reserve `numbered_steps` / `chevron_process` / `snake_flow` / `process_flow` for genuine processes (a temporal or causal axis the reader must follow in order).
+
+**Why:** Arrows and `01/02/03` badges are a promise of sequence. Spending that chrome on parallel or unordered content is decoration masquerading as structure — it tells the audience "follow this order" when there is no order to follow.
+
+**Detection heuristic (warn):** ≥3 congruent chips (same `width`/`height`, near-constant horizontal pitch) bearing ordinal labels or joined by arrow `<marker>`/`<path>`, with no accompanying time axis, date row, or causal connective in the copy → likely decorative step-flow.
+
+---
+
+## Rule 21: One Dominant Message, Text as Caption
+
+A content slide makes **one** core assertion. The `.gm` line carries the so-what; the dominant **visual is the evidence**; the remaining text is a *caption* to that visual — not a second essay.
+
+**Forbidden:**
+
+```
+[ headline A + 3 bullets ]   [ headline B + 3 bullets ]     ← two co-equal messages competing
+[ headline ] + [ 6-bullet list running the full width ]     ← the slide became a document page
+```
+
+**Correct alternative:**
+
+```
+[ one headline assertion ]
+[ dominant visual = evidence (chart / diagram / image / table) ]
+[ ≤3 concise bullets or a one-line caption ]
+[ GM ]
+```
+
+- **Max 3 supporting bullets**, each ideally ≤1 line (this tightens Rule 11's 4–5 ceiling for a single-message body slide). A fourth point means either the slide is doing two jobs (split it) or a bullet is not load-bearing (cut it).
+- One headline-weight text block per slide beyond the title.
+
+**The visual-evidence principle:** the governing message states the claim; the **dominant visual is its evidence** and should clearly lead the content area, with the text deliberately thin (caption, not essay).
+
+**Reconciliation with `design-system.md` ("high content density" / "visually full").** Density means a **dominant visual carrying the page**, *not* dense text or stacked cards. "Visually full" = visually *dominant* (the evidence clearly leads the content area), with the text restrained. A slide can be visually rich and textually restrained at the same time — that is the target, not a contradiction.
+
+**Why:** When the visual is the argument and the text is its caption, the so-what lands in one read. Two competing messages, or a wall of bullets, dilute the point and push the slide back toward a generic document.
+
+**Detection heuristic (warn):** in the content area, >3 sibling bullet `<text>`/`<tspan>` rows, OR ≥2 headline-weight (`font-size ≥ 28`) text blocks beyond the page title, OR total body copy past a generous character budget → flag for "more than one message."
+
+---
+
+## Rule 22: Measured Whitespace & Top-Right Quiet Zone
+
+On the fixed **1280×720** canvas, restraint is measurable.
+
+- **Whitespace ≥ 30%.** At least ~30% of the canvas stays unpainted — outer margins, gutters between modules, and breathing room around the dominant visual. The outer content margin (≥56px, per the content-shell spec) is never crossed by primary content.
+- **Top-right quiet zone.** The corner **x ≥ 1024, y ≤ 160** (a ~256×160 region) is kept clear of primary content — at most a small eyebrow/label or the page chrome lives there. It is the eye's entry/rest point.
+
+**Forbidden:** edge-to-edge fills; content touching all four margins; a card, metric, or chart packed into the top-right corner; a slide whose painted elements blanket the canvas with no quiet region.
+
+**Correct alternative:** let the dominant visual breathe inside the margins; group supporting text in one column; leave the top-right open.
+
+**Reconciliation:** "visually full" (design-system) is satisfied by a *dominant* visual that clearly leads the content area (Rule 21) **plus** ≥30% whitespace as the breathing room around it — not by ~70%+ ink coverage. Full ≠ crowded.
+
+**Why:** Whitespace is the editorial signal of confidence; a quiet corner gives the eye somewhere to enter and rest. A canvas painted corner-to-corner reads as a dashboard, not a considered argument.
+
+**Detection heuristic (warn):** union bounding box of painted elements (exclude the background `<rect>`) covers >70% of `1280×720` → whitespace < 30% warn. Any `<rect>` / `<image>` / non-marker visual whose bbox intersects the top-right `x∈[1024,1280], y∈[0,160]` box → quiet-zone warn.
+
+---
+
+## Rule 23: Photographs Stand Alone as Evidence
+
+A photographic `<image>` is **evidence shown at legible size**, never wallpaper behind text.
+
+**Forbidden:**
+
+```
+<image .../>                 ← full-bleed photo
+<text> headline over photo   ← text overlaid on the image
+```
+
+— a headline or body set on top of a photo; a photo dropped in at low opacity as a background; a thumbnail-sized decorative photo beside a wall of text.
+
+**Correct alternative:** the photo occupies a dedicated region (≥~40% width) as the evidence; its caption/label sits **outside** the image bounding box (adjacent, not on top); the GM goes below. Text and image share the slide side-by-side, not stacked through each other.
+
+**Why:** Text on a photograph harms legibility for both, and demotes the photograph from *evidence* to *decoration*. The image has to be readable **as** the argument (the visual-evidence principle: the visual is the evidence), which it cannot be with type sitting on it.
+
+**Detection heuristic (warn):** any `<text>`/`<tspan>` whose anchor lies inside an `<image>`'s `x/y/width/height` bbox → text-on-photo warn. An `<image>` with bbox area < ~15% of canvas placed alongside heavy body copy → decorative-thumbnail warn.
+
+---
+
 ## Production Principles
 
 These rules apply to all JavaScript in slide files. They are theme-agnostic; palette-specific guidance lives in `anti-slop-theme.md`.

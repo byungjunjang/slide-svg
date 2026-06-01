@@ -107,7 +107,7 @@ Every `<text>` element in generated SVG uses this exact chain. Truncated or subs
 
 ### 4.4 Density vs sparsity
 
-Jangpm leans dense. When tempted to add text to fill space — add a visual instead (icon, callout card, micro-chart, divider rule). Sparsity is acceptable only on title / section / closing pages.
+Jangpm leans dense **with visuals, not text** — when tempted to add text to fill space, add a *visual* instead (chart, diagram, micro-chart, callout, divider rule). This is **bounded by `anti-slop-core.md` Rules 21–22**: one dominant message, ≤3 bullets, ≥30% whitespace, a clear top-right quiet zone. "Dense" means a **dominant evidence visual carrying the page** — never a wall of body text or stacked cards. Sparsity is acceptable on title / section / closing pages.
 
 ---
 

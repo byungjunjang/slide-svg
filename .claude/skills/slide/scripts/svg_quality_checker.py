@@ -43,6 +43,303 @@ def _active_primary_font():
     return first or None
 
 
+# ============================================================
+# Warn-level composition measurements (anti-slop Rules 21/22/23 + chart-accent audit)
+# Pure helpers: content string in, measured value out. Wired into check_file as
+# advisory warnings (never errors) so they inform without blocking export.
+# ============================================================
+
+CANVAS_W, CANVAS_H = 1280, 720
+# Content shell free-compose region (executor §1: x=56, y=160, w=1168, h=480).
+CONTENT_AREA = (56, 160, 1168, 480)
+# Top-right breathing corner kept clear of primary content (anti-slop Rule 22).
+QUIET_ZONE = (1024, 0, 256, 160)
+
+_HEX_RE = re.compile(r"#[0-9A-Fa-f]{6}")
+
+
+def _active_theme_hexes() -> set:
+    """Every hex value in the active theme's color palette (uppercased).
+
+    Empty set ⇒ theme unreadable ⇒ callers skip the off-theme audit rather than
+    flag every color as off-theme.
+    """
+    try:
+        import json
+        theme_path = Path(__file__).resolve().parent.parent / "references" / "theme-active.json"
+        colors = json.loads(theme_path.read_text(encoding="utf-8")).get("colors", {})
+    except Exception:
+        return set()
+    return {v.upper() for v in colors.values()
+            if isinstance(v, str) and _HEX_RE.fullmatch(v)}
+
+
+def off_theme_hexes(content: str, allowed: set) -> set:
+    """Hex colors in `content` that are not in the active theme palette.
+
+    Catches hardcoded ppt-master / off-theme hues leaking into authored slides
+    (chart-accent hardcode audit). White/black are common literals but
+    are intentionally NOT auto-allowed — the theme palette is the contract.
+    """
+    allowed_up = {h.upper() for h in allowed}
+    return {h.upper() for h in _HEX_RE.findall(content)} - allowed_up
+
+
+def _tag_attr_strings(content: str, tag: str) -> list:
+    """Attribute string for each `<tag ...>` occurrence."""
+    return re.findall(rf"<{tag}\b([^>]*)", content)
+
+
+def _attr_num(attrs: str, name: str):
+    m = re.search(rf'\b{name}\s*=\s*"(-?[\d.]+)"', attrs)
+    return float(m.group(1)) if m else None
+
+
+def parse_boxes(content: str, tag: str) -> list:
+    """`(x, y, w, h)` for each `<tag>` that has all four of x/y/width/height."""
+    boxes = []
+    for attrs in _tag_attr_strings(content, tag):
+        x, y = _attr_num(attrs, "x"), _attr_num(attrs, "y")
+        w, h = _attr_num(attrs, "width"), _attr_num(attrs, "height")
+        if None not in (x, y, w, h):
+            boxes.append((x, y, w, h))
+    return boxes
+
+
+def parse_text_anchors(content: str) -> list:
+    """`(x, y)` anchor for each `<text>` element with both x and y."""
+    pts = []
+    for attrs in _tag_attr_strings(content, "text"):
+        x, y = _attr_num(attrs, "x"), _attr_num(attrs, "y")
+        if x is not None and y is not None:
+            pts.append((x, y))
+    return pts
+
+
+def _point_in_box(px: float, py: float, box) -> bool:
+    x, y, w, h = box
+    return x <= px <= x + w and y <= py <= y + h
+
+
+def _boxes_intersect(a, b) -> bool:
+    ax, ay, aw, ah = a
+    bx, by, bw, bh = b
+    return ax < bx + bw and bx < ax + aw and ay < by + bh and by < ay + ah
+
+
+def _is_background(box) -> bool:
+    """A near-full-canvas rect is the slide background, not foreground content."""
+    _, _, w, h = box
+    return w * h >= 0.85 * CANVAS_W * CANVAS_H
+
+
+def texts_over_images(content: str) -> int:
+    """Count `<text>` anchors that fall inside any `<image>` bbox (Rule 23)."""
+    images = parse_boxes(content, "image")
+    if not images:
+        return 0
+    return sum(1 for (px, py) in parse_text_anchors(content)
+               if any(_point_in_box(px, py, b) for b in images))
+
+
+def quiet_zone_hits(content: str) -> int:
+    """Count primary-content marks intruding the top-right quiet zone (Rule 22):
+    foreground rect/image bboxes, plus text anchors and polyline/path points (a
+    chart legend or annotation in the corner counts too). The zone is y<=160 —
+    above the content area — so charts/tables drawn at y>=160 never intrude."""
+    qx, qy, qw, qh = QUIET_ZONE
+    n = sum(1 for b in parse_boxes(content, "rect") + parse_boxes(content, "image")
+            if not _is_background(b) and _boxes_intersect(b, QUIET_ZONE))
+    marks = parse_text_anchors(content) + _polyline_points(content) + _path_points(content)
+    n += sum(1 for (px, py) in marks if qx <= px <= qx + qw and qy <= py <= qy + qh)
+    return n
+
+
+def _area(box) -> float:
+    return box[2] * box[3] if box else 0.0
+
+
+def _bbox_of_points(points: list):
+    if not points:
+        return None
+    xs = [p[0] for p in points]
+    ys = [p[1] for p in points]
+    return (min(xs), min(ys), max(xs) - min(xs), max(ys) - min(ys))
+
+
+def _polyline_points(content: str) -> list:
+    pts = []
+    for raw in re.findall(r'points\s*=\s*"([^"]+)"', content):
+        nums = [float(n) for n in re.findall(r"-?\d+\.?\d*", raw)]
+        pts += list(zip(nums[0::2], nums[1::2]))
+    return pts
+
+
+def _circle_extents(content: str) -> list:
+    pts = []
+    for attrs in _tag_attr_strings(content, "circle"):
+        cx, cy, r = _attr_num(attrs, "cx"), _attr_num(attrs, "cy"), _attr_num(attrs, "r")
+        if cx is not None and cy is not None:
+            rr = r or 0
+            pts += [(cx - rr, cy - rr), (cx + rr, cy + rr)]
+    return pts
+
+
+def _foreground_rects(content: str) -> list:
+    """Every non-background rect (rounded OR square) — cards, chart bars, table
+    cells, diagram nodes. The near-full-canvas background rect is excluded."""
+    out = []
+    for attrs in _tag_attr_strings(content, "rect"):
+        x, y = _attr_num(attrs, "x"), _attr_num(attrs, "y")
+        w, h = _attr_num(attrs, "width"), _attr_num(attrs, "height")
+        if None in (x, y, w, h):
+            continue
+        box = (x, y, w, h)
+        if not _is_background(box):
+            out.append(box)
+    return out
+
+
+def _rounded_rects(content: str) -> list:
+    out = []
+    for attrs in _tag_attr_strings(content, "rect"):
+        x, y = _attr_num(attrs, "x"), _attr_num(attrs, "y")
+        w, h = _attr_num(attrs, "width"), _attr_num(attrs, "height")
+        if None in (x, y, w, h):
+            continue
+        rx = _attr_num(attrs, "rx")
+        if rx and rx > 2 and not _is_background((x, y, w, h)):
+            out.append((x, y, w, h))
+    return out
+
+
+def _path_points(content: str) -> list:
+    """Coordinate pairs from every `<path d=...>` — a rough point cloud for a
+    bounding box. Donut/pie/area/funnel/sankey charts are `<path>`-drawn."""
+    pts = []
+    for attrs in _tag_attr_strings(content, "path"):
+        m = re.search(r'\bd\s*=\s*"([^"]+)"', attrs)
+        if not m:
+            continue
+        nums = [float(n) for n in re.findall(r"-?\d+\.?\d*", m.group(1))]
+        pts += list(zip(nums[0::2], nums[1::2]))
+    return pts
+
+
+def _has_arc_path(content: str) -> bool:
+    """A `<path>` carrying an elliptical-arc command — pie / donut / gauge segment."""
+    for attrs in _tag_attr_strings(content, "path"):
+        m = re.search(r'\bd\s*=\s*"([^"]+)"', attrs)
+        if m and re.search(r"[Aa]\s", m.group(1)):
+            return True
+    return False
+
+
+def _looks_like_bar_chart(content: str) -> bool:
+    """≥3 foreground rects sharing a left edge with varying widths (horizontal bars)
+    or a baseline with varying heights (vertical bars). Distinguishes a bar chart
+    — whose rects often have rounded corners — from a uniform card grid."""
+    from collections import Counter
+    rects = _foreground_rects(content)
+    if len(rects) < 3:
+        return False
+    lefts = Counter(round(r[0]) for r in rects)
+    edge, n = lefts.most_common(1)[0]
+    if n >= 3 and len({round(r[2]) for r in rects if round(r[0]) == edge}) >= 3:
+        return True
+    bases = Counter(round(r[1] + r[3]) for r in rects)
+    base, n = bases.most_common(1)[0]
+    if n >= 3 and len({round(r[3]) for r in rects if round(r[1] + r[3]) == base}) >= 3:
+        return True
+    return False
+
+
+def _wide_hline_count(content: str) -> int:
+    """Near-horizontal `<line>` spanning ≥ half the canvas width — table row rules."""
+    n = 0
+    for attrs in _tag_attr_strings(content, "line"):
+        x1, y1 = _attr_num(attrs, "x1"), _attr_num(attrs, "y1")
+        x2, y2 = _attr_num(attrs, "x2"), _attr_num(attrs, "y2")
+        if None in (x1, y1, x2, y2):
+            continue
+        if abs(y1 - y2) < 2 and abs(x2 - x1) >= 600:
+            n += 1
+    return n
+
+
+def visual_primary_fraction(content: str) -> float:
+    """Graphic coverage — union-bbox area of every non-text, non-background visual
+    primitive ÷ content area, clamped to ≤1.0.
+
+    Counts images, polyline/path/circle drawing envelopes, and all foreground
+    rects (cards, bars, cells, nodes). Used only to flag genuinely *text-led*
+    slides (see `_check_visual_primary`); a near-zero score means "almost no
+    graphics on the slide." Rough warn signal, not an exact occupancy.
+    """
+    content_area = CONTENT_AREA[2] * CONTENT_AREA[3]
+    candidates = list(parse_boxes(content, "image"))
+    for pts in (_polyline_points(content), _circle_extents(content), _path_points(content)):
+        bb = _bbox_of_points(pts)
+        if bb:
+            candidates.append(bb)
+    rects = _foreground_rects(content)
+    if rects:
+        corners = [(b[0], b[1]) for b in rects] + [(b[0] + b[2], b[1] + b[3]) for b in rects]
+        candidates.append(_bbox_of_points(corners))
+    if not candidates:
+        return 0.0
+    return min(1.0, max(_area(c) for c in candidates) / content_area)
+
+
+def dominant_primitive(content: str) -> str:
+    """Classify a slide's realized dominant primitive: image / chart / table /
+    cards / text. A coarse, deterministic proxy for `lead_type`, feeding the
+    deck-diversity signal.
+
+    Order matters: chart before table (charts also draw gridlines), table before
+    cards (a comparison table is rounded column cards + horizontal rules).
+    """
+    content_area = CONTENT_AREA[2] * CONTENT_AREA[3]
+    if any(_area(b) >= 0.25 * content_area for b in parse_boxes(content, "image")):
+        return "image"
+    if (_polyline_points(content) or _has_arc_path(content)
+            or len(_tag_attr_strings(content, "circle")) >= 6
+            or _looks_like_bar_chart(content)):
+        return "chart"
+    if _wide_hline_count(content) >= 3:
+        return "table"
+    if len(_rounded_rects(content)) >= 2:
+        return "cards"
+    return "text"
+
+
+_FONT_SIZE_RE = re.compile(r'font-size\s*[:=]\s*["\']?(\d+\.?\d*)')
+
+
+def _max_font_size(content: str) -> float:
+    sizes = [float(s) for s in _FONT_SIZE_RE.findall(content)]
+    return max(sizes) if sizes else 0.0
+
+
+def low_primitive_diversity(primitives: list, min_slides: int = 4,
+                            threshold: float = 0.6):
+    """Deck-level realized-primitive diversity (lead_type-diversity proxy).
+
+    Returns a warning string when one dominant primitive owns > `threshold` of the
+    body slides; None when varied or when the deck is too small to judge.
+    """
+    if len(primitives) < min_slides:
+        return None
+    from collections import Counter
+    top, n = Counter(primitives).most_common(1)[0]
+    share = n / len(primitives)
+    if share > threshold:
+        return (f"{int(round(share * 100))}% of body slides are '{top}'-led — low "
+                f"primitive diversity; vary the lead_type / dominant primitive "
+                f"(executor §0.1 Dominant Primitive Cap)")
+    return None
+
+
 class SVGQualityChecker:
     """SVG quality checker"""
 
@@ -110,7 +407,14 @@ class SVGQualityChecker:
             # 6. Check image references (file existence and resolution)
             self._check_image_references(content, svg_path, result)
 
-            # Determine pass/fail
+            # 7-10. Composition signals — WARN-level only (advisory, never
+            # errors): off-theme hex audit, photo overlay, quiet zone, visual-primary.
+            self._check_off_theme_hex(content, result)
+            self._check_photo_overlay(content, result)
+            self._check_quiet_zone(content, result)
+            self._check_visual_primary(content, result)
+
+            # Determine pass/fail (these signals are warnings, never block)
             result['passed'] = len(result['errors']) == 0
 
         except Exception as e:
@@ -374,6 +678,58 @@ class SVGQualityChecker:
             except Exception:
                 pass  # Image unreadable, skip resolution check
 
+    def _check_off_theme_hex(self, content: str, result: Dict):
+        """WARN: hex colors outside the active theme palette (hardcode audit)."""
+        allowed = _active_theme_hexes()
+        if not allowed:
+            return  # theme unreadable — skip rather than flag everything
+        off = off_theme_hexes(content, allowed)
+        if off:
+            shown = ", ".join(sorted(off)[:5])
+            more = "" if len(off) <= 5 else f" (+{len(off) - 5} more)"
+            result['warnings'].append(
+                f"Off-theme hex (not in active palette): {shown}{more} "
+                f"— use theme tokens / single accent")
+
+    def _check_photo_overlay(self, content: str, result: Dict):
+        """WARN: text overlaid on a photo (anti-slop Rule 23)."""
+        n = texts_over_images(content)
+        if n:
+            result['warnings'].append(
+                f"{n} text element(s) overlaid on an <image> — photos must stand "
+                f"alone, caption outside the image (anti-slop Rule 23)")
+
+    def _check_quiet_zone(self, content: str, result: Dict):
+        """WARN: content intruding the top-right quiet zone (anti-slop Rule 22)."""
+        n = quiet_zone_hits(content)
+        if n:
+            result['warnings'].append(
+                f"{n} element(s) in the top-right quiet zone — keep the corner "
+                f"clear for breathing room (anti-slop Rule 22)")
+
+    def _check_visual_primary(self, content: str, result: Dict):
+        """WARN: a *text-led* body slide with no dominant evidence visual
+        (anti-slop Rule 21 — one message + a visual carrying ≥ ~55%; Rule 19 — no
+        card-only). Slides that already realize a chart / diagram / image / table /
+        card primitive are not flagged. Cover / chapter / closing / hero slides
+        (display & display-sm type ≥ 40px) are exempt.
+        """
+        if _max_font_size(content) >= 40:
+            return
+        # Body slide: record its realized primitive for the deck-diversity pass.
+        prim = dominant_primitive(content)
+        result['info']['primitive'] = prim
+        if prim != "text":
+            return  # already carried by a chart/diagram/image/table/card visual
+        frac = visual_primary_fraction(content)
+        result['info']['visual_primary'] = round(frac, 2)
+        if frac < 0.55:
+            result['warnings'].append(
+                f"Text-led body slide, weak visual support ({int(frac * 100)}% "
+                f"graphic coverage) — carry the message with a dominant evidence "
+                f"visual (chart/diagram/image/table), not text alone "
+                f"(anti-slop Rule 21 / Rule 19)")
+
     def _categorize_issue(self, error_msg: str) -> str:
         """Categorize issue type"""
         if 'viewBox' in error_msg:
@@ -420,6 +776,13 @@ class SVGQualityChecker:
         for svg_file in svg_files:
             result = self.check_file(str(svg_file), expected_format)
             self._print_result(result)
+
+        # Deck-level realized-primitive diversity (lead_type-diversity proxy).
+        primitives = [r['info']['primitive'] for r in self.results
+                      if 'primitive' in r.get('info', {})]
+        deck_warn = low_primitive_diversity(primitives)
+        if deck_warn:
+            print(f"[WARN] deck: {deck_warn}\n")
 
         return self.results
 
@@ -484,7 +847,7 @@ class SVGQualityChecker:
             print(f"\n[TIP] Common fixes:")
             print(f"  1. viewBox issues: Ensure consistency with canvas format (see references/canvas-formats.md)")
             print(f"  2. foreignObject: Use <text> + <tspan> for manual line breaks")
-            print(f"  3. Font issues: Use system UI font stack")
+            print(f"  3. Font issues: Lead every font-family with the active theme font (references/theme-active.json)")
 
     def _percentage(self, count: int) -> int:
         """Calculate percentage"""

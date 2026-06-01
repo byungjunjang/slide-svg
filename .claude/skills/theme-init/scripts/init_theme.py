@@ -15,14 +15,19 @@ Steps:
     4. render_layouts.py      — theme-parametric SVG layouts (source-aware:
                                 per-theme _shell_src/ if composed, else _source/)
     5. validate_shells.py     — FATAL lock check on the rendered shells
-    6. reskin_gallery.py      — regenerate colors_and_type.css for HTML gallery
-    7. render_design_system.py — regenerate design-system.md
-    8. render_anti_slop_theme.py — regenerate anti-slop-theme.md
-    9. render_prompts.py      — regenerate strategist.md + executor.md
-   10. render_design_md.py    — render DESIGN.md skeleton for slide-plan
+    6. render_charts.py       — re-render templates/charts/*.svg from the
+                                tokenized _source/*.tpl.svg in the active accent
+                                (keeps charts on-theme after a swap)
+    7. validate_charts.py     — FATAL single-accent gate: rendered charts must
+                                use the accent family + neutrals only
+    8. reskin_gallery.py      — regenerate colors_and_type.css for HTML gallery
+    9. render_design_system.py — regenerate design-system.md
+   10. render_anti_slop_theme.py — regenerate anti-slop-theme.md
+   11. render_prompts.py      — regenerate strategist.md + executor.md
+   12. render_design_md.py    — render DESIGN.md skeleton for slide-plan
                                 (skipped if target file already exists; --force
                                  to overwrite hand-authored content)
-   11. preview_shells.py      — NON-fatal: build _preview/index.html for the
+   13. preview_shells.py      — NON-fatal: build _preview/index.html for the
                                 Step 6.5 final-approval gate (4 shells + samples)
 
 Usage:
@@ -167,7 +172,7 @@ def main() -> int:
             print("[init_theme] aborted — no render writes")
             return 0
 
-    # 4-9. Render chain. Each script reads theme-active.json and writes its
+    # Steps 4-13. Render chain. Each script reads theme-active.json and writes its
     # output file. Any failure aborts the pipeline.
     #
     # render_design_md is intentionally last: it produces a *skeleton* that
@@ -182,6 +187,8 @@ def main() -> int:
     for step, script, extra in [
         ("render_layouts",          "render_layouts.py",          []),
         ("validate_shells",         "validate_shells.py",         []),
+        ("render_charts",           "render_charts.py",           []),
+        ("validate_charts",         "validate_charts.py",         []),
         ("reskin_gallery",          "reskin_gallery.py",          []),
         ("render_design_system",    "render_design_system.py",    []),
         ("render_anti_slop_theme",  "render_anti_slop_theme.py",  []),

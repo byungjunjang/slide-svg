@@ -1,0 +1,210 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1280 720" width="1280" height="720">
+    
+    
+    <defs>
+        
+        
+        
+        
+        
+        
+        
+    </defs>
+    
+    <rect width="1280" height="720" fill="{{TOKEN:colors.surface}}"/>
+    
+    <text x="640" y="45" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC', 'Microsoft YaHei', sans-serif" 
+          font-size="32" font-weight="bold" fill="{{TOKEN:colors.text}}" text-anchor="middle">
+        <tspan>Product Quality Issue Pareto Analysis</tspan>
+    </text>
+    
+    <text x="640" y="80" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC', 'Microsoft YaHei', sans-serif" 
+          font-size="18" fill="{{TOKEN:colors.text-secondary}}" text-anchor="middle">
+        <tspan>2025 Q4 - Customer Complaint Attribution (Total: 1,000 cases)</tspan>
+    </text>
+    
+    
+    <g id="legend" transform="translate(150, 100)">
+        <rect x="0" y="0" width="20" height="14" fill="{{TOKEN:colors.accent}}" rx="2"/>
+        <text x="28" y="11" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC', 'Microsoft YaHei', sans-serif" 
+              font-size="13" fill="{{TOKEN:colors.text-secondary}}"><tspan>Key Factors (80%)</tspan></text>
+        
+        <rect x="170" y="0" width="20" height="14" fill="{{TOKEN:colors.accent}}" fill-opacity="0.6" rx="2"/>
+        <text x="198" y="11" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC', 'Microsoft YaHei', sans-serif" 
+              font-size="13" fill="{{TOKEN:colors.text-secondary}}"><tspan>Minor Factors</tspan></text>
+        
+        <line x1="320" y1="7" x2="340" y2="7" stroke="{{TOKEN:colors.accent}}" stroke-opacity="0.4" stroke-width="3"/>
+        <circle cx="330" cy="7" r="5" fill="{{TOKEN:colors.accent}}" fill-opacity="0.4"/>
+        <text x="348" y="11" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC', 'Microsoft YaHei', sans-serif" 
+              font-size="13" fill="{{TOKEN:colors.text-secondary}}"><tspan>Cumulative %</tspan></text>
+    </g>
+    
+    
+    <line x1="130" y1="130" x2="130" y2="580" stroke="{{TOKEN:colors.border}}" stroke-width="2"/>
+    <text x="70" y="360" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC', 'Microsoft YaHei', sans-serif" 
+          font-size="16" font-weight="600" fill="{{TOKEN:colors.text}}" text-anchor="middle" transform="rotate(-90, 70, 360)">
+        <tspan>Complaint Count</tspan>
+    </text>
+    
+    
+    <text x="120" y="585" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif" 
+          font-size="13" fill="{{TOKEN:colors.text-secondary}}" text-anchor="end"><tspan>0</tspan></text>
+    <text x="120" y="490" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif" 
+          font-size="13" fill="{{TOKEN:colors.text-secondary}}" text-anchor="end"><tspan>100</tspan></text>
+    <text x="120" y="395" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif" 
+          font-size="13" fill="{{TOKEN:colors.text-secondary}}" text-anchor="end"><tspan>200</tspan></text>
+    <text x="120" y="300" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif" 
+          font-size="13" fill="{{TOKEN:colors.text-secondary}}" text-anchor="end"><tspan>300</tspan></text>
+    <text x="120" y="205" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif" 
+          font-size="13" fill="{{TOKEN:colors.text-secondary}}" text-anchor="end"><tspan>400</tspan></text>
+    <text x="120" y="135" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif" 
+          font-size="13" fill="{{TOKEN:colors.text-secondary}}" text-anchor="end"><tspan>450</tspan></text>
+    
+    
+    <line x1="1150" y1="130" x2="1150" y2="580" stroke="{{TOKEN:colors.border}}" stroke-width="2"/>
+    <text x="1210" y="360" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC', 'Microsoft YaHei', sans-serif" 
+          font-size="16" font-weight="600" fill="{{TOKEN:colors.accent}}" fill-opacity="0.4" text-anchor="middle" transform="rotate(90, 1210, 360)">
+        <tspan>Cumulative %</tspan>
+    </text>
+    
+    
+    <text x="1160" y="585" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif" 
+          font-size="13" fill="{{TOKEN:colors.accent}}" fill-opacity="0.4"><tspan>0%</tspan></text>
+    <text x="1160" y="470" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif" 
+          font-size="13" fill="{{TOKEN:colors.accent}}" fill-opacity="0.4"><tspan>25%</tspan></text>
+    <text x="1160" y="355" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif" 
+          font-size="13" fill="{{TOKEN:colors.accent}}" fill-opacity="0.4"><tspan>50%</tspan></text>
+    <text x="1160" y="240" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif" 
+          font-size="13" fill="{{TOKEN:colors.accent}}" fill-opacity="0.4"><tspan>75%</tspan></text>
+    <text x="1160" y="135" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif" 
+          font-size="13" fill="{{TOKEN:colors.accent}}" fill-opacity="0.4"><tspan>100%</tspan></text>
+    
+    
+    <line x1="130" y1="580" x2="1150" y2="580" stroke="{{TOKEN:colors.border}}" stroke-width="2"/>
+    
+    
+    <line x1="130" y1="490" x2="1150" y2="490" stroke="{{TOKEN:colors.border}}" stroke-width="1" stroke-dasharray="5,5"/>
+    <line x1="130" y1="395" x2="1150" y2="395" stroke="{{TOKEN:colors.border}}" stroke-width="1" stroke-dasharray="5,5"/>
+    <line x1="130" y1="300" x2="1150" y2="300" stroke="{{TOKEN:colors.border}}" stroke-width="1" stroke-dasharray="5,5"/>
+    <line x1="130" y1="205" x2="1150" y2="205" stroke="{{TOKEN:colors.border}}" stroke-width="1" stroke-dasharray="5,5"/>
+    
+    
+    <line x1="130" y1="220" x2="1150" y2="220" stroke="{{TOKEN:colors.accent}}" stroke-width="2" stroke-dasharray="10,5"/>
+    <text x="145" y="215" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif" 
+          font-size="14" font-weight="600" fill="{{TOKEN:colors.accent}}"><tspan>80% Key Factor Line</tspan></text>
+    
+    
+    <rect x="130" y="220" width="640" height="360" fill="{{TOKEN:colors.accent}}" fill-opacity="0.25" opacity="0.3"/>
+    
+    
+    
+    <rect x="170" y="230" width="100" height="350" fill="{{TOKEN:colors.accent}}" rx="4"/>
+    <text x="220" y="220" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif" 
+          font-size="16" font-weight="bold" fill="{{TOKEN:colors.accent}}" fill-opacity="0.25" text-anchor="middle"><tspan>350</tspan></text>
+    <text x="220" y="610" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC', 'Microsoft YaHei', sans-serif" 
+          font-size="14" fill="{{TOKEN:colors.text}}" text-anchor="middle"><tspan>Function Error</tspan></text>
+    <text x="220" y="628" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif" 
+          font-size="12" fill="{{TOKEN:colors.text-secondary}}" text-anchor="middle"><tspan>(35%)</tspan></text>
+    
+    
+    <rect x="300" y="360" width="100" height="220" fill="{{TOKEN:colors.accent}}" rx="4"/>
+    <text x="350" y="350" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif" 
+          font-size="16" font-weight="bold" fill="{{TOKEN:colors.accent}}" fill-opacity="0.25" text-anchor="middle"><tspan>220</tspan></text>
+    <text x="350" y="610" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC', 'Microsoft YaHei', sans-serif" 
+          font-size="14" fill="{{TOKEN:colors.text}}" text-anchor="middle"><tspan>Appearance</tspan></text>
+    <text x="350" y="628" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif" 
+          font-size="12" fill="{{TOKEN:colors.text-secondary}}" text-anchor="middle"><tspan>(22%)</tspan></text>
+    
+    
+    <rect x="430" y="430" width="100" height="150" fill="{{TOKEN:colors.accent}}" rx="4"/>
+    <text x="480" y="420" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif" 
+          font-size="16" font-weight="bold" fill="{{TOKEN:colors.accent}}" fill-opacity="0.25" text-anchor="middle"><tspan>150</tspan></text>
+    <text x="480" y="610" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC', 'Microsoft YaHei', sans-serif" 
+          font-size="14" fill="{{TOKEN:colors.text}}" text-anchor="middle"><tspan>Missing Parts</tspan></text>
+    <text x="480" y="628" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif" 
+          font-size="12" fill="{{TOKEN:colors.text-secondary}}" text-anchor="middle"><tspan>(15%)</tspan></text>
+    
+    
+    <rect x="560" y="460" width="100" height="120" fill="{{TOKEN:colors.accent}}" rx="4"/>
+    <text x="610" y="450" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif" 
+          font-size="16" font-weight="bold" fill="{{TOKEN:colors.accent}}" fill-opacity="0.25" text-anchor="middle"><tspan>120</tspan></text>
+    <text x="610" y="610" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC', 'Microsoft YaHei', sans-serif" 
+          font-size="14" fill="{{TOKEN:colors.text}}" text-anchor="middle"><tspan>Ship Damage</tspan></text>
+    <text x="610" y="628" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif" 
+          font-size="12" fill="{{TOKEN:colors.text-secondary}}" text-anchor="middle"><tspan>(12%)</tspan></text>
+    
+    
+    <rect x="690" y="510" width="100" height="70" fill="{{TOKEN:colors.accent}}" fill-opacity="0.6" rx="4"/>
+    <text x="740" y="500" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif" 
+          font-size="14" font-weight="bold" fill="{{TOKEN:colors.accent}}" fill-opacity="0.25" text-anchor="middle"><tspan>70</tspan></text>
+    <text x="740" y="610" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC', 'Microsoft YaHei', sans-serif" 
+          font-size="14" fill="{{TOKEN:colors.text}}" text-anchor="middle"><tspan>Manual Error</tspan></text>
+    <text x="740" y="628" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif" 
+          font-size="12" fill="{{TOKEN:colors.text-secondary}}" text-anchor="middle"><tspan>(7%)</tspan></text>
+    
+    
+    <rect x="820" y="530" width="100" height="50" fill="{{TOKEN:colors.accent}}" fill-opacity="0.6" rx="4"/>
+    <text x="870" y="520" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif" 
+          font-size="14" font-weight="bold" fill="{{TOKEN:colors.accent}}" fill-opacity="0.25" text-anchor="middle"><tspan>50</tspan></text>
+    <text x="870" y="610" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC', 'Microsoft YaHei', sans-serif" 
+          font-size="14" fill="{{TOKEN:colors.text}}" text-anchor="middle"><tspan>Packaging</tspan></text>
+    <text x="870" y="628" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif" 
+          font-size="12" fill="{{TOKEN:colors.text-secondary}}" text-anchor="middle"><tspan>(5%)</tspan></text>
+    
+    
+    <rect x="950" y="540" width="100" height="40" fill="{{TOKEN:colors.accent}}" fill-opacity="0.6" rx="4"/>
+    <text x="1000" y="530" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif" 
+          font-size="14" font-weight="bold" fill="{{TOKEN:colors.accent}}" fill-opacity="0.25" text-anchor="middle"><tspan>40</tspan></text>
+    <text x="1000" y="610" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC', 'Microsoft YaHei', sans-serif" 
+          font-size="14" fill="{{TOKEN:colors.text}}" text-anchor="middle"><tspan>Other</tspan></text>
+    <text x="1000" y="628" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif" 
+          font-size="12" fill="{{TOKEN:colors.text-secondary}}" text-anchor="middle"><tspan>(4%)</tspan></text>
+    
+    
+    <polyline points="220,420 350,322 480,254 610,205 740,170 870,151 1000,130" 
+              fill="none" stroke="{{TOKEN:colors.accent}}" stroke-opacity="0.4" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+    
+    
+    <circle cx="220" cy="420" r="8" fill="{{TOKEN:colors.accent}}" fill-opacity="0.4"/>
+    <text x="220" y="445" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif" 
+          font-size="12" font-weight="bold" fill="{{TOKEN:colors.accent}}" fill-opacity="0.4" text-anchor="middle"><tspan>35%</tspan></text>
+    
+    <circle cx="350" cy="322" r="8" fill="{{TOKEN:colors.accent}}" fill-opacity="0.4"/>
+    <text x="350" y="310" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif" 
+          font-size="12" font-weight="bold" fill="{{TOKEN:colors.accent}}" fill-opacity="0.4" text-anchor="middle"><tspan>57%</tspan></text>
+    
+    <circle cx="480" cy="254" r="8" fill="{{TOKEN:colors.accent}}" fill-opacity="0.4"/>
+    <text x="480" y="242" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif" 
+          font-size="12" font-weight="bold" fill="{{TOKEN:colors.accent}}" fill-opacity="0.4" text-anchor="middle"><tspan>72%</tspan></text>
+    
+    <circle cx="610" cy="205" r="8" fill="{{TOKEN:colors.accent}}"/>
+    <text x="610" y="193" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif" 
+          font-size="13" font-weight="bold" fill="{{TOKEN:colors.accent}}" text-anchor="middle"><tspan>84%</tspan></text>
+    
+    <circle cx="740" cy="170" r="6" fill="{{TOKEN:colors.accent}}" fill-opacity="0.4"/>
+    <text x="740" y="158" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif" 
+          font-size="11" font-weight="bold" fill="{{TOKEN:colors.accent}}" fill-opacity="0.4" text-anchor="middle"><tspan>91%</tspan></text>
+    
+    <circle cx="870" cy="151" r="6" fill="{{TOKEN:colors.accent}}" fill-opacity="0.4"/>
+    <text x="870" y="139" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif" 
+          font-size="11" font-weight="bold" fill="{{TOKEN:colors.accent}}" fill-opacity="0.4" text-anchor="middle"><tspan>96%</tspan></text>
+    
+    <circle cx="1000" cy="130" r="6" fill="{{TOKEN:colors.accent}}" fill-opacity="0.4"/>
+    <text x="1000" y="118" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif" 
+          font-size="11" font-weight="bold" fill="{{TOKEN:colors.accent}}" fill-opacity="0.4" text-anchor="middle"><tspan>100%</tspan></text>
+    
+    
+    <rect x="130" y="655" width="1020" height="50" rx="6" fill="{{TOKEN:colors.accent}}" fill-opacity="0.25" stroke="{{TOKEN:colors.accent}}" stroke-width="2"/>
+    <text x="150" y="678" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC', 'Microsoft YaHei', sans-serif" 
+          font-size="16" font-weight="600" fill="{{TOKEN:colors.accent}}" fill-opacity="0.25">
+        <tspan>Key Finding:</tspan>
+    </text>
+    <text x="270" y="678" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC', 'Microsoft YaHei', sans-serif" 
+          font-size="15" fill="{{TOKEN:colors.text-secondary}}">
+        <tspan>Top 4 issues account for 84% of complaints - prioritize resolution</tspan>
+    </text>
+    <text x="150" y="695" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC', 'Microsoft YaHei', sans-serif" 
+          font-size="13" fill="{{TOKEN:colors.text-secondary}}">
+        <tspan>Action: Enhance QC process, optimize logistics packaging, improve parts checklist verification</tspan>
+    </text>
+</svg>

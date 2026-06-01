@@ -201,6 +201,30 @@ When content outline pages involve **data visualization or infographic-style str
 > - Prefer specificity: if `vertical_list` fits better than generic `numbered_steps`, choose the more specific template
 > - When no built-in template fits, note "custom layout" instead of forcing a poor match
 
+### Lead Type & Visual-Primary Assignment (Non-blocking — Strategist proposes, Executor disposes)
+
+**The visual-evidence principle of this skill: the governing message is the claim; the dominant visual is its evidence.** For each content-outline page, propose a `lead_type` — the *dominant evidence primitive* that should carry the page — and record it in §IX alongside the visualization type. This is a **suggestion**, not a mandate.
+
+**`lead_type` values:**
+
+| `lead_type` | The page's evidence is… | Implementation SSOT |
+|---|---|---|
+| `chart` | a quantitative payload (trend, comparison, share, distribution) | `chart_strategy` → `chart-rhetorical-roles.md` §1–9 |
+| `diagram` | a relationship, structure, or genuine process | `diagram-types.md` → `chart-rhetorical-roles.md` "Diagram & image evidence roles" |
+| `image` | a real-world artifact or a concept illustration | image pattern (`patterns.md` image-text / image-annotated) — must stand alone (anti-slop Rule 23) |
+| `table` | precise multi-attribute values that must be read exactly | `comparison_table` / `data-table` |
+| `text` | a definition, principle, or quote with no evidence visual | text-led — still pairs with ≥1 supporting visual on body slides (Rule 19) |
+| `null` | (no proposal) — defer entirely to the Executor | — |
+
+**Assignment rules:**
+
+1. **Evidence first, never decoration.** Assign a visual `lead_type` only when the page actually has that evidence to show. **Never force a chart onto a page with no quantitative payload** — set `lead_type: text` or `null` and let the Executor compose. A chart invented for a data-less slide is exactly the slop this skill exists to prevent.
+2. **Visual-primary minimum (deck-level, advisory/warn).** Target **≥ ~60% of body slides** with a visual `lead_type` (`chart` / `diagram` / `image` / `table`) rather than `text`. A deck that is mostly `text`-led is a card-and-bullet deck wearing a theme. This is a planning target measured at warn level — not a per-slide gate.
+3. **Refines, does not replace, `recommended_layout_family`.** `lead_type` names the dominant *primitive* (a finer cut than the family) and introduces **no new validated field**. In Plan-Consuming mode the plan's `recommended_layout_family` + `chart_strategy` already imply the lead; `lead_type` is primarily for the Standalone / `design_spec` path and as an explicit visual-evidence annotation.
+4. **Executor authority is unchanged.** The Executor RETAINS full authority over the actual primitive, pattern, and geometry (executor §0.1). `lead_type` is a *first choice* it may override when content shape or the Dominant Primitive Cap dictates. **If `slide_plan.json` and a `lead_type` suggestion disagree, `slide_plan.json` wins.**
+
+See `chart-rhetorical-roles.md` for the chart (§1–9) and diagram/image evidence-role mappings, `diagram-types.md` for diagram grammar, and anti-slop-core Rules 21–22 for the one-message / visual-dominance / whitespace discipline this assignment serves.
+
 ### Speaker Notes Requirements (Default — no discussion needed)
 
 - File naming: Recommended to match SVG names (`01_cover.svg` → `notes/01_cover.md`), also compatible with `notes/slide01.md`

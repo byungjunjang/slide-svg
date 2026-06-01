@@ -58,6 +58,16 @@ In **Standalone** mode the Executor selects family and pattern both, as before �
 
 ---
 
+### 0.2 Lead-type hint (honored, not binding)
+
+The Strategist's Design Spec (and, when present, `slide_plan.json`) may carry a per-page **`lead_type`** — its proposed *dominant evidence primitive* (`chart` / `diagram` / `image` / `table` / `text` / `null`; see the strategist Eight Confirmations and `chart-rhetorical-roles.md`). Treat it as a **first-choice hint, not a binding instruction**:
+
+- **Honor it** when it fits the content shape — build the proposed visual inline as native SVG (chart from `templates/charts/`, diagram per `diagram-types.md`, image per `patterns.md`).
+- **Override it** when content shape or the **Dominant Primitive Cap** (§0.1 #4) dictates a different primitive — or when `slide_plan.json` disagrees (the plan wins).
+- **`lead_type: text` / `null` forces no visual.** Never invent a chart or diagram for a page with no evidence to show. (Rule 19 still wants ≥1 supporting visual on body slides — but an honest text-led composition beats a fabricated data viz.)
+
+---
+
 ## 1. Template Adherence
 
 The **Jangpm** template pack at `templates/layouts/jangpm/` is the only layout pack this skill uses. These shells are the composed deck skeleton (see DESIGN.md §6.0) — inherit their geometry, decoration, and band exactly; only replace the named content placeholders:
@@ -154,7 +164,7 @@ This audit applies to **content slides only**. Cover / chapter / ending pages ar
   2. **Logic Construction Phase** — after all SVGs are finalized, batch-write speaker notes for narrative coherence
 - **Proximity principle** — related elements close together; unrelated groups separated by increased space or a rule line
 - **Absolute spec adherence** — Canvas size, color palette, typography scale, and layout grid come from the Design Spec. No improvisation.
-- **Jangpm anti-slop** — Read `anti-slop-core.md` (18 structural rules) and `anti-slop-theme.md` (active-theme literal enforcement) once at session start; apply both (see §6 below for executor-relevant summary)
+- **Jangpm anti-slop** — Read `anti-slop-core.md` (23 structural rules) and `anti-slop-theme.md` (active-theme literal enforcement) once at session start; apply both (see §6 below for executor-relevant summary)
 - **Visual depth via hierarchy, not effects** — Jangpm rejects filter shadows, glow, gradient overlays, same-hue gradient title bars, numbered circles with theme-fill backgrounds. Create depth through typographic contrast, rule lines, card containment (sparingly), and whitespace — NOT through visual effects.
 
 ### SVG File Naming Convention
@@ -304,7 +314,7 @@ Concept → tabler-outline icon (common picks):
 
 ## 6. Anti-Slop Summary (Executor-Relevant)
 
-Full lists in `anti-slop-core.md` (18 structural rules) and `anti-slop-theme.md` (theme-literal rules). The executor must respect every rule in both files; these 12 structural rules are the ones that bite during SVG generation:
+Full lists in `anti-slop-core.md` (23 structural rules) and `anti-slop-theme.md` (theme-literal rules). The executor must respect every rule in both files; the structural rules that bite hardest during SVG generation:
 
 1. **No gradient orbs** — no radial gradients as background decoration
 2. **No rainbow / gradient borders** — all borders are `1px solid #E5E7EB`
@@ -320,6 +330,11 @@ Full lists in `anti-slop-core.md` (18 structural rules) and `anti-slop-theme.md`
 16. **No accent-soft as default card background** — accent is scarce
 17. **No decorative semantic colors** — green/red/amber only when data meaning demands it
 18. **No SaaS dashboard aesthetics** — stat widgets, colored icon badges, gradient KPI cards are forbidden
+19. **No card-only body slides** — a body slide's cards must sit alongside ≥1 non-card visual (chart / table / diagram / image)
+20. **No decorative step-flow** — number/arrow process chrome only for a genuine time/causal sequence, never to enumerate parallel items
+21. **One dominant message** — one headline assertion + ≤3 supporting bullets (tightens Rule 11's 4–5 ceiling for single-message slides); the dominant visual is the evidence, text is its caption
+22. **Measured whitespace & quiet zone** — keep ~30% of the 1280×720 canvas unpainted; leave the top-right corner (x≥1024, y≤160) clear of primary content
+23. **Photographs stand alone** — never overlay `<text>` on an `<image>`; the caption sits outside the image's bounding box
 
 ### Governing Message (GM) Rule — MANDATORY
 

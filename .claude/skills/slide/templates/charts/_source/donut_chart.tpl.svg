@@ -1,0 +1,219 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1280 720" width="1280" height="720">
+    
+    
+    <defs>
+        
+        
+    </defs>
+    
+    
+    <rect width="1280" height="720" fill="{{TOKEN:colors.surface}}"/>
+    
+    
+    <text x="60" y="80" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif" 
+          font-size="32" font-weight="bold" fill="{{TOKEN:colors.text}}">
+        <tspan>产品线营收占比</tspan>
+    </text>
+    
+    <text x="60" y="115" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif" 
+          font-size="18" fill="{{TOKEN:colors.text-secondary}}">
+        <tspan>2025年第三季度 · 总收入 5.2亿元</tspan>
+    </text>
+    
+    
+    <g id="donutChart" transform="translate(400, 410)">
+        
+        
+        
+        <path d="M 0,-180 A 180,180 0 0,1 156.36,88.18 L 86.87,49.04 A 100,100 0 0,0 0,-100 Z" 
+              fill="{{TOKEN:colors.accent}}"/>
+        
+        
+        <path d="M 156.36,88.18 A 180,180 0 0,1 -123.43,130.14 L -68.57,72.30 A 100,100 0 0,0 86.87,49.04 Z" 
+              fill="{{TOKEN:colors.accent}}" fill-opacity="0.6"/>
+        
+        
+        <path d="M -123.43,130.14 A 180,180 0 0,1 -175.36,-51.76 L -97.42,-28.76 A 100,100 0 0,0 -68.57,72.30 Z" 
+              fill="{{TOKEN:colors.accent}}" fill-opacity="0.4"/>
+        
+        
+        <path d="M -175.36,-51.76 A 180,180 0 0,1 -54.46,-171.54 L -30.26,-95.30 A 100,100 0 0,0 -97.42,-28.76 Z" 
+              fill="{{TOKEN:colors.accent}}" fill-opacity="0.25"/>
+        
+        
+        <path d="M -54.46,-171.54 A 180,180 0 0,1 0,-180 L 0,-100 A 100,100 0 0,0 -30.26,-95.30 Z" 
+              fill="{{TOKEN:colors.text-secondary}}"/>
+        
+        
+        <circle cx="0" cy="0" r="100" fill="{{TOKEN:colors.surface}}"/>
+        
+        
+        <text x="0" y="-15" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif" 
+              font-size="48" font-weight="bold" fill="{{TOKEN:colors.text}}" text-anchor="middle">
+            <tspan>5.2亿</tspan>
+        </text>
+        <text x="0" y="20" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif" 
+              font-size="18" fill="{{TOKEN:colors.text-secondary}}" text-anchor="middle">
+            <tspan>总收入</tspan>
+        </text>
+    </g>
+    
+    
+    
+    <g>
+        <line x1="530" y1="295" x2="620" y2="250" stroke="{{TOKEN:colors.accent}}" stroke-width="1.5"/>
+        <circle cx="530" cy="295" r="3" fill="{{TOKEN:colors.accent}}"/>
+        <text x="630" y="255" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif" 
+              font-size="20" font-weight="600" fill="{{TOKEN:colors.accent}}">
+            <tspan>35%</tspan>
+        </text>
+    </g>
+    
+    
+    <g>
+        <line x1="510" y1="500" x2="620" y2="540" stroke="{{TOKEN:colors.accent}}" stroke-opacity="0.6" stroke-width="1.5"/>
+        <circle cx="510" cy="500" r="3" fill="{{TOKEN:colors.accent}}" fill-opacity="0.6"/>
+        <text x="630" y="545" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif" 
+              font-size="20" font-weight="600" fill="{{TOKEN:colors.accent}}" fill-opacity="0.6">
+            <tspan>28%</tspan>
+        </text>
+    </g>
+    
+    
+    <g>
+        <line x1="250" y1="480" x2="150" y2="520" stroke="{{TOKEN:colors.accent}}" stroke-opacity="0.4" stroke-width="1.5"/>
+        <circle cx="250" cy="480" r="3" fill="{{TOKEN:colors.accent}}" fill-opacity="0.4"/>
+        <text x="140" y="525" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif" 
+              font-size="20" font-weight="600" fill="{{TOKEN:colors.accent}}" fill-opacity="0.4" text-anchor="end">
+            <tspan>20%</tspan>
+        </text>
+    </g>
+    
+    
+    <g>
+        <line x1="310" y1="265" x2="200" y2="220" stroke="{{TOKEN:colors.accent}}" stroke-opacity="0.25" stroke-width="1.5"/>
+        <circle cx="310" cy="265" r="3" fill="{{TOKEN:colors.accent}}" fill-opacity="0.25"/>
+        <text x="190" y="225" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif" 
+              font-size="20" font-weight="600" fill="{{TOKEN:colors.accent}}" fill-opacity="0.25" text-anchor="end">
+            <tspan>12%</tspan>
+        </text>
+    </g>
+    
+    
+    <g>
+        <line x1="375" y1="240" x2="340" y2="180" stroke="{{TOKEN:colors.text-secondary}}" stroke-width="1.5"/>
+        <circle cx="375" cy="240" r="3" fill="{{TOKEN:colors.text-secondary}}"/>
+        <text x="330" y="185" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif" 
+              font-size="20" font-weight="600" fill="{{TOKEN:colors.text-secondary}}" text-anchor="end">
+            <tspan>5%</tspan>
+        </text>
+    </g>
+    
+    
+    <g id="detailList">
+        
+        <text x="750" y="220" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif" 
+              font-size="22" font-weight="600" fill="{{TOKEN:colors.text}}">
+            <tspan>详细数据</tspan>
+        </text>
+        
+        
+        <rect x="750" y="250" width="8" height="40" rx="4" fill="{{TOKEN:colors.accent}}"/>
+        <text x="775" y="270" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif" 
+              font-size="18" fill="{{TOKEN:colors.text-secondary}}">
+            <tspan>企业服务</tspan>
+        </text>
+        <text x="1100" y="270" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif" 
+              font-size="20" font-weight="600" fill="{{TOKEN:colors.text}}" text-anchor="end">
+            <tspan>¥1.82亿</tspan>
+        </text>
+        <text x="1180" y="270" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif" 
+              font-size="18" fill="{{TOKEN:colors.accent}}" text-anchor="end">
+            <tspan>35%</tspan>
+        </text>
+        
+        
+        <rect x="750" y="310" width="8" height="40" rx="4" fill="{{TOKEN:colors.accent}}" fill-opacity="0.6"/>
+        <text x="775" y="330" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif" 
+              font-size="18" fill="{{TOKEN:colors.text-secondary}}">
+            <tspan>消费电子</tspan>
+        </text>
+        <text x="1100" y="330" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif" 
+              font-size="20" font-weight="600" fill="{{TOKEN:colors.text}}" text-anchor="end">
+            <tspan>¥1.46亿</tspan>
+        </text>
+        <text x="1180" y="330" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif" 
+              font-size="18" fill="{{TOKEN:colors.accent}}" fill-opacity="0.6" text-anchor="end">
+            <tspan>28%</tspan>
+        </text>
+        
+        
+        <rect x="750" y="370" width="8" height="40" rx="4" fill="{{TOKEN:colors.accent}}" fill-opacity="0.4"/>
+        <text x="775" y="390" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif" 
+              font-size="18" fill="{{TOKEN:colors.text-secondary}}">
+            <tspan>云计算</tspan>
+        </text>
+        <text x="1100" y="390" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif" 
+              font-size="20" font-weight="600" fill="{{TOKEN:colors.text}}" text-anchor="end">
+            <tspan>¥1.04亿</tspan>
+        </text>
+        <text x="1180" y="390" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif" 
+              font-size="18" fill="{{TOKEN:colors.accent}}" fill-opacity="0.4" text-anchor="end">
+            <tspan>20%</tspan>
+        </text>
+        
+        
+        <rect x="750" y="430" width="8" height="40" rx="4" fill="{{TOKEN:colors.accent}}" fill-opacity="0.25"/>
+        <text x="775" y="450" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif" 
+              font-size="18" fill="{{TOKEN:colors.text-secondary}}">
+            <tspan>物联网</tspan>
+        </text>
+        <text x="1100" y="450" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif" 
+              font-size="20" font-weight="600" fill="{{TOKEN:colors.text}}" text-anchor="end">
+            <tspan>¥0.62亿</tspan>
+        </text>
+        <text x="1180" y="450" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif" 
+              font-size="18" fill="{{TOKEN:colors.accent}}" fill-opacity="0.25" text-anchor="end">
+            <tspan>12%</tspan>
+        </text>
+        
+        
+        <rect x="750" y="490" width="8" height="40" rx="4" fill="{{TOKEN:colors.text-secondary}}"/>
+        <text x="775" y="510" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif" 
+              font-size="18" fill="{{TOKEN:colors.text-secondary}}">
+            <tspan>其他</tspan>
+        </text>
+        <text x="1100" y="510" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif" 
+              font-size="20" font-weight="600" fill="{{TOKEN:colors.text}}" text-anchor="end">
+            <tspan>¥0.26亿</tspan>
+        </text>
+        <text x="1180" y="510" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif" 
+              font-size="18" fill="{{TOKEN:colors.text-secondary}}" text-anchor="end">
+            <tspan>5%</tspan>
+        </text>
+        
+        
+        <line x1="750" y1="550" x2="1180" y2="550" stroke="{{TOKEN:colors.border}}" stroke-width="2"/>
+        
+        
+        <text x="775" y="580" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif" 
+              font-size="18" font-weight="600" fill="{{TOKEN:colors.text}}">
+            <tspan>合计</tspan>
+        </text>
+        <text x="1100" y="580" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif" 
+              font-size="20" font-weight="bold" fill="{{TOKEN:colors.text}}" text-anchor="end">
+            <tspan>¥5.20亿</tspan>
+        </text>
+        <text x="1180" y="580" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif" 
+              font-size="18" font-weight="600" fill="{{TOKEN:colors.text}}" text-anchor="end">
+            <tspan>100%</tspan>
+        </text>
+    </g>
+    
+    
+    <text x="60" y="695" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif" 
+          font-size="14" fill="{{TOKEN:colors.text-secondary}}">
+        <tspan>数据来源: 财务部门季度报告</tspan>
+    </text>
+</svg>
+

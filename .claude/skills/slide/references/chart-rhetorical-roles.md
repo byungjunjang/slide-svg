@@ -171,6 +171,41 @@ Use this to validate post-hoc when reading existing decks or to disambiguate whe
 
 ---
 
+## Diagram & image evidence roles (`lead_type` extension)
+
+> **Why this section.** The 9 chart roles above cover *quantitative* evidence only. When a slide's evidence is a **relationship / structure** (`lead_type: diagram`) or a **real-world artifact / concept illustration** (`lead_type: image`), it needs the same rhetorical-role → implementation discipline. This section is that map — it keeps this file as the single SSOT for visual-evidence selection without renaming it (chart roles + these). Diagram grammar lives in `diagram-types.md`; image patterns in `patterns.md`. These roles are **advisory inputs to the Strategist's `lead_type` proposal** (strategist Eight Confirmations) and add **no validated field** — `validate_plan.py` still enforces only the chart-role rules below.
+
+### Diagram evidence roles (`lead_type: diagram`)
+
+Use when the payload is **non-numeric structure** — how things connect, nest, sequence, or rank.
+
+| Role | Use when the evidence is… | Primary (`diagram-types.md`) | Boundary / caveat |
+|---|---|---|---|
+| `system-structure` | components and how they connect | `architecture`, `layers`, `nested` | not a process — implies no time/causal order |
+| `process-sequence` | a **genuine** ordered / causal flow | `flowchart`, `sequence`, `state`, `swimlane` | ⚠ real sequences only — decorative step strips are banned (anti-slop Rule 20) |
+| `hierarchy` | ranked / parent-child structure | `tree`, `org`, `pyramid` | pyramid as *hierarchy*; pyramid as share → `split-segment` chart |
+| `relationship` | links, set overlap, or a hub of relations | `ER`, `venn`, mind-map, hub-spoke | quantitative overlap → chart, not venn |
+| `timeline` | events anchored to a time axis | `timeline` | a quantity per event → `forecast` / `growth-trend` chart |
+| `positioning` | items placed on 2 **qualitative** axes | `quadrant` | numeric axes → `quadrant` *chart* (`matrix_2x2`) |
+
+### Image evidence roles (`lead_type: image`)
+
+Use when the **photograph or illustration itself** is the argument (the visual-evidence principle). The image stands alone — never text-over-image (anti-slop Rule 23).
+
+| Role | Use when the evidence is… | Primary | Boundary / caveat |
+|---|---|---|---|
+| `artifact-evidence` | the actual thing — product shot, screenshot, document, real scene | `image` at ≥ ~40% width, caption **outside** the bbox (`patterns.md` image-annotated) | must be legible *as* evidence; no decorative thumbnails |
+| `concept-illustration` | an abstract concept made concrete by a generated illustration | active-theme illustration (`patterns.md` image-text; style lock in `image-generator.md`) | one concept per image; not wallpaper (anti-slop Rule 13) |
+
+### Chart vs diagram vs image — the deciding question
+
+> **Does the page carry a number that must be read?** → `chart` (or `table` for exact values).
+> **A structure / relationship / sequence with no number?** → `diagram`.
+> **Is a real-world artifact or concept-made-visible the proof itself?** → `image`.
+> **None of these — just an assertion?** → `text` (and pair it with one supporting visual, anti-slop Rule 19).
+
+---
+
 ## Validation rules (enforced by `validate_plan.py`)
 
 1. If `chart_strategy` is set, `chart_takeaway` MUST be non-empty (Layer 1 R2).
