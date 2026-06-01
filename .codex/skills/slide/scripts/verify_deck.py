@@ -55,12 +55,23 @@ def svg_canvas_ok(svg_text: str) -> bool:
 
 
 def image_is_placeholder(path: Path, min_bytes: int = 12_000, min_std: float = 6.0) -> bool:
-    """Tiny OR near-uniform image ⇒ placeholder/degenerate."""
+    """Tiny OR near-uniform image ⇒ placeholder/degenerate.
+
+    A missing image-processing library is an environment problem (preflight owns
+    that check), not a deck failure — so ImportError yields False (cannot assess)
+    rather than a false flag. A missing/unreadable image file still returns True.
+    """
     try:
         if path.stat().st_size < min_bytes:
             return True
+    except OSError:
+        return True  # missing/unreadable file is itself a failure
+    try:
         from PIL import Image
         import numpy as np
+    except ImportError:
+        return False  # cannot assess without PIL/numpy; preflight owns this check
+    try:
         with Image.open(path) as im:
             arr = np.asarray(im.convert("RGB"), dtype="float32")
         return float(arr.std()) < min_std
@@ -113,7 +124,8 @@ def run_checks(project: Path) -> list[str]:
         failures.append("slide_plan.json failed validate_plan.py")
 
     # 2. stage parity
-    n_out, n_fin = page_count(project, "svg_output"), page_count(project, "svg_final")
+    pages = _svgs(out)
+    n_out, n_fin = len(pages), page_count(project, "svg_final")
     if n_out == 0:
         failures.append("svg_output/ has no SVG pages — executor stage did not run")
     elif n_fin != n_out:
@@ -126,14 +138,14 @@ def run_checks(project: Path) -> list[str]:
         failures.append("svg_quality_checker reported errors on svg_output")
 
     # 4. image authenticity
-    bad_imgs = [p.name for p in (project / "images").glob("*")
+    imgs_dir = project / "images"
+    bad_imgs = [p.name for p in (imgs_dir.glob("*") if imgs_dir.is_dir() else [])
                 if p.suffix.lower() in IMAGE_SUFFIXES and image_is_placeholder(p)]
     if bad_imgs:
         failures.append("placeholder/degenerate images: " + ", ".join(bad_imgs)
                         + " — real generation required, no fallback")
 
     # 5. governing-message discipline (svg_output, pre-flatten)
-    pages = _svgs(out)
     if pages:
         gm = sum(1 for p in pages
                  if svg_has_gm(p.read_text(encoding="utf-8", errors="replace")))

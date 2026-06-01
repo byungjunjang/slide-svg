@@ -47,6 +47,16 @@ class TestPlanRequirement:
         assert vd.deck_needs_plan(tmp_path) is False
 
 
+class TestImagePlaceholder:
+    def test_small_file_is_placeholder(self, tmp_path):
+        f = tmp_path / "tiny.png"
+        f.write_bytes(b"X" * 100)
+        assert vd.image_is_placeholder(f) is True
+
+    def test_missing_file_is_placeholder(self, tmp_path):
+        assert vd.image_is_placeholder(tmp_path / "ghost.png") is True
+
+
 class TestOrchestrator:
     def _good_deck(self, root: Path, n: int = 4) -> Path:
         proj = root / "deck"
@@ -83,3 +93,21 @@ class TestOrchestrator:
         monkeypatch.setattr(vd, "_sync_check", lambda: 0)
         failures = vd.run_checks(proj)
         assert any("svg_final" in f for f in failures)
+
+    def test_missing_images_dir_does_not_crash(self, tmp_path, monkeypatch):
+        import shutil
+        proj = self._good_deck(tmp_path)
+        shutil.rmtree(proj / "images")
+        monkeypatch.setattr(vd, "_run_quality_checker", lambda d: 0)
+        monkeypatch.setattr(vd, "_sync_check", lambda: 0)
+        failures = vd.run_checks(proj)
+        assert failures == [], failures
+
+    def test_invalid_plan_fails(self, tmp_path, monkeypatch):
+        proj = self._good_deck(tmp_path, n=8)
+        (proj / "slide_plan.json").write_text("{}", encoding="utf-8")
+        monkeypatch.setattr(vd, "_run_validator", lambda p: 1)
+        monkeypatch.setattr(vd, "_run_quality_checker", lambda d: 0)
+        monkeypatch.setattr(vd, "_sync_check", lambda: 0)
+        failures = vd.run_checks(proj)
+        assert any("validate_plan" in f for f in failures)
