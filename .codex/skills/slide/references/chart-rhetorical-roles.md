@@ -2,7 +2,7 @@
 
 > **Purpose:** Bridge between `slide-plan`'s deck-design vocabulary (rhetorical) and `/slide` Executor's implementation library (technical).
 > **Authority:** This file is the SSOT for `chart_strategy` values in `slide_plan.json`. Executor consults this map to pick a concrete template from `templates/charts/charts_index.json`.
-> **Adapted from:** `WorkOS/SLIDE-PLAN-INTRODUCTION-GUIDE.md` §Layer 2 (mckinsey-pptx column-chart 4-way split + extended palette).
+> **Adapted from:** internal slide-plan design guide §Layer 2 (mckinsey-pptx column-chart 4-way split + extended palette).
 
 ---
 

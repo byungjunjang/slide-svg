@@ -1,7 +1,7 @@
 # slide_role Enum — slide-svg
 
 > **Authority:** SSOT for `slide_role` values in `slide_plan.json`. `slide-plan` validator enforces this enum; `/slide` Executor consults it to pick layout family and density rhythm.
-> **Adapted from:** `WorkOS/SLIDE-PLAN-INTRODUCTION-GUIDE.md` §Layer 2 + slide-svg's primary use cases (educational / report).
+> **Adapted from:** internal slide-plan design guide §Layer 2 + slide-svg's primary use cases (educational / report).
 
 ---
 
