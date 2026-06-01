@@ -26,8 +26,8 @@ DST = REPO_ROOT / ".codex" / "skills"
 TEXT_SUFFIXES = {".md", ".py", ".sh", ".json", ".txt", ".svg", ".cfg",
                  ".toml", ".yml", ".yaml", ".ini"}
 EXCLUDE_NAMES = {"__pycache__", ".DS_Store"}
-OLD_TOKEN = ".claude/skills"
-NEW_TOKEN = ".codex/skills"
+OLD_TOKEN = ".claude" + "/skills"
+NEW_TOKEN = ".codex" + "/skills"
 
 
 def _iter_files(root: Path):

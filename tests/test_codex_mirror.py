@@ -22,3 +22,7 @@ class TestTransform:
     def test_leaves_unrelated_text_unchanged(self):
         out = scm._transform_bytes(Path("x.py"), b"# the .claude dir")
         assert out == b"# the .claude dir"  # only the combined token is rewritten
+
+    def test_unicode_decode_error_falls_back_to_raw(self):
+        raw = b"\xff\xfe.claude/skills"  # invalid UTF-8
+        assert scm._transform_bytes(Path("x.md"), raw) == raw
