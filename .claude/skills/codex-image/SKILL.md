@@ -73,6 +73,34 @@ If prompt is empty, ask via AskUserQuestion:
 > "What image should I generate? Enter a prompt."
 > "어떤 이미지를 생성할까? 프롬프트를 입력해줘."
 
+## Step 2.5 — Background normalization (avoid the transparency checkerboard) / 배경 정규화
+
+> **Known `gpt-image-2` failure mode.** When a prompt asks for a `transparent background`,
+> `gpt-image-2` does NOT return true alpha — it **paints a literal gray-and-white
+> checkerboard** (the pattern editors use to *display* transparency) into the RGB pixels.
+> The result looks broken on any real backdrop. This skill therefore never passes a
+> transparency request straight through.
+>
+> **알려진 `gpt-image-2` 버그.** 프롬프트가 `transparent background`를 요청하면 실제 알파
+> 투명도가 아니라 **회색·흰색 체커보드 무늬를 픽셀로 그려 넣는다**(편집기가 투명도를 *표시*할
+> 때 쓰는 격자). 어떤 배경에 올려도 깨져 보인다. 그래서 이 스킬은 투명 요청을 그대로 넘기지 않는다.
+
+Strip transparency phrasing from the prompt before generating (the Step 4 task carries a
+hard background rule as a second guard, so this is belt-and-suspenders):
+
+```bash
+# Neutralize "transparent background" / "transparent bg" / "no background" so the model
+# does not bake a checkerboard. Caller-named backdrop colors (e.g. "#FAFAF9 background",
+# "white background") are kept and become the clean solid fill.
+_PROMPT=$(printf '%s' "${_PROMPT}" \
+  | sed -E 's/(fully |truly )?transparent[ -]+(background|bg)/clean solid background/Ig' \
+  | sed -E 's/\bno background\b/clean solid background/Ig')
+```
+
+If the user genuinely needs a cut-out asset, tell them `gpt-image-2` (via the codex
+`image_gen` tool) cannot emit reliable alpha; generate on a **flat solid color** and remove
+the background afterward with an image editor. Do NOT request "transparent" to get it.
+
 ## Step 3 — Determine Save Path / 저장 경로 결정
 
 ```bash
@@ -96,11 +124,12 @@ _FILENAME="${_FILENAME_ARG:-codex-image-${_TIMESTAMP}}"
 codex exec "Perform the following tasks:
 1. Use the built-in image_gen tool to generate an image.
 2. Prompt: '${_PROMPT}'
-3. Size: ${_SIZE}
-4. Quality: ${_QUALITY}
-5. Count: ${_N}
-6. Copy the generated image to '${_OUT_DIR}/${_FILENAME}.png'. For multiple images use -1.png, -2.png suffix.
-7. Print the saved file path and size." \
+3. Background rule (MUST follow): the image must have a clean, single solid flat background. NEVER paint a transparency/alpha checkerboard — i.e. no alternating gray-and-white squares anywhere. If the prompt implies a 'transparent' or 'no' background, render a clean solid background of the nearest plain color instead (use the backdrop color named in the prompt if any, otherwise plain white).
+4. Size: ${_SIZE}
+5. Quality: ${_QUALITY}
+6. Count: ${_N}
+7. Copy the generated image to '${_OUT_DIR}/${_FILENAME}.png'. For multiple images use -1.png, -2.png suffix.
+8. Print the saved file path and size." \
   -C "${_PROJECT_ROOT}" \
   -s workspace-write \
   -c 'model_reasoning_effort="medium"' \
