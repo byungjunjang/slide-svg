@@ -56,7 +56,7 @@ description: >
 | `${SKILL_DIR}/scripts/source_to_md/web_to_md.py` | Web page to Markdown |
 | `${SKILL_DIR}/scripts/source_to_md/web_to_md.cjs` | Node.js fallback for WeChat / TLS-blocked sites (use only if `curl_cffi` is unavailable; `web_to_md.py` now handles WeChat when `curl_cffi` is installed) |
 | `${SKILL_DIR}/scripts/project_manager.py` | Project init / validate / manage |
-| `${SKILL_DIR}/scripts/analyze_images.py` | Image analysis (size / aspect inspection — AI image generation is via `/codex-image`) |
+| `${SKILL_DIR}/scripts/analyze_images.py` | Image analysis (size / aspect inspection only — AI generation is host-specific: Claude Code uses `/codex-image`; Codex uses built-in `imagegen`) |
 | `${SKILL_DIR}/scripts/svg_quality_checker.py` | SVG quality check |
 | `${SKILL_DIR}/scripts/total_md_split.py` | Speaker notes splitting |
 | `${SKILL_DIR}/scripts/finalize_svg.py` | SVG post-processing (unified entry) |
@@ -431,24 +431,21 @@ PY
 
 Read `references/image-generator.md`
 
-> 🔒 **Single-backend lock**: AI images are generated **only** through the `/codex-image` skill. Never use nanobanana2, Gemini, DALL·E, Midjourney, Stable Diffusion, FLUX, Imagen, Qwen, Zhipu, or any MCP image tool. If the codex-image preflight fails, halt and ask the user to run `codex login` — do NOT substitute another generator.
+> 🔒 **Host backend lock**: AI images are generated only through the sanctioned backend for the current host. Claude Code uses the vendored `/codex-image` skill. Codex uses its built-in `imagegen` skill / built-in `image_gen` tool. Never use nanobanana2, Gemini, DALL·E, Midjourney, Stable Diffusion, FLUX, Imagen, Qwen, Zhipu, or any unrelated MCP image tool. If the sanctioned backend is unavailable, halt — do NOT substitute another generator.
 
 1. Extract all images with status "pending generation" from the design spec
-2. Generate prompt document → `<project_path>/images/image_prompts.md`. Every prompt MUST embed the Jangpm Deck Style Anchor (§🔒 of `image-generator.md`) as prefix, and the negative list as `Avoid: ...` suffix in the prompt body (codex-image has no separate negative-prompt arg).
-3. Generate images via `/codex-image` (Codex CLI OAuth → `gpt-image-2`, no API key needed). Loop once per slot — serial, 2–5 s spacing, confirm file exists before the next:
+2. Generate prompt document → `<project_path>/images/image_prompts.md`. Every prompt MUST embed the Jangpm Deck Style Anchor (§🔒 of `image-generator.md`) as prefix, and the negative list as `Avoid: ...` suffix in the prompt body.
+3. Generate images one slot at a time — serial, confirm the file exists before the next:
 
-   ```bash
-   /codex-image --size <size> --quality high \
-     --out <project_path>/images --filename <slot_name> \
-     "<Jangpm anchor> <subject prompt> Avoid: <negative list>"
-   ```
+   - **Claude Code host**: invoke `/codex-image` with the slot prompt and write directly to `<project_path>/images/<slot_name>.png`.
+   - **Codex host**: use the default `imagegen` skill, call the built-in `image_gen` tool for the slot prompt, then move/copy the selected generated file from Codex's default generated-images location into `<project_path>/images/<slot_name>.png`. Do not assume `/codex-image` CLI flags such as `--size`, `--quality`, `--out`, or `--filename` exist in Codex.
 
-   Size mapping (gpt-image-2 only supports these three; no true 16:9):
-   - Hero / full-bleed 16:9 slot → `--size 1536x1024` (SVG `preserveAspectRatio="xMidYMid slice"` crops to 1280×720)
-   - Inline card 1:1 → `--size 1024x1024`
-   - Portrait card 3:4 → `--size 1024x1536`
+   Size guidance:
+   - Hero / full-bleed 16:9 slot → request a wide landscape image; SVG `preserveAspectRatio="xMidYMid slice"` may crop to 1280×720.
+   - Inline card 1:1 → request a square image.
+   - Portrait card 3:4 → request a portrait image.
 
-   See `references/image-generator.md` for the full codex-image recipe (sizes, negative handling, pacing). If codex-image preflight fails (CLI missing or `codex login` expired), halt and prompt the user to fix it — do not silently skip slots.
+   See `references/image-generator.md` for the full host-specific recipe. If the sanctioned backend fails or is unavailable, keep `images/image_prompts.md`, halt, and report the exact blocker. Do not silently skip slots.
 
 **✅ Checkpoint — Confirm all images are ready, proceed to Step 6**:
 ```markdown

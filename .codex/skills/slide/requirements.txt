@@ -85,8 +85,8 @@ curl_cffi>=0.7.0
 # ─────────────────────────────────────────────────────────────
 # AI image generation
 # ─────────────────────────────────────────────────────────────
-# Handled by the bundled `/codex-image` skill (Codex CLI OAuth → gpt-image-2).
-# No Python SDK deps needed here — see .codex/skills/codex-image/README.md
+# Handled by the sanctioned host backend: Claude Code `/codex-image`;
+# Codex built-in `imagegen` / `image_gen`. No slide Python SDK deps needed here.
 # for the Node-side `@openai/codex` installation.
 
 

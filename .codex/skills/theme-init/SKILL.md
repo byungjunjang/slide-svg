@@ -429,7 +429,7 @@ After a successful run the following files are updated in place:
 | `.codex/skills/slide/references/anti-slop-theme.md` | Theme-literal enforcement rules (rendered) |
 | `.codex/skills/slide/references/strategist.md` | Eight-Confirmations prompt with active-theme values |
 | `.codex/skills/slide/references/executor.md` | SVG-generation prompt with active-theme values |
-| `.codex/skills/slide/references/image-generator.md` | AI-illustration Style Lock + codex-image recipe (rendered from `image-generator.tpl.md`; active palette/name, hue-neutral prose) |
+| `.codex/skills/slide/references/image-generator.md` | AI-illustration Style Lock + host-specific image backend recipe (rendered from `image-generator.tpl.md`; active palette/name, hue-neutral prose) |
 | `.codex/skills/slide/references/colors_and_type.css` | CSS vars powering the HTML gallery |
 | `.codex/skills/slide/templates/layouts/<theme-name>/*.svg` | Cover / chapter / content / ending shells (rendered; carry the narrative band when the theme sets `shell-bg`) |
 | `.codex/skills/slide/templates/layouts/<theme-name>/_shell_src/*.tpl.svg` | Per-theme composed shell **source** (Step 5; preserved across re-runs). Absent → renders from global `_source/` baseline |
@@ -596,5 +596,6 @@ now-obsolete.
   tokens into DrawingML. Each `/theme-init` is full replacement.
 - Canvas format expansion (e.g., 1920×1080, A4). Separate tooling
   project; not a theme concern.
-- Image generation (AI illustrations). Lives in the `/codex-image`
-  skill / Image_Generator role, intentionally decoupled.
+- Image generation (AI illustrations). Lives in the Image_Generator role
+  with a host-specific backend: Claude Code `/codex-image`, Codex built-in
+  `imagegen` / `image_gen`. It is intentionally decoupled from `/theme-init`.

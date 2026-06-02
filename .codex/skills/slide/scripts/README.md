@@ -2,7 +2,7 @@
 
 This directory contains user-facing scripts for conversion, project setup, SVG processing, and export.
 
-AI image generation is handled by the bundled `/codex-image` skill (Codex CLI OAuth → `gpt-image-2`); it lives in `.codex/skills/codex-image/` rather than under `scripts/`.
+AI image generation is host-specific: Claude Code uses the bundled `/codex-image` skill from the canonical Claude skill tree; Codex uses its default `imagegen` skill / built-in `image_gen` tool. Generation does not live under `scripts/`.
 
 ## Directory Layout
 
@@ -40,7 +40,7 @@ Repository update:
 | Conversion | `source_to_md/pdf_to_md.py`, `source_to_md/doc_to_md.py`, `source_to_md/ppt_to_md.py`, `source_to_md/web_to_md.py`, `source_to_md/web_to_md.cjs` | [docs/conversion.md](./docs/conversion.md) |
 | Project management | `project_manager.py`, `error_helper.py`, `pptx_template_import.py` | [docs/project.md](./docs/project.md) |
 | SVG pipeline | `finalize_svg.py`, `svg_to_pptx.py`, `total_md_split.py`, `svg_quality_checker.py` | [docs/svg-pipeline.md](./docs/svg-pipeline.md) |
-| Image tools | `analyze_images.py` (size/aspect inspection only — generation is `/codex-image`) | — |
+| Image tools | `analyze_images.py` (size/aspect inspection only — generation is host-specific: Claude Code `/codex-image`, Codex `imagegen`) | — |
 | Dev / maintenance utilities | `dev/update_repo.py`, `dev/batch_validate.py`, `dev/generate_examples_index.py`, `dev/svg_position_calculator.py`, `dev/rotate_images.py`, `dev/pptx_animations.py` | [dev/README.md](./dev/README.md) |
 | Troubleshooting | validation, preview, export, dependency issues | [docs/troubleshooting.md](./docs/troubleshooting.md) |
 
@@ -84,7 +84,7 @@ Image inspection (size/aspect for layout planning):
 ./scripts/_py.sh scripts/analyze_images.py <project_path>/images
 ```
 
-(For AI image generation, use the `/codex-image` slash command — see `.codex/skills/codex-image/README.md`.)
+(For AI image generation, use the sanctioned host backend: Claude Code `/codex-image`; Codex built-in `imagegen` / `image_gen`.)
 
 Repository update:
 

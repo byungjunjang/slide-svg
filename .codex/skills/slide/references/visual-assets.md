@@ -6,7 +6,7 @@ Reference for integrating AI-generated illustrations and website screenshots int
 
 ## When to Use Visual Assets
 
-### Use codex-image (AI Illustration)
+### Use AI Image Generation
 
 - **Concept explanation slides** — abstract ideas that benefit from visual metaphor (e.g., "cloud computing", "neural network")
 - **Hero statement slides** — a striking illustration reinforces the key message
@@ -31,24 +31,22 @@ Ask: "Does an image add information that text/icons/charts cannot?" If yes → u
 
 ---
 
-## codex-image Integration (the ONLY AI image path)
+## AI Image Integration (host-specific sanctioned path)
 
-**AI illustrations MUST be generated through `/codex-image` — and nothing else.** Do NOT use
-nanobanana2, Gemini, DALL·E, Midjourney, Stable Diffusion, FLUX, Imagen, any MCP image tool,
-or any other generator. codex-image (Codex CLI OAuth → `gpt-image-2`) is the single sanctioned
-backend. Full recipe (sizes, negative handling, pacing, auth preflight): `references/image-generator.md` §4.3.
+**AI illustrations MUST be generated through the sanctioned backend for the current host.**
+Claude Code uses `/codex-image`; Codex uses the default `imagegen` skill and built-in
+`image_gen` tool. Do NOT use nanobanana2, Gemini, DALL·E, Midjourney, Stable Diffusion,
+FLUX, Imagen, any unrelated MCP image tool, or any other generator. Full recipe
+(prompting, saving, pacing, host gates): `references/image-generator.md` §4.3.
 
-### Calling the Skill
+### Calling the Backend
 
-```
-/codex-image --size <1536x1024|1024x1024|1024x1536> --quality high \
-  --out <project_path>/images --filename <slot_name> \
-  "<active-theme anchor> prompt describing the illustration  Avoid: <negative list>"
-```
+- **Claude Code**: call `/codex-image` and write to `<project_path>/images/<slot_name>.png`.
+- **Codex**: trigger `imagegen`, call built-in `image_gen` for the slot prompt, then move/copy the selected generated asset into `<project_path>/images/<slot_name>.png`.
 
-Within the `/slide` workflow this runs in Step 5 (Image_Generator). If codex-image is
-unavailable (Codex CLI missing or `codex login` expired), **halt** and ask the user to fix it —
-do NOT silently fall back to any other generator.
+Within the `/slide` workflow this runs in Step 5 (Image_Generator). If the sanctioned
+backend is unavailable, **halt** and report the blocker — do NOT silently fall back to
+any other generator.
 
 ### Prompt Guidelines
 
@@ -171,7 +169,7 @@ output/
 
 ### Naming Convention
 
-- codex-image: `{topic-slug}-{index}.png` (e.g., `ai-robot-1.png`)
+- AI-generated images: `{topic-slug}-{index}.png` (e.g., `ai-robot-1.png`)
 - Screenshots: `screenshot-{domain}-{index}.png` (e.g., `screenshot-github-com-1.png`)
 
 ### HTML Reference Path

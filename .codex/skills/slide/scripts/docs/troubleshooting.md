@@ -60,4 +60,4 @@ Important optional packages:
 - `numpy` for image processing helpers
 - `PyMuPDF` for PDF conversion
 
-(AI image generation no longer relies on Python SDKs — it goes through the `/codex-image` skill, which uses the Node-based Codex CLI.)
+(AI image generation no longer relies on slide Python SDKs. Claude Code uses `/codex-image`; Codex uses its built-in `imagegen` / `image_gen` path.)

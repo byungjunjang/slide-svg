@@ -2,9 +2,10 @@
 """Generate the Codex skills mirror from the canonical Claude skills tree.
 
 The Claude skills tree is the single source of truth. The Codex skills tree is
-a generated artifact: a byte-for-byte copy, except the canonical path token is
-rewritten to the Codex path token inside text files so Codex copies
-host-correct invocation commands. Re-run after editing canonical skills.
+a generated artifact: a copy of the host-compatible skills, except the
+canonical path token is rewritten to the Codex path token inside text files so
+Codex copies host-correct invocation commands. Re-run after editing canonical
+skills.
 
 Usage:
     python3 .codex/skills/slide/scripts/dev/sync_codex_mirror.py          # regenerate
@@ -26,6 +27,7 @@ DST = REPO_ROOT / ".codex" / "skills"
 TEXT_SUFFIXES = {".md", ".py", ".sh", ".json", ".txt", ".svg", ".cfg",
                  ".toml", ".yml", ".yaml", ".ini"}
 EXCLUDE_NAMES = {"__pycache__", ".DS_Store"}
+EXCLUDE_REL_PREFIXES = {("codex-image",)}
 OLD_TOKEN = ".claude" + "/skills"
 NEW_TOKEN = ".codex" + "/skills"
 GENERATED_MARKER = f"""# Generated Codex Skills Mirror
@@ -42,6 +44,8 @@ def _iter_files(root: Path):
     for p in sorted(root.rglob("*")):
         rel = p.relative_to(root)
         if any(part in EXCLUDE_NAMES for part in rel.parts):
+            continue
+        if any(rel.parts[:len(prefix)] == prefix for prefix in EXCLUDE_REL_PREFIXES):
             continue
         if p.suffix == ".pyc":
             continue

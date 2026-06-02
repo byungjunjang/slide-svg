@@ -118,11 +118,12 @@ slide-svg/
 
 ## 이미지 생성 백엔드
 
-`/slide` Step 5(Image_Generator)가 이미지가 필요한 슬롯을 채울 때 사용하는 경로는 **`codex-image` 단일 경로**다. `references/image-generator.md` §🔒의 **활성 테마 Style Lock**(Deck Style Anchor + Negative Prompt)이 프롬프트 앞/뒤에 자동 prepend 된다. 이 Style Lock의 팔레트·테마명은 `image-generator.tpl.md`에서 `theme-active.json` 토큰으로 렌더되므로 `/theme-init` 교체 시 자동으로 새 테마 색을 따른다 (anti-slop 구조 락은 테마 불가지로 고정).
+`/slide` Step 5(Image_Generator)가 이미지가 필요한 슬롯을 채울 때 쓰는 백엔드는 **호스트별로 정해진다** — Claude Code는 vendored `/codex-image` 스킬, Codex는 런타임 기본 `imagegen` 스킬 / 내장 `image_gen` 도구. 어느 호스트든 `references/image-generator.md` §🔒의 **활성 테마 Style Lock**(Deck Style Anchor + Negative Prompt)이 프롬프트 앞/뒤에 자동 prepend 된다. 이 Style Lock의 팔레트·테마명은 `image-generator.tpl.md`에서 `theme-active.json` 토큰으로 렌더되므로 `/theme-init` 교체 시 자동으로 새 테마 색을 따른다 (anti-slop 구조 락은 테마 불가지로 고정).
 
-- **`codex-image` 스킬** (`.claude/skills/codex-image/SKILL.md`) — API 키 불필요. Codex CLI OAuth(ChatGPT 로그인) 경유 `gpt-image-2` 호출. Step 5가 `/codex-image --out <project>/images --filename <slot> --size <매핑> --quality high "<Jangpm anchor> <prompt> Avoid: <negative>"` 형태로 호출. 사이즈는 `1024x1024` / `1024x1536` / `1536x1024` 중 선택 (gpt-image-2 제약). 16:9 슬롯은 `1536x1024` 생성 → SVG `preserveAspectRatio="xMidYMid slice"`로 1280×720 크롭.
+- **Claude Code — `codex-image` 스킬** (`.claude/skills/codex-image/SKILL.md`) — API 키 불필요. Codex CLI OAuth(ChatGPT 로그인) 경유 `gpt-image-2` 호출. Step 5가 `/codex-image --out <project>/images --filename <slot> --size <매핑> --quality high "<Jangpm anchor> <prompt> Avoid: <negative>"` 형태로 호출. 사이즈는 `1024x1024` / `1024x1536` / `1536x1024` 중 선택 (gpt-image-2 제약). 16:9 슬롯은 `1536x1024` 생성 → SVG `preserveAspectRatio="xMidYMid slice"`로 1280×720 크롭.
+- **Codex — 기본 `imagegen` 스킬 / 내장 `image_gen` 도구.** `codex-image`는 `.codex/skills`에 패키징하지 않는다 (`sync_codex_mirror.py`가 미러에서 제외) — Codex 런타임에 동등 기능이 내장돼 있기 때문. `image_gen`으로 슬롯당 1장 생성 후 Codex 기본 출력 경로에서 `<project>/images/<slot>.png`로 이동·복사. `--size` / `--quality` / `--out` / `--filename` 같은 `/codex-image` CLI 플래그는 가정하지 않는다.
 
-codex-image preflight(`codex login status`)가 실패하면 Step 5는 진행을 멈추고 사용자에게 `codex login` 안내한다 — 다른 백엔드로 silent fallback 하지 않는다. 새 레이아웃 템플릿은 추가하지 않음 — 기존 `templates/layouts/jangpm/01_cover.svg`(풀-블리드 16:9 슬롯) + `references/patterns.md`의 `image-text`/`image-annotated` 패턴이 이미지 슬롯을 커버한다.
+이미지 백엔드 preflight 또는 실행이 실패하면 Step 5는 진행을 멈춘다 — Claude Code는 `codex login status`로 게이트하고 실패 시 `codex login`을 안내, Codex는 `imagegen` / `image_gen` 가용성을 Image_Generator 실행 시점에 확인한다. 어느 쪽도 다른 백엔드로 silent fallback 하지 않는다. 새 레이아웃 템플릿은 추가하지 않음 — 기존 `templates/layouts/jangpm/01_cover.svg`(풀-블리드 16:9 슬롯) + `references/patterns.md`의 `image-text`/`image-annotated` 패턴이 이미지 슬롯을 커버한다.
 
 ## 다이어그램
 

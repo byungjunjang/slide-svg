@@ -21,6 +21,10 @@ REQUIREMENTS = HERE.parent / "requirements.txt"
 # CLI output — extend this tuple if a future codex build changes its wording.
 LOGIN_OK_PHRASES = ("logged in", "authenticated", "authorized")
 REQUIRED_PYTHON_MODULES = ("pptx", "PIL", "numpy")
+CODEX_IMAGEGEN_NOTICE = (
+    "Codex built-in imagegen availability is enforced at Image_Generator "
+    "execution time"
+)
 
 
 def check_python_deps() -> list[str]:
@@ -42,6 +46,15 @@ def check_assets() -> list[str]:
     return fails
 
 
+def host_kind() -> str:
+    parts = set(HERE.parts)
+    if ".codex" in parts:
+        return "codex"
+    if ".claude" in parts:
+        return "claude"
+    return "unknown"
+
+
 def check_codex_image() -> list[str]:
     """codex CLI login status. Failure halts image-bearing decks rather than
     silently producing placeholder art."""
@@ -58,6 +71,20 @@ def check_codex_image() -> list[str]:
     if r.returncode != 0 or not any(p in blob for p in LOGIN_OK_PHRASES):
         return ["codex not logged in — run `codex login` (no placeholder fallback allowed)"]
     return []
+
+
+def check_image_generation() -> list[str]:
+    """Host-specific image gate.
+
+    Claude Code uses the vendored /codex-image skill and can preflight the
+    Codex CLI login. Codex uses its built-in imagegen skill; this Python script
+    cannot introspect that tool, so Step 5 enforces availability when it calls
+    imagegen.
+    """
+    if host_kind() == "codex":
+        print(f"[preflight] INFO: {CODEX_IMAGEGEN_NOTICE}")
+        return []
+    return check_codex_image()
 
 
 def check_mirror() -> list[str]:
@@ -77,11 +104,11 @@ def check_mirror() -> list[str]:
 def main() -> int:
     ap = argparse.ArgumentParser(description="Pre-pipeline environment gate.")
     ap.add_argument("--needs-images", action="store_true",
-                    help="Also require codex-image login.")
+                    help="Also require host image-generation readiness.")
     args = ap.parse_args()
     fails = check_python_deps() + check_assets() + check_mirror()
     if args.needs_images:
-        fails += check_codex_image()
+        fails += check_image_generation()
     if fails:
         sys.stderr.write("[preflight] FAIL:\n")
         for f in fails:

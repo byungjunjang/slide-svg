@@ -34,7 +34,7 @@ Overrides below (style keywords table, industry presets) are kept for completene
 
 ## Core Mission
 
-Receive the "Image Resource List" from the Design Specification & Content Outline output by the Strategist, create optimized prompts for each image pending generation, generate images **via the `/codex-image` skill — the only sanctioned backend** — and save them to the project's `images/` directory.
+Receive the "Image Resource List" from the Design Specification & Content Outline output by the Strategist, create optimized prompts for each image pending generation, generate images through the sanctioned backend for the current host, and save them to the project's `images/` directory.
 
 **Trigger condition**: When AI image generation is needed (standalone use or invoked within pipeline)
 
@@ -153,7 +153,7 @@ Under the `slide` skill, the deck canvas is always 1280×720 (16:9). Image aspec
 | Inline card illustration | 1:1 | 1024×1024 |
 | Two-column left-right illustration | 3:4 or 4:3 | 1024×1365 or 1365×1024 |
 
-> **Note (Method 0 / codex-image path)**: gpt-image-2 has no true 16:9 size. 16:9 slots are generated at `1536×1024` and SVG `preserveAspectRatio="xMidYMid slice"` crops to 1280×720. See §4.3 Method 0 for the full size mapping.
+> **Note (host image path)**: 16:9 slots may be generated as wide landscape assets and SVG `preserveAspectRatio="xMidYMid slice"` crops them to 1280×720 when needed. See §4.3 for host-specific handling.
 
 ### 2.6 Multi-Image Coherence Strategy
 
@@ -288,44 +288,46 @@ For each image with "Pending" status:
 
 > Prerequisite: Section 4.2 must be complete; `images/image_prompts.md` must exist
 
-#### codex-image — the ONLY image backend (never use any other)
+#### Host image backend lock (never use an unsanctioned backend)
 
-**Every AI-generated image MUST be produced by the `/codex-image` skill.** Do NOT use
-nanobanana2, Midjourney, DALL·E, Stable Diffusion, Gemini, Imagen, FLUX, Qwen, Zhipu,
-any MCP image tool, or any other generator under any circumstance.
+**Every AI-generated image MUST be produced by the sanctioned backend for the current host.**
+Do NOT use nanobanana2, Midjourney, DALL·E, Stable Diffusion, Gemini, Imagen, FLUX,
+Qwen, Zhipu, or any unrelated MCP image tool under any circumstance.
 
-`/slide` Step 5는 항상 `/codex-image`를 호출합니다. API 키 불필요 — Codex CLI OAuth(ChatGPT 로그인)가 `gpt-image-2`를 호출. 스킬 정의는 `.claude/skills/codex-image/SKILL.md`.
+Host mapping:
+- **Claude Code**: use the vendored `/codex-image` skill. Its definition remains in the canonical Claude skill tree under `codex-image/SKILL.md`.
+- **Codex**: use Codex's default `imagegen` skill and built-in `image_gen` tool. `codex-image` is intentionally not packaged under `.codex/skills`.
 
-```bash
-/codex-image --size 1536x1024 --quality high \
-  --out <project_path>/images --filename cover_bg \
-  "Jangpm lecture deck illustration — minimal flat line-art, restrained clean tones aligned with the single #4633E3 accent and #FAFAF9 background, transparent background, <subject>, color palette: #FAFAF9 background, restrained clean midtones harmonized with the single #4633E3 accent, neutral grays (#1A1A1A text, #6B7280 secondary). Avoid: text, watermark, logo, photograph, photorealistic, 3D render, gradient, glow, neon, vibrant colors, rainbow, dashboard UI, stock photo, shutterstock, low quality, blurry"
+Prompt body for either host:
+```text
+Jangpm lecture deck illustration — minimal flat line-art, restrained clean tones aligned with the single #4633E3 accent and #FAFAF9 background, transparent background, <subject>, color palette: #FAFAF9 background, restrained clean midtones harmonized with the single #4633E3 accent, neutral grays (#1A1A1A text, #6B7280 secondary). Avoid: text, watermark, logo, photograph, photorealistic, 3D render, gradient, glow, neon, vibrant colors, rainbow, dashboard UI, stock photo, shutterstock, low quality, blurry
 ```
 
-**Size mapping** (`gpt-image-2` only supports these three sizes):
+**Size / aspect guidance**:
 
-| Slot | `--size` | SVG handling |
+| Slot | Generation request | SVG handling |
 |------|----------|--------------|
-| Hero / full-bleed 16:9 | `1536x1024` | `preserveAspectRatio="xMidYMid slice"` → crops to 1280×720 |
-| Inline card 1:1 | `1024x1024` | Use as-is |
-| Portrait card 3:4 | `1024x1536` | `preserveAspectRatio="xMidYMid slice"` |
+| Hero / full-bleed 16:9 | Wide landscape image | `preserveAspectRatio="xMidYMid slice"` → crops to 1280×720 |
+| Inline card 1:1 | Square image | Use as-is |
+| Portrait card 3:4 | Portrait image | `preserveAspectRatio="xMidYMid slice"` |
 
-**Negative prompt handling**: codex-image has no separate negative-prompt arg. Append the §2.4 / §6 negative list to the prompt body as `Avoid: <comma-separated list>`. gpt-image-2 honors this convention reliably.
+**Negative prompt handling**: Append the §2.4 / §6 negative list to the prompt body as `Avoid: <comma-separated list>`.
 
-**Filename**: `--filename <slot_name>` (no extension) writes directly to `<project_path>/images/<slot_name>.png`, matching the Image Resource List filename. Omit `--filename` only for standalone (non-pipeline) use.
+**Filename**: final project-bound assets MUST be saved at `<project_path>/images/<slot_name>.png`, matching the Image Resource List filename.
 
-**Pacing**: One image at a time, confirm file exists before next, 2–5 s spacing. codex exec has a 2-min timeout per image; if it times out, retry with `--quality medium`.
+**Claude Code path**: call `/codex-image` one image at a time and write directly to the slot filename.
 
-**Auth precondition**: `codex login status` must return "Logged in". If not, stop and instruct: "Run `codex login` in terminal." Do not silently skip image slots.
+**Codex path**: trigger the default `imagegen` skill, call built-in `image_gen` once per slot, inspect/select the generated asset, then move/copy it from Codex's default generated-images location into `<project_path>/images/<slot_name>.png`. Do not rely on `/codex-image` CLI arguments such as `--size`, `--quality`, `--out`, or `--filename`.
 
-#### If codex-image is unavailable → HALT (no fallback backend)
+**Pacing**: One image at a time, confirm the saved `<project_path>/images/<slot_name>.png` exists before generating the next.
 
-codex-image is the **only** AI image path. If the Codex CLI is missing or `codex login` is
-expired/sandboxed (e.g. claude.ai upload), **do NOT** switch to any other generator. Instead:
-stop, keep the saved `images/image_prompts.md`, and tell the user to run `codex login` in their
-terminal. (If they would rather supply their own assets, they can re-run with the Strategist's
-"B) user-provided" image option and drop files into `project/images/` themselves — but the skill
-never calls a non-codex-image generator on their behalf.)
+#### If the sanctioned backend is unavailable → HALT (no fallback backend)
+
+If the current host's sanctioned image backend is missing, inaccessible, or fails,
+**do NOT** switch to any other generator. Instead: stop, keep the saved
+`images/image_prompts.md`, and report the exact blocker. If the user would rather
+supply their own assets, they can re-run with the Strategist's "B) user-provided"
+image option and drop files into `project/images/` themselves.
 
 ### 4.4 Verification Phase
 
@@ -377,8 +379,8 @@ Abstract futuristic background with flowing digital waves...
 
 ## Usage Instructions
 
-1. Images are generated automatically via `/codex-image` (the only sanctioned backend)
-2. codex-image unavailable? Halt and run `codex login` — do not substitute another generator
+1. Images are generated automatically via the current host's sanctioned backend: Claude Code `/codex-image`, Codex built-in `imagegen` / `image_gen`
+2. Sanctioned backend unavailable? Halt and report the blocker — do not substitute another generator
 3. Rename generated images to the corresponding filenames
 4. Place in the `images/` directory
 ```

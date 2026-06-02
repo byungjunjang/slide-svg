@@ -26,9 +26,7 @@ When the user asks for slides ("슬라이드", "프레젠테이션", "생성PPT"
    (add `--needs-images` if the deck needs generated images). If it fails, STOP
    and fix the environment. Do not proceed with a broken toolchain.
    First-time setup: run
-   `python3 -m pip install -r .claude/skills/slide/requirements.txt`; for image
-   decks install `@openai/codex`, run `codex login`, then confirm
-   `codex login status`.
+   `python3 -m pip install -r .claude/skills/slide/requirements.txt`.
 2. **Execute `.codex/skills/slide/SKILL.md` step by step.** Do NOT summarize it
    and improvise. **Forbidden:** reimplementing the pipeline yourself (hand-built
    PPTX, ad-hoc React/HTML, placeholder images). If a step's tool is unavailable,
@@ -42,9 +40,11 @@ When the user asks for slides ("슬라이드", "프레젠테이션", "생성PPT"
 4. **Serial pipeline, no shortcuts:** strategist → [image_generator] → executor →
    post-processing → export. No cross-merge. Main agent writes SVG itself
    (no sub-agent delegation for Executor Step 6). Generate pages one at a time.
-5. **Images:** if a slot needs a generated image, codex-image / image generation
-   must be available and logged in (`codex login status`). If not, **HALT** —
-   no PIL/solid-color/placeholder fallback.
+5. **Images:** if a slot needs a generated image, use Codex's default
+   `imagegen` skill / built-in `image_gen` tool and save the selected output to
+   the requested `images/<slot>.png` path. If `imagegen` / `image_gen` is not
+   available, **HALT** — no PIL/solid-color/placeholder fallback and no
+   `/codex-image` dependency in the Codex package.
 6. **Post-processing discipline:** run, as three separate calls,
    `total_md_split.py` → `finalize_svg.py` → `svg_to_pptx.py <project> -s final`.
    Never `cp`. Never add undocumented flags. `-s final` is required.
