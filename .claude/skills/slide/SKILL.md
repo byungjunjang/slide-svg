@@ -519,7 +519,7 @@ ${SKILL_DIR}/scripts/_py.sh ${SKILL_DIR}/scripts/svg_to_pptx.py <project_path> -
 
 > ❌ **NEVER** use `cp` as a substitute for `finalize_svg.py` — it performs multiple critical processing steps
 > ❌ **NEVER** export directly from `svg_output/` — MUST use `-s final` to export from `svg_final/`
-> ❌ **NEVER** add extra flags like `--only`
+> ❌ **NEVER** add undocumented flags — only the documented `--only native` / `--only legacy` (shown above) are permitted
 
 ---
 
@@ -564,6 +564,6 @@ Before switching roles, you **MUST first read** the corresponding reference file
 
 ## Notes
 
-- Do NOT add extra flags like `--only` to the post-processing commands — run them as-is
+- Do NOT add undocumented flags to the post-processing commands — run them as-is, except for the documented `--only native` / `--only legacy` on the export step
 - Local preview: `python3 -m http.server -d <project_path>/svg_final 8000`
 - **Troubleshooting**: If the user encounters issues during generation (layout overflow, export errors, blank images, etc.), recommend checking the project's known-issues tracker (GitHub Issues) — it collects fixes from real user reports

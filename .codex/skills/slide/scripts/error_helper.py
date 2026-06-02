@@ -8,7 +8,7 @@ of the script tree uses bare `print()` for progress output, which is the
 intended split — don't expand this module into a logging facade.
 """
 
-from typing import Dict, List, Optional
+from typing import Dict, Optional
 
 
 class ErrorHelper:
@@ -379,22 +379,6 @@ class ErrorHelper:
                 lines.append(f"   {i}. {sol}")
 
         return "\n".join(lines)
-
-    @classmethod
-    def print_error(cls, error_type: str, context: Optional[Dict] = None):
-        """
-        Print formatted error message.
-
-        Args:
-            error_type: Error type
-            context: Context information
-        """
-        print(cls.format_error_message(error_type, context))
-
-    @classmethod
-    def get_all_error_types(cls) -> List[str]:
-        """Get all supported error types."""
-        return list(cls.ERROR_SOLUTIONS.keys())
 
     @classmethod
     def print_help(cls):

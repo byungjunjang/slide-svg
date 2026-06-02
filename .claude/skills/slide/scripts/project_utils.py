@@ -11,61 +11,16 @@ from pathlib import Path
 from datetime import datetime
 from typing import Dict, List, Optional, Tuple
 
-# Canvas format definitions (unified source)
+# Canvas format definitions — single source of truth in config.py
 try:
     from config import CANVAS_FORMATS
 except ImportError:
-    # Fallback: maintain minimal usable configuration to avoid runtime crashes
-    CANVAS_FORMATS = {
-        'ppt169': {
-            'name': 'PPT 16:9',
-            'dimensions': '1280×720',
-            'viewbox': '0 0 1280 720',
-            'aspect_ratio': '16:9'
-        },
-        'ppt43': {
-            'name': 'PPT 4:3',
-            'dimensions': '1024×768',
-            'viewbox': '0 0 1024 768',
-            'aspect_ratio': '4:3'
-        },
-        'wechat': {
-            'name': 'WeChat Article Header',
-            'dimensions': '900×383',
-            'viewbox': '0 0 900 383',
-            'aspect_ratio': '2.35:1'
-        },
-        'xiaohongshu': {
-            'name': '小红书',
-            'dimensions': '1242×1660',
-            'viewbox': '0 0 1242 1660',
-            'aspect_ratio': '3:4'
-        },
-        'moments': {
-            'name': 'Moments/Instagram',
-            'dimensions': '1080×1080',
-            'viewbox': '0 0 1080 1080',
-            'aspect_ratio': '1:1'
-        },
-        'story': {
-            'name': 'Story/Vertical',
-            'dimensions': '1080×1920',
-            'viewbox': '0 0 1080 1920',
-            'aspect_ratio': '9:16'
-        },
-        'banner': {
-            'name': 'Horizontal Banner',
-            'dimensions': '1920×1080',
-            'viewbox': '0 0 1920 1080',
-            'aspect_ratio': '16:9'
-        },
-        'a4': {
-            'name': 'A4 Print',
-            'dimensions': '1240×1754',
-            'viewbox': '0 0 1240 1754',
-            'aspect_ratio': '√2:1'
-        }
-    }
+    # Direct invocation: ensure the scripts dir is importable, then re-import the canonical source
+    import sys
+    _scripts_dir = Path(__file__).resolve().parent
+    if str(_scripts_dir) not in sys.path:
+        sys.path.insert(0, str(_scripts_dir))
+    from config import CANVAS_FORMATS  # type: ignore
 
 CANVAS_FORMAT_ALIASES = {
     'xhs': 'xiaohongshu',
@@ -379,63 +334,6 @@ def find_all_projects(base_dir: str) -> List[Path]:
                 projects.append(item)
 
     return sorted(projects)
-
-
-def format_file_size(size_bytes: int) -> str:
-    """
-    Format file size.
-
-    Args:
-        size_bytes: File size in bytes
-
-    Returns:
-        Formatted file size string
-    """
-    for unit in ['B', 'KB', 'MB', 'GB']:
-        if size_bytes < 1024.0:
-            return f"{size_bytes:.1f} {unit}"
-        size_bytes /= 1024.0
-    return f"{size_bytes:.1f} TB"
-
-
-def get_project_stats(project_path: str) -> Dict:
-    """
-    Get project statistics.
-
-    Args:
-        project_path: Project directory path
-
-    Returns:
-        Statistics dictionary
-    """
-    project_path = Path(project_path)
-    stats = {
-        'total_files': 0,
-        'svg_files': 0,
-        'md_files': 0,
-        'html_files': 0,
-        'total_size': 0,
-        'svg_size': 0
-    }
-
-    if not project_path.exists():
-        return stats
-
-    for file in project_path.rglob('*'):
-        if file.is_file():
-            stats['total_files'] += 1
-            file_size = file.stat().st_size
-            stats['total_size'] += file_size
-
-            if file.suffix == '.svg':
-                stats['svg_files'] += 1
-                stats['svg_size'] += file_size
-            elif file.suffix == '.md':
-                stats['md_files'] += 1
-            elif file.suffix == '.html':
-                stats['html_files'] += 1
-
-    return stats
 
 
 if __name__ == '__main__':

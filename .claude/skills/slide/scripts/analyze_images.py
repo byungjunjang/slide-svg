@@ -29,19 +29,11 @@ except ImportError:
 try:
     from config import CANVAS_FORMATS, LAYOUT_MARGINS
 except ImportError:
-    CANVAS_FORMATS = {
-        'ppt169': {
-            'name': 'PPT 16:9',
-            'width': 1280,
-            'height': 720,
-        },
-    }
-    LAYOUT_MARGINS = {
-        'ppt169': {
-            'top': 60, 'right': 60, 'bottom': 60, 'left': 60,
-            'content_width': 1160, 'content_height': 600
-        },
-    }
+    # Direct invocation: ensure the scripts dir is importable, then re-import the canonical source
+    _scripts_dir = Path(__file__).resolve().parent
+    if str(_scripts_dir) not in sys.path:
+        sys.path.insert(0, str(_scripts_dir))
+    from config import CANVAS_FORMATS, LAYOUT_MARGINS  # type: ignore
 
 IMAGE_EXTENSIONS = {".jpg", ".jpeg", ".png", ".gif", ".webp", ".bmp", ".tiff", ".tif"}
 REPORT_WIDTH = 100

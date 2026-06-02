@@ -46,17 +46,15 @@ if sys.platform == 'win32':
         sys.stdout = io.TextIOWrapper(sys.stdout.buffer, encoding='utf-8')
         sys.stderr = io.TextIOWrapper(sys.stderr.buffer, encoding='utf-8')
 
-# Import canvas format configuration
+# Import canvas format configuration — single source of truth in config.py (via project_utils)
 try:
     from project_utils import CANVAS_FORMATS
 except ImportError:
-    # Use built-in definitions if import fails
-    CANVAS_FORMATS = {
-        'ppt169': {'name': 'PPT 16:9', 'dimensions': '1280×720', 'viewbox': '0 0 1280 720'},
-        'ppt43': {'name': 'PPT 4:3', 'dimensions': '1024×768', 'viewbox': '0 0 1024 768'},
-        'xiaohongshu': {'name': 'Xiaohongshu (RED)', 'dimensions': '1242×1660', 'viewbox': '0 0 1242 1660'},
-        'moments': {'name': 'WeChat Moments', 'dimensions': '1080×1080', 'viewbox': '0 0 1080 1080'},
-    }
+    # Direct invocation: ensure the parent scripts dir is importable, then re-import the canonical source
+    _scripts_dir = Path(__file__).resolve().parent.parent
+    if str(_scripts_dir) not in sys.path:
+        sys.path.insert(0, str(_scripts_dir))
+    from project_utils import CANVAS_FORMATS  # type: ignore
 
 
 # =============================================================================
