@@ -8,13 +8,14 @@ import base64
 from typing import Any
 from xml.etree import ElementTree as ET
 
+from . import font_metrics
 from .drawingml_context import ConvertContext, ShapeResult
 from .drawingml_utils import (
     SVG_NS, XLINK_NS, ANGLE_UNIT, FONT_PX_TO_HUNDREDTHS_PT, DASH_PRESETS,
     px_to_emu, _f, _get_attr,
     ctx_x, ctx_y, ctx_w, ctx_h,
     parse_hex_color, resolve_url_id, get_effective_filter_id,
-    parse_font_family, is_cjk_char, estimate_text_width,
+    parse_font_family, estimate_text_width,
     _xml_escape,
 )
 from .drawingml_styles import (
@@ -628,6 +629,14 @@ def convert_polyline(elem: ET.Element, ctx: ConvertContext) -> ShapeResult | Non
 # text
 # ---------------------------------------------------------------------------
 
+# Width headroom so mobile PPTX viewers don't force-wrap. With real glyph
+# advances the only remaining unknown is the fallback-font width on machines
+# without Pretendard installed; the heuristic path also absorbs its own
+# estimation error, hence the larger factor.
+TEXT_WIDTH_HEADROOM_METRIC = 1.10
+TEXT_WIDTH_HEADROOM_HEURISTIC = 1.25
+
+
 def _normalize_text(text: str) -> str:
     """Collapse internal whitespace/newlines into a single space, strip ends."""
     if not text:
@@ -765,8 +774,14 @@ def convert_text(elem: ET.Element, ctx: ConvertContext) -> ShapeResult | None:
     if not full_text.strip():
         return None
 
-    # Estimate text dimensions
-    text_width = estimate_text_width(full_text, font_size, font_weight) * 1.25  # headroom so mobile PPTX viewers don't force-wrap
+    # Estimate text dimensions per run — tspan font-size/weight overrides
+    # would otherwise be measured at the parent size.
+    headroom = (TEXT_WIDTH_HEADROOM_METRIC if font_metrics.metrics_available()
+                else TEXT_WIDTH_HEADROOM_HEURISTIC)
+    text_width = sum(
+        estimate_text_width(r['text'], r.get('font_size', font_size),
+                            r.get('font_weight', font_weight))
+        for r in runs) * headroom
     text_height = font_size * 1.5
     padding = font_size * 0.1
 

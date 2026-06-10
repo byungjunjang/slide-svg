@@ -85,7 +85,13 @@ SAFE_DEFAULTS: dict[str, Any] = {
                 "8": 32, "10": 40, "12": 48, "14": 56, "16": 64},
     "assets":  {"icon-pack-default": "tabler-outline",
                 "icon-pack-fallback": "tabler-filled",
-                "character": None},
+                "character": None,
+                # Theme-owned reference artifacts (ownership manifest): the
+                # pattern gallery survives theme swaps (reskin_gallery.py
+                # re-skins its CSS), but the reference text is voice-specific
+                # — replace it for the new theme or leave null to disable.
+                "gallery": None,
+                "reference-text": None},
     "voice":   {"tone": "editorial, analytical, declarative",
                 "pov":  "third-person institutional",
                 "register": "report / lecture",

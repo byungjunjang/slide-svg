@@ -173,6 +173,14 @@ active primary font (`<Family>-<Weight>.{otf,ttf,woff,woff2}`), so a new
 theme that supplies its own font files just needs them dropped into
 `assets/fonts/` before re-running.
 
+If the new theme changes the **primary font family**, also re-run
+`python3 .claude/skills/slide/scripts/dev/build_font_metrics.py` (after
+updating its `FONT_FAMILY`/`WEIGHT_FILES` for the new OTFs) so the PPTX
+exporter's glyph-advance cache (`svg_to_pptx/font_metrics.json`) matches.
+Until it is rebuilt the exporter detects the mismatch and falls back to
+heuristic text measurement with a `[WARN]` — safe, but text boxes get
+the older, looser sizing.
+
 If the validator rejects your draft, fix the specific field(s) it flags
 and re-run — the script is idempotent.
 
@@ -546,6 +554,23 @@ when the brand provides an instructor-persona illustration; otherwise
 leave it `null`. Templates render `_(not provided)_` for null and the
 strategist/executor instructions tell the pipeline to skip persona
 slides rather than invent a stand-in.
+
+**`assets.gallery` / `assets.reference-text` declare ownership of
+theme-specific reference artifacts** so a theme swap leaves no orphaned
+files behind. Jangpm owns `references/jangpm-patterns/` (HTML pattern
+gallery, archived as `jangpm-patterns.tar.gz`) and
+`references/reference-2-text.txt` (target voice extract). On a theme
+swap:
+
+- **gallery** — keep the previous theme's gallery as a *structural*
+  visual reference (`reskin_gallery.py` re-skins its CSS to the new
+  tokens on every run), point the key at a new gallery, or set `null`
+  if the new theme ships none. The directory name records which theme
+  authored it — do not silently re-attribute it.
+- **reference-text** — this is voice-specific and does NOT survive a
+  voice change. Replace it with an extract that matches the new theme's
+  `voice` tokens, or set `null`; when null, ignore the corresponding
+  "Target reference text" row in `slide/SKILL.md §Reference Resources`.
 
 See `examples/acme-warm.md` for a reference design guide and
 `.claude/skills/slide/references/theme-active.json` (Jangpm) for a fully

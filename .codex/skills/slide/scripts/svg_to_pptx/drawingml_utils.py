@@ -5,6 +5,7 @@ from __future__ import annotations
 import re
 from xml.etree import ElementTree as ET
 
+from . import font_metrics
 from .drawingml_context import ConvertContext
 
 # ---------------------------------------------------------------------------
@@ -291,7 +292,17 @@ def is_cjk_char(ch: str) -> bool:
 
 
 def estimate_text_width(text: str, font_size: float, font_weight: str = '400') -> float:
-    """Estimate text width in SVG pixels."""
+    """Estimate text width in SVG pixels.
+
+    Prefers real glyph advances from the prebuilt theme-font cache
+    (font_metrics.json — e.g. Pretendard Hangul is 0.864em, not the 1.0em the
+    heuristic assumed). Falls back to the per-character-class heuristic when
+    the cache is missing or the active theme uses a different primary font.
+    """
+    measured = font_metrics.measure_text(text, font_size, font_weight)
+    if measured is not None:
+        return measured
+
     width = 0.0
     for ch in text:
         if is_cjk_char(ch):

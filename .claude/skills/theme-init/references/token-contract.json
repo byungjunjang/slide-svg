@@ -117,6 +117,14 @@
         "character": {
           "type": ["string", "null"],
           "description": "Optional path to a brand-character illustration, relative to repo root. null to skip."
+        },
+        "gallery": {
+          "type": ["string", "null"],
+          "description": "Optional path to the HTML visual-reference gallery owned by this theme, relative to repo root. The gallery survives theme swaps (reskin_gallery.py re-skins its CSS); null if the theme ships none."
+        },
+        "reference-text": {
+          "type": ["string", "null"],
+          "description": "Optional path to a target voice/text extract owned by this theme, relative to repo root. Voice-specific — replace on theme swap or null to disable."
         }
       }
     },

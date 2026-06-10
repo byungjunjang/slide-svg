@@ -493,8 +493,8 @@ Read references/executor.md
 
 🚧 **GATE**: Step 6 complete; all SVGs generated to `svg_output/`; speaker notes `notes/total.md` generated.
 
-> ⚠️ The following three sub-steps MUST be **executed individually one at a time**. Each command must complete and be confirmed successful before running the next.
-> ❌ **NEVER** put all three commands in a single code block or single shell invocation.
+> ⚠️ The following four sub-steps MUST be **executed individually one at a time**. Each command must complete and be confirmed successful before running the next.
+> ❌ **NEVER** put all four commands in a single code block or single shell invocation.
 
 **Step 7.1** — Split speaker notes:
 ```bash
@@ -514,9 +514,18 @@ ${SKILL_DIR}/scripts/_py.sh ${SKILL_DIR}/scripts/svg_to_pptx.py <project_path> -
 # Use --only legacy  to only generate SVG image version
 ```
 
+**Step 7.4** — Verify the deck (hard-fail quality gate):
+```bash
+${SKILL_DIR}/scripts/_py.sh ${SKILL_DIR}/scripts/verify_deck.py <project_path>
+```
+- Runs the full gate: plan validation, stage parity, native PPTX integrity, **theme-palette compliance** (`svg_quality_checker.py --strict-theme` on `svg_output/`), image authenticity, governing-message discipline, canvas lock, mirror freshness.
+- Off-theme colors fail the gate. Legitimate exceptions (e.g., partner brand colors) go in `<project_path>/.theme-color-allow` — one `#RRGGBB` per line.
+- The deck is **not done** until this step exits 0.
+
 > ❌ **NEVER** use `cp` as a substitute for `finalize_svg.py` — it performs multiple critical processing steps
 > ❌ **NEVER** export directly from `svg_output/` — MUST use `-s final` to export from `svg_final/`
 > ❌ **NEVER** add undocumented flags — only the documented `--only native` / `--only legacy` (shown above) are permitted
+> ❌ **NEVER** declare the deck complete while Step 7.4 fails — fix the reported issues, don't skip the gate
 
 ---
 
@@ -545,8 +554,8 @@ Before switching roles, you **MUST first read** the corresponding reference file
 | HTML skeleton (for preview mode) | `references/skeleton.md` |
 | Library usage (Reveal.js, Chart.js, Mermaid, Lucide) | `references/libraries.md` |
 | Visual assets (illustration style) | `references/visual-assets.md` |
-| Target reference text (Jangpm source deck extract) | `references/reference-2-text.txt` |
-| Visual reference gallery (25 Jangpm HTMLs) | `references/jangpm-patterns/` |
+| Target reference text (theme-owned via `assets.reference-text`; skip if null) | `references/reference-2-text.txt` |
+| Visual reference gallery (theme-owned via `assets.gallery`; CSS reskinned on /theme-init) | `references/jangpm-patterns/` |
 
 ### Pipeline Technical Reference
 | Resource | Path |

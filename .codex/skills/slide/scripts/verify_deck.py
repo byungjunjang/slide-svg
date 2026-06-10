@@ -164,10 +164,14 @@ def _run_validator(plan_path: Path) -> int:
 
 
 def _run_quality_checker(svg_dir: Path) -> int:
+    """Strict mode: off-theme hex colors are gate failures, not advisories.
+    svg_output is the SSOT for authored colors (svg_final embeds base64 assets
+    whose bytes can false-positive the hex scan)."""
     qc = HERE / "svg_quality_checker.py"
     if not qc.exists() or not svg_dir.is_dir():
         return 0
-    return subprocess.run([sys.executable, str(qc), str(svg_dir)]).returncode
+    return subprocess.run(
+        [sys.executable, str(qc), "--strict-theme", str(svg_dir)]).returncode
 
 
 def _sync_check() -> int:
@@ -221,7 +225,10 @@ def run_checks(project: Path) -> list[str]:
         else:
             failures.append("native .pptx validation failed — " + "; ".join(pptx_errors))
     if _run_quality_checker(out) != 0:
-        failures.append("svg_quality_checker reported errors on svg_output")
+        failures.append(
+            "svg_quality_checker (--strict-theme) reported errors on svg_output — "
+            "fix off-theme colors or whitelist brand exceptions in "
+            "<project>/.theme-color-allow")
 
     # 4. image authenticity
     imgs_dir = project / "images"

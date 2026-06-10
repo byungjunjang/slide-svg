@@ -85,6 +85,26 @@ def off_theme_hexes(content: str, allowed: set) -> set:
     return {h.upper() for h in _HEX_RE.findall(content)} - allowed_up
 
 
+COLOR_ALLOW_FILENAME = ".theme-color-allow"
+
+
+def load_color_allowlist(project_dir: Path) -> set:
+    """Per-project hex allowlist (`.theme-color-allow`, one #RRGGBB per line).
+
+    Escape hatch for legitimate off-palette colors (brand logos, partner marks).
+    Blank lines and non-hex lines are ignored, so the file tolerates comments.
+    """
+    allow_path = Path(project_dir) / COLOR_ALLOW_FILENAME
+    if not allow_path.is_file():
+        return set()
+    hexes = set()
+    for line in allow_path.read_text(encoding="utf-8", errors="replace").splitlines():
+        token = line.strip()
+        if _HEX_RE.fullmatch(token):
+            hexes.add(token.upper())
+    return hexes
+
+
 def _tag_attr_strings(content: str, tag: str) -> list:
     """Attribute string for each `<tag ...>` occurrence."""
     return re.findall(rf"<{tag}\b([^>]*)", content)
@@ -157,6 +177,165 @@ def quiet_zone_hits(content: str) -> int:
 
 def _area(box) -> float:
     return box[2] * box[3] if box else 0.0
+
+
+# ============================================================
+# Text-box overlap + safe-area measurements (WARN-level)
+# Text extents come from the export pipeline's measurer (real glyph advances
+# when font_metrics.json is present) so the checker sees what PPTX will get.
+# ============================================================
+
+# Slide safe area: left/right padding --space-14 (56px, design-system §spacing),
+# top 40px, bottom 680px (the band below is reserved for the .gm line).
+SAFE_AREA = (56, 40, 1224, 680)
+# GM line anchor band (matches verify_deck.GM_Y_RANGE) — exempt from safe-area.
+_GM_Y_RANGE = (655, 705)
+# Overlap is flagged only past this share of the smaller box — adjacent
+# label/value pairs commonly touch by a few px without being a defect.
+TEXT_OVERLAP_MIN_SHARE = 0.20
+# Pairs whose font sizes differ by this factor are display+label compositions
+# (e.g. a 200px stat over a 13px caption): the big glyph's em-box padding
+# swallows the label without any visual collision, so they are skipped.
+TEXT_OVERLAP_MAX_FS_RATIO = 2.5
+
+try:
+    from svg_to_pptx.drawingml_utils import estimate_text_width as _measure_text_width
+except ImportError:
+    _measure_text_width = None
+
+
+_TEXT_ELEM_RE = re.compile(r"<text\b([^>]*)>(.*?)</text>", re.DOTALL)
+
+
+def parse_text_elements(content: str) -> list:
+    """`(x, y, font_size, font_weight, anchor, text)` per `<text>` element.
+
+    Elements without x/y or carrying a transform (coords not resolvable by a
+    regex parser) are skipped.
+    """
+    out = []
+    for m in _TEXT_ELEM_RE.finditer(content):
+        attrs, inner = m.group(1), m.group(2)
+        if "transform" in attrs:
+            continue
+        x, y = _attr_num(attrs, "x"), _attr_num(attrs, "y")
+        if x is None or y is None:
+            continue
+        fs_m = re.search(r'font-size\s*=\s*"([\d.]+)', attrs)
+        fw_m = re.search(r'font-weight\s*=\s*"([^"]+)"', attrs)
+        anchor_m = re.search(r'text-anchor\s*=\s*"([^"]+)"', attrs)
+        text = re.sub(r"\s+", " ", re.sub(r"<[^>]+>", " ", inner)).strip()
+        if not text:
+            continue
+        out.append((x, y, float(fs_m.group(1)) if fs_m else 16.0,
+                    fw_m.group(1) if fw_m else "400",
+                    anchor_m.group(1) if anchor_m else "start", text))
+    return out
+
+
+def _text_boxes_with_meta(content: str) -> list:
+    """`(box, anchor_y, anchor, font_size, text)` per text element — box is the
+    estimated visual extent (no export headroom). Mirrors convert_text's anchor
+    math; height spans ascent (0.85em above the baseline) plus descent (0.25em)."""
+    if _measure_text_width is None:
+        return []
+    out = []
+    for (x, y, fs, fw, anchor, text) in parse_text_elements(content):
+        w = _measure_text_width(text, fs, fw)
+        if anchor == "middle":
+            bx = x - w / 2
+        elif anchor == "end":
+            bx = x - w
+        else:
+            bx = x
+        out.append(((bx, y - fs * 0.85, w, fs * 1.1), y, anchor, fs, text))
+    return out
+
+
+def _overlap_share(a, b) -> float:
+    """Intersection area as a share of the smaller box."""
+    ix = min(a[0] + a[2], b[0] + b[2]) - max(a[0], b[0])
+    iy = min(a[1] + a[3], b[1] + b[3]) - max(a[1], b[1])
+    if ix <= 0 or iy <= 0:
+        return 0.0
+    smaller = min(a[2] * a[3], b[2] * b[3])
+    return (ix * iy) / smaller if smaller > 0 else 0.0
+
+
+def text_box_overlaps(content: str) -> list:
+    """Pairs of text boxes overlapping past TEXT_OVERLAP_MIN_SHARE.
+
+    Skipped: display+label pairs (font-size ratio ≥ TEXT_OVERLAP_MAX_FS_RATIO)
+    and decorative single-glyph texts (a giant pull-quote mark's em box is
+    mostly empty space).
+    """
+    items = [(box, fs, text) for (box, _, _, fs, text)
+             in _text_boxes_with_meta(content)
+             if not (len(text) == 1 and not text.isalnum())]
+    hits = []
+    for i in range(len(items)):
+        for j in range(i + 1, len(items)):
+            (box_a, fs_a, text_a), (box_b, fs_b, text_b) = items[i], items[j]
+            if max(fs_a, fs_b) / max(min(fs_a, fs_b), 1) >= TEXT_OVERLAP_MAX_FS_RATIO:
+                continue
+            share = _overlap_share(box_a, box_b)
+            if share > TEXT_OVERLAP_MIN_SHARE:
+                hits.append((text_a[:24], text_b[:24], int(round(share * 100))))
+    return hits
+
+
+def _is_bleed_band(box) -> bool:
+    """Full-width or full-height rect — intentional shell band, not content."""
+    _, _, w, h = box
+    return w >= CANVAS_W * 0.98 or h >= CANVAS_H * 0.98
+
+
+def safe_area_violations(content: str) -> list:
+    """Foreground marks escaping the slide safe area (x<56 / x>1224 / y<40 /
+    y>680). Backgrounds, bleed bands, full-bleed images, and the GM line are
+    exempt; text is judged by its estimated visual box."""
+    x_min, y_min, x_max, y_max = SAFE_AREA
+    hits = []
+
+    for ((bx, by, w, h), anchor_y, anchor, _fs, text) in _text_boxes_with_meta(content):
+        if anchor_y >= _GM_Y_RANGE[0]:
+            # Footer band: the GM line plus page numbers / footer captions
+            # legitimately sit below the content area — x-only judgement.
+            if bx < x_min or bx + w > x_max + 2:  # +2: page numbers end at 1224
+                hits.append(f'text "{text[:24]}" '
+                            f'({bx:.0f},{by:.0f},{w:.0f}×{h:.0f})')
+            continue
+        if bx < x_min or bx + w > x_max or by < y_min or by + h > y_max:
+            hits.append(f'text "{text[:24]}" '
+                        f'({bx:.0f},{by:.0f},{w:.0f}×{h:.0f})')
+
+    for box in parse_boxes(content, "rect"):
+        if _is_background(box) or _is_bleed_band(box):
+            continue
+        x, y, w, h = box
+        if w >= 1000 and y >= 600 and x >= x_min and x + w <= x_max:
+            continue  # deliberate full-content-width footer band behind the GM
+        if x < x_min or x + w > x_max or y < y_min or y + h > y_max:
+            hits.append(f"rect ({x:.0f},{y:.0f},{w:.0f}×{h:.0f})")
+
+    for box in parse_boxes(content, "image"):
+        if _is_background(box) or _is_bleed_band(box):
+            continue
+        x, y, w, h = box
+        if x < x_min or x + w > x_max or y < y_min or y + h > y_max:
+            hits.append(f"image ({x:.0f},{y:.0f},{w:.0f}×{h:.0f})")
+
+    for attrs in _tag_attr_strings(content, "circle"):
+        cx, cy, r = _attr_num(attrs, "cx"), _attr_num(attrs, "cy"), _attr_num(attrs, "r")
+        if cx is None or cy is None:
+            continue
+        rr = r or 0
+        if rr <= 8:
+            continue  # decorative dot / bullet — its center is what's placed
+        if cx - rr < x_min or cx + rr > x_max or cy - rr < y_min or cy + rr > y_max:
+            hits.append(f"circle (cx={cx:.0f},cy={cy:.0f},r={rr:.0f})")
+
+    return hits
 
 
 def _bbox_of_points(points: list):
@@ -343,7 +522,8 @@ def low_primitive_diversity(primitives: list, min_slides: int = 4,
 class SVGQualityChecker:
     """SVG quality checker"""
 
-    def __init__(self):
+    def __init__(self, strict_theme: bool = False):
+        self.strict_theme = strict_theme
         self.results = []
         self.summary = {
             'total': 0,
@@ -352,6 +532,18 @@ class SVGQualityChecker:
             'errors': 0
         }
         self.issue_types = defaultdict(int)
+        self._allowlist_cache: Dict[str, set] = {}
+
+    def _color_allowlist(self, svg_path: Path) -> set:
+        """Project allowlist for `svg_path` — checked in the SVG's directory and
+        its parent (svg_output/<file>.svg ⇒ the project root holds the file)."""
+        merged = set()
+        for d in (svg_path.parent, svg_path.parent.parent):
+            key = str(d)
+            if key not in self._allowlist_cache:
+                self._allowlist_cache[key] = load_color_allowlist(d)
+            merged |= self._allowlist_cache[key]
+        return merged
 
     def check_file(self, svg_file: str, expected_format: str = None) -> Dict:
         """
@@ -407,12 +599,15 @@ class SVGQualityChecker:
             # 6. Check image references (file existence and resolution)
             self._check_image_references(content, svg_path, result)
 
-            # 7-10. Composition signals — WARN-level only (advisory, never
-            # errors): off-theme hex audit, photo overlay, quiet zone, visual-primary.
-            self._check_off_theme_hex(content, result)
+            # 7-10. Composition signals — advisory warnings by default. The
+            # off-theme hex audit is promoted to an error under --strict-theme
+            # (deck gate); photo overlay, quiet zone, visual-primary stay WARN.
+            self._check_off_theme_hex(content, result, svg_path)
             self._check_photo_overlay(content, result)
             self._check_quiet_zone(content, result)
             self._check_visual_primary(content, result)
+            self._check_text_overlap(content, result)
+            self._check_safe_area(content, result)
 
             # Determine pass/fail (these signals are warnings, never block)
             result['passed'] = len(result['errors']) == 0
@@ -678,18 +873,29 @@ class SVGQualityChecker:
             except Exception:
                 pass  # Image unreadable, skip resolution check
 
-    def _check_off_theme_hex(self, content: str, result: Dict):
-        """WARN: hex colors outside the active theme palette (hardcode audit)."""
+    def _check_off_theme_hex(self, content: str, result: Dict, svg_path: Path = None):
+        """Hex colors outside the active theme palette (hardcode audit).
+
+        WARN by default; promoted to an error under --strict-theme so
+        verify_deck can gate decks on palette compliance. A per-project
+        `.theme-color-allow` file whitelists legitimate exceptions.
+        """
         allowed = _active_theme_hexes()
         if not allowed:
             return  # theme unreadable — skip rather than flag everything
+        if svg_path is not None:
+            allowed = allowed | self._color_allowlist(svg_path)
         off = off_theme_hexes(content, allowed)
         if off:
             shown = ", ".join(sorted(off)[:5])
             more = "" if len(off) <= 5 else f" (+{len(off) - 5} more)"
-            result['warnings'].append(
-                f"Off-theme hex (not in active palette): {shown}{more} "
-                f"— use theme tokens / single accent")
+            msg = (f"Off-theme hex (not in active palette): {shown}{more} "
+                   f"— use theme tokens / single accent")
+            if self.strict_theme:
+                result['errors'].append(
+                    msg + f" (or whitelist in <project>/{COLOR_ALLOW_FILENAME})")
+            else:
+                result['warnings'].append(msg)
 
     def _check_photo_overlay(self, content: str, result: Dict):
         """WARN: text overlaid on a photo (anti-slop Rule 23)."""
@@ -706,6 +912,29 @@ class SVGQualityChecker:
             result['warnings'].append(
                 f"{n} element(s) in the top-right quiet zone — keep the corner "
                 f"clear for breathing room (anti-slop Rule 22)")
+
+    def _check_text_overlap(self, content: str, result: Dict):
+        """WARN: estimated text boxes overlapping past the share threshold —
+        the same measurement the PPTX exporter uses, so a hit here means the
+        exported deck will very likely show colliding text."""
+        hits = text_box_overlaps(content)
+        if hits:
+            a, b, share = hits[0]
+            more = "" if len(hits) == 1 else f" (+{len(hits) - 1} more pair(s))"
+            result['warnings'].append(
+                f'Text boxes overlap ~{share}%: "{a}" × "{b}"{more} '
+                f"— increase spacing or shorten the longer run")
+
+    def _check_safe_area(self, content: str, result: Dict):
+        """WARN: foreground content escaping the slide safe area
+        (x 56–1224 / y 40–680; GM line and bleed bands exempt)."""
+        hits = safe_area_violations(content)
+        if hits:
+            shown = "; ".join(hits[:3])
+            more = "" if len(hits) <= 3 else f" (+{len(hits) - 3} more)"
+            result['warnings'].append(
+                f"Safe-area violation ({len(hits)}): {shown}{more} "
+                f"— keep content within x 56–1224, y 40–680")
 
     def _check_visual_primary(self, content: str, result: Dict):
         """WARN: a *text-led* body slide with no dominant evidence visual
@@ -901,13 +1130,20 @@ def main() -> None:
         print("  python3 scripts/svg_quality_checker.py <svg_file>")
         print("  python3 scripts/svg_quality_checker.py <directory>")
         print("  python3 scripts/svg_quality_checker.py --all examples")
+        print("\nOptions:")
+        print("  --strict-theme   promote off-theme hex colors to errors (deck gate);")
+        print(f"                   whitelist exceptions in <project>/{COLOR_ALLOW_FILENAME}")
         print("\nExamples:")
         print("  python3 scripts/svg_quality_checker.py examples/project/svg_output/slide_01.svg")
         print("  python3 scripts/svg_quality_checker.py examples/project/svg_output")
         print("  python3 scripts/svg_quality_checker.py examples/project")
         sys.exit(0)
 
-    checker = SVGQualityChecker()
+    strict_theme = '--strict-theme' in sys.argv
+    if strict_theme:
+        sys.argv.remove('--strict-theme')
+
+    checker = SVGQualityChecker(strict_theme=strict_theme)
 
     # Parse arguments
     target = sys.argv[1]
