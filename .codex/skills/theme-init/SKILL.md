@@ -15,14 +15,23 @@ description: >
 
 # /theme-init — Active-Theme Replacement
 
-> **Model.** One user = one design system. The slide-svg pipeline bakes
-> tokens into DrawingML at export time, so runtime multi-theming is
-> impossible. `/theme-init` is a **one-shot full replacement** — every
-> reference file is rewritten from `theme-active.json` and every SVG
-> layout is re-rendered from its shell source — the per-theme
-> `_shell_src/*.tpl.svg` composed in Step 5 when present, else the global
-> `_source/*.tpl.svg` baseline. Run `/theme-init` again with a different
-> guide to switch.
+> **Model.** One ACTIVE design system at a time. The slide-svg pipeline
+> bakes tokens into DrawingML at export time, so runtime multi-theming
+> (different themes per deck simultaneously) is impossible. A bake is a
+> **full replacement of the rendered state** — every reference file is
+> rewritten from `theme-active.json` and every SVG layout is re-rendered
+> from its shell source — the per-theme `_shell_src/*.tpl.svg` composed
+> in Step 5 when present, else the global `_source/*.tpl.svg` baseline.
+>
+> **Preset catalog.** Baked themes are not lost on the next swap: every
+> successful bake snapshots the validated theme into the catalog at
+> `.codex/skills/slide/assets/design-systems/<name>/theme.json` (pointer:
+> `active.json`, index: auto-generated `README.md`). Switching back to a
+> cataloged theme needs no design guide and no agent extraction —
+> `init_theme.py --activate <preset>` deterministically re-renders the
+> global reference docs in seconds. Per-theme artifacts
+> (`templates/layouts/<name>/` shells, `_shell_src/`, `DESIGN.md`) are
+> keyed by theme name and survive switches untouched.
 >
 > **Two render layers.** Step 3 substitutes tokens into the shell source
 > (token swap). Step 5 (optional) is where the agent re-composes the shell
@@ -43,6 +52,10 @@ description: >
   new voice guidelines)
 - Editing `theme-active.json` by hand and needing to regenerate derived
   files
+- **Switching back to a previously baked theme** — check
+  `assets/design-systems/README.md` for the catalog, then
+  `init_theme.py --activate <preset>` (no design guide, no extraction,
+  no Step 4/5 agent work — those per-theme artifacts are preserved)
 
 Do **NOT** run this skill to generate slides — that's `/slide`.
 
@@ -383,6 +396,54 @@ that only runs when optional Step 5 is used; Step 6.5 runs on every path.
 
 ## Alternative entry points
 
+### Activate a cataloged preset (fast switch)
+
+Switch to a theme already in the catalog — copies its snapshot over
+`theme-active.json`, validates, and re-runs the deterministic render
+chain. No design guide, no agent extraction, seconds not minutes:
+
+```bash
+python3 .codex/skills/theme-init/scripts/init_theme.py --activate <preset>
+```
+
+Available presets: `assets/design-systems/README.md` (auto-generated).
+Per-theme artifacts (`templates/layouts/<name>/` shells, `_shell_src/`,
+`DESIGN.md`) are preserved — only the global reference docs re-render.
+The Step 6.5 user-approval gate does NOT apply to `--activate`: the
+preset was already approved when it was baked.
+
+### Bake without switching (--no-set-active)
+
+Register a new theme in the catalog but keep the current active theme
+rendered. After the bake, the previous active preset is automatically
+re-activated (same render chain — expect a double render):
+
+```bash
+python3 .codex/skills/theme-init/scripts/init_theme.py \
+    --fill-from /tmp/draft.json --no-set-active
+```
+
+Preflight requirement: the current active theme must already be in the
+catalog (so it can be restored). If not, run `--register-current` first
+— the command aborts before any write otherwise.
+
+### Register the current theme (migration / self-heal)
+
+Snapshot the live `theme-active.json` into the catalog and point
+`active.json` at it. No rendering:
+
+```bash
+python3 .codex/skills/theme-init/scripts/init_theme.py --register-current
+```
+
+Use after hand-editing `theme-active.json` (adopt the edit as the
+cataloged state), or to register a theme created before the catalog
+existed.
+
+> **Manual step when a NEW theme is baked:** `templates/layouts/layouts_index.json`
+> is hand-curated editorial metadata — add the new theme's entry yourself;
+> it is not auto-generated from theme.json.
+
 ### Re-render after hand-editing theme-active.json
 
 If you edited `theme-active.json` directly (not a new extraction), just
@@ -392,7 +453,9 @@ run without `--fill-from`:
 python3 .codex/skills/theme-init/scripts/init_theme.py
 ```
 
-This skips fill, goes straight to validate → render.
+This skips fill, goes straight to validate → render. (Note: the bake
+also refreshes the catalog snapshot of the theme and re-points
+`active.json` at it — add `--no-set-active` if you don't want that.)
 
 ### Dry run
 
@@ -441,6 +504,9 @@ After a successful run the following files are updated in place:
 | `.codex/skills/slide/references/colors_and_type.css` | CSS vars powering the HTML gallery |
 | `.codex/skills/slide/templates/layouts/<theme-name>/*.svg` | Cover / chapter / content / ending shells (rendered; carry the narrative band when the theme sets `shell-bg`) |
 | `.codex/skills/slide/templates/layouts/<theme-name>/_shell_src/*.tpl.svg` | Per-theme composed shell **source** (Step 5; preserved across re-runs). Absent → renders from global `_source/` baseline |
+| `.codex/skills/slide/assets/design-systems/<theme-name>/theme.json` | Catalog snapshot (pristine — pre font-fallback injection) for later `--activate` |
+| `.codex/skills/slide/assets/design-systems/active.json` | Catalog pointer (which preset is active; `--no-set-active` leaves it on the previous preset) |
+| `.codex/skills/slide/assets/design-systems/README.md` | Auto-generated catalog index — never edit directly |
 
 ## Canvas lock (non-negotiable)
 

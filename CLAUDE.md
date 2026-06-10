@@ -6,7 +6,7 @@
 
 ## 개요
 
-`ppt-master`의 네이티브 DrawingML SVG→PPTX 파이프라인 위에 **활성 테마 디자인 시스템**을 단일 시각언어로 락하는 한국어 강의 슬라이드 생성기. 1280×720, 편집 가능한 네이티브 도형, 모든 콘텐츠 슬라이드 하단에 `.gm` (governing message) 라인. 활성 테마는 `references/theme-active.json`이 결정하며 `/theme-init`로 교체 — 기본 테마는 **Jangpm** (모노크롬 + 단일 `#4633E3` 인디고 액센트, Pretendard).
+`ppt-master`의 네이티브 DrawingML SVG→PPTX 파이프라인 위에 **활성 테마 디자인 시스템**을 단일 시각언어로 락하는 한국어 강의 슬라이드 생성기. 1280×720, 편집 가능한 네이티브 도형, 모든 콘텐츠 슬라이드 하단에 `.gm` (governing message) 라인. 활성 테마는 `references/theme-active.json`(렌더 작업 사본)이 결정하며, 검증된 테마들은 **프리셋 카탈로그**(`.claude/skills/slide/assets/design-systems/<preset>/theme.json` + `active.json` 포인터)에 보관된다 — `/theme-init`로 새 테마를 굽고, 카탈로그에 있는 테마는 `init_theme.py --activate <preset>`으로 수 초 만에 전환(전역 참조 문서 결정적 재렌더, LLM 불필요). 기본 테마는 **Jangpm** (모노크롬 + 단일 `#4633E3` 인디고 액센트, Pretendard).
 
 **듀얼 모드 (Claude Code · claude.ai)**: 외부 MCP 서버, 브라우저 바이너리, 다른 스킬 폴더 참조 없음. 핵심 PPTX 빌드(`finalize_svg.py` + `svg_to_pptx.py`)는 100% 순수 Python (`python-pptx` + 자체 DrawingML XML 라이터). 시스템 바이너리(`cairo`, `pandoc`)는 모두 선택적이며 없으면 svglib + reportlab 경로로 자동 폴백.
 
@@ -27,7 +27,7 @@
 - **직렬 실행** — strategist → [image_generator] → executor → post-processing → export. 교차 병합 금지
 - **메인 에이전트 단독 SVG 생성** — Executor Step 6은 sub-agent에 위임 금지 (SKILL.md §Global Execution Discipline #6)
 - **순차 페이지 생성** — 한 번에 한 페이지씩, 그룹 배치 금지 (#7)
-- **활성 테마 = 단일 시각언어** — PPTX가 export 시점에 토큰을 DrawingML로 굽기 때문에 런타임 멀티 테마 불가능. `/theme-init`는 1회성 전체 교체만 지원 (`.claude/skills/theme-init/SKILL.md`)
+- **활성 테마 = 단일 시각언어** — PPTX가 export 시점에 토큰을 DrawingML로 굽기 때문에 런타임 멀티 테마(덱별 다른 테마 동시 사용)는 불가능. 대신 검증된 테마는 프리셋 카탈로그에 보관되고 `--activate`로 빠르게 전환한다 — 전환도 "한 시점에 하나"의 원칙은 유지 (`.claude/skills/theme-init/SKILL.md`)
 - **plan/render 분리 (선택적)** — 체계적인 데크는 `/slide-plan`이 `slide_plan.json`을 먼저 만들고 `/slide`가 그 plan을 소비. 간단한 데크는 `/slide`만으로도 동작 (Standalone 모드 — 기존 Eight Confirmations 흐름 그대로). 두 모드는 같은 `/slide` 파이프라인 안에서 자동 분기.
 
 ## 스킬
@@ -36,12 +36,12 @@
 |------|--------|------|
 | `/slide` | `"슬라이드 만들어"`, `"강의 슬라이드"`, `"프레젠테이션"`, `"make slides"`, `"/slide"`, `"생성PPT"` | 핵심 파이프라인 |
 | `/slide-plan` | `"기획부터"`, `"체계적으로 슬라이드"`, `"narrative 짜줘"`, `"/slide-plan"` | 선택적 강화 단계 — `/slide` 이전에 실행 |
-| `/theme-init` | `"테마 교체"`, `"디자인 시스템 바꿔"`, `"새 브랜드 적용"`, `"change the design system"`, `"replace the theme"` | 활성 테마 1회성 교체 |
+| `/theme-init` | `"테마 교체"`, `"디자인 시스템 바꿔"`, `"새 브랜드 적용"`, `"change the design system"`, `"replace the theme"` | 새 테마 베이크(카탈로그 등록) / 카탈로그 프리셋 빠른 전환(`--activate`) |
 
 스킬 정의:
 - `/slide`: `.claude/skills/slide/SKILL.md` — Step 4에서 `slide_plan.json` 존재 시 plan-consuming 모드, 부재 시 Eight Confirmations 모드로 자동 분기
 - `/slide-plan`: `.claude/skills/slide-plan/SKILL.md` — deck_type 감지 + narrative arc + 슬라이드별 rationale + 차트 수사적 역할 + Layer 1 R1–R5 검증 (`scripts/validate_plan.py`). 출력: `output/<project>/slide_plan.json`
-- `/theme-init`: `.claude/skills/theme-init/SKILL.md` (활성 테마 전체 교체; 에이전트가 디자인 가이드를 직접 추출 → fill-nulls → 토큰 검증 → 전 참조 파일 재생성 + `templates/layouts/<theme>/DESIGN.md` skeleton 생성 → 에이전트가 `<!-- AGENT-FILL -->` 마커 채워 완성 → **Step 5 Shell Composition**(선택): 에이전트가 baseline 셸을 레퍼런스로 좌표·정렬·장식·내러티브 밴드를 `_shell_src/*.tpl.svg`로 재작곡 → render-first 프리뷰로 사용자 피드백 루프 → `validate_shells.py` 락 검사 → 사용자 검토 BLOCKING; API key 불필요, jsonschema만 필요; 캔버스 1280×720은 테마 간 영구 락; 라이트 완화는 내러티브 셸 밴드까지만 — content 셸은 라이트 유지)
+- `/theme-init`: `.claude/skills/theme-init/SKILL.md` (새 테마 베이크: 에이전트가 디자인 가이드를 직접 추출 → fill-nulls → 토큰 검증 → 전 참조 파일 재생성 + `templates/layouts/<theme>/DESIGN.md` skeleton 생성 → 에이전트가 `<!-- AGENT-FILL -->` 마커 채워 완성 → **Step 5 Shell Composition**(선택): 에이전트가 baseline 셸을 레퍼런스로 좌표·정렬·장식·내러티브 밴드를 `_shell_src/*.tpl.svg`로 재작곡 → render-first 프리뷰로 사용자 피드백 루프 → `validate_shells.py` 락 검사 → 사용자 검토 BLOCKING; API key 불필요, jsonschema만 필요; 캔버스 1280×720은 테마 간 영구 락; 라이트 완화는 내러티브 셸 밴드까지만 — content 셸은 라이트 유지. 베이크 성공 시 테마가 카탈로그에 자동 등록되며, 이미 카탈로그에 있는 테마는 `init_theme.py --activate <preset>`으로 베이크 없이 빠른 전환 — 셸·DESIGN.md·`_shell_src/`는 테마별 보존)
 
 ## 사용 패턴
 
@@ -100,7 +100,11 @@ slide-svg/
 │       │   ├── template-designer.md
 │       │   ├── reference-2-text.txt   ← 타깃 시각 기준 텍스트
 │       │   └── jangpm-patterns/       ← 25 HTML 샘플 (시각 레퍼런스 갤러리; 활성 테마 CSS로 reskin)
-│       ├── scripts/                   ← 파이썬 도구 모음 (source_to_md, svg_quality_checker, finalize_svg, svg_to_pptx, …)
+│       ├── scripts/                   ← 파이썬 도구 모음 (source_to_md, svg_quality_checker, finalize_svg, svg_to_pptx, announce_theme, …)
+│       ├── assets/design-systems/     ← 테마 프리셋 카탈로그
+│       │   ├── active.json            ← 활성 프리셋 포인터 (init_theme.py --activate가 갱신)
+│       │   ├── README.md              ← 카탈로그 인덱스 (자동 생성 — 직접 편집 금지)
+│       │   └── <preset>/theme.json    ← 검증된 테마 스냅샷 (pristine — 폰트 폴백 주입 전)
 │       ├── templates/
 │       │   ├── layouts/<theme>/       ← 활성 테마 레이아웃 팩 (cover, chapter, content, ending + design_spec + DESIGN.md). 현재: `jangpm/`
 │       │   │   ├── DESIGN.md          ← preset 디자인 어휘 (`recommended_layout_family` + 차트 처리 + anti-pattern). slide-plan이 소비. jangpm은 수동 작성, 새 preset은 `/theme-init`이 skeleton 생성 후 agent가 마커 채움
@@ -182,6 +186,10 @@ ls assets/icons/tabler-outline/ | grep <keyword>
 # 6d. dual-host 품질 게이트
 .claude/skills/slide/scripts/_py.sh .claude/skills/slide/scripts/preflight.py --needs-images
 .claude/skills/slide/scripts/_py.sh .claude/skills/slide/scripts/verify_deck.py output/<project>
+
+# 7. 테마 카탈로그 (보관된 프리셋 목록: assets/design-systems/README.md)
+python3 .claude/skills/theme-init/scripts/init_theme.py --activate <preset>   # 카탈로그 프리셋으로 빠른 전환
+python3 .claude/skills/theme-init/scripts/init_theme.py --register-current    # 현 활성 테마를 카탈로그에 등록
 ```
 
 ## Troubleshooting

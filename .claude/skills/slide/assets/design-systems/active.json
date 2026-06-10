@@ -1,0 +1,4 @@
+{
+  "active": "jangpm",
+  "_comment": "활성 테마 카탈로그 포인터(SSOT). init_theme.py --activate <preset>이 갱신하며, references/theme-active.json은 이 프리셋의 렌더 작업 사본이다. 직접 바꾸지 말고 --activate를 쓸 것."
+}

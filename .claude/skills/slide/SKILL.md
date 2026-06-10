@@ -89,12 +89,14 @@ Before any user-visible work, read `references/theme-active.json` and announce t
 > The schema this file conforms to (v1 token contract) lives at `.claude/skills/theme-init/references/token-contract.json`. Read that if you need to know which fields are required, what value formats are accepted, or how to validate a hand-edited theme.
 
 ```bash
-python3 -c "import json; t=json.load(open('.claude/skills/slide/references/theme-active.json')); print(f'[active theme] {t[\"display_name\"]} ({t[\"name\"]}) — accent {t[\"colors\"][\"accent\"]}, font {t[\"typography\"][\"font-chain\"].split(\",\")[0]}')"
+python3 .claude/skills/slide/scripts/announce_theme.py
 ```
+
+The script also performs catalog-drift detection: if the preset catalog pointer (`assets/design-systems/active.json`) disagrees with `theme-active.json`'s name, it prints a `[WARN] theme drift` line with the fix (`init_theme.py --activate <pointer>` to follow the catalog, or `--register-current` to adopt the working copy). A drift warning means a previous activate/bake was interrupted — resolve it before generating slides. A missing catalog (claude.ai essentials bundle) is silent and fine.
 
 **If `theme-active.json` is missing or fails to load**: stop. The user must run `/theme-init` first (see `.claude/skills/theme-init/SKILL.md`). Do NOT fall back to hard-coded Jangpm values — that would mask the configuration error and produce decks in an unintended language.
 
-**If the active theme is not what the user expects**: stop and redirect them to `/theme-init <design-guide.md>` with their target guide. Do NOT hand-patch literals in Strategist/Executor output to match a different theme — the render chain is the only supported way to change the active theme.
+**If the active theme is not what the user expects**: stop and redirect them. If the wanted theme is already in the catalog (`assets/design-systems/README.md`), `python3 .claude/skills/theme-init/scripts/init_theme.py --activate <preset>` switches in seconds; otherwise `/theme-init <design-guide.md>` bakes it first. Do NOT hand-patch literals in Strategist/Executor output to match a different theme — the render chain is the only supported way to change the active theme.
 
 This step is **read-only** — it never writes files. Subsequent steps inherit the active theme by reading the already-rendered `references/strategist.md`, `references/executor.md`, `references/design-system.md`, and `references/anti-slop-*.md`.
 
