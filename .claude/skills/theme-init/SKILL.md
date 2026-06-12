@@ -132,70 +132,24 @@ Write your output to a scratch file, for example
 
 ### 3. Fill + validate + render (one command)
 
+**이 스텝을 실행하기 전에 `references/token-validation-pipeline.md`를 반드시 먼저 읽어라.**
+
+목적: 드래프트 토큰 JSON을 fill-nulls → v1 스키마 검증 → 폰트 검증 → 전
+참조 파일 렌더 체인(`*.svg` 셸, `design-system.md`, `anti-slop-theme.md`,
+`strategist.md`, `executor.md`, `image-generator.md`, DESIGN.md skeleton)
+까지 한 번에 처리한다.
+
 ```bash
 python3 .claude/skills/theme-init/scripts/init_theme.py \
     --fill-from /tmp/theme-draft.json
 ```
 
-This runs:
-
-1. **`fill_theme_defaults.py`** — reads your draft, fills any nulls /
-   missing tokens with monochrome safe defaults, writes the complete
-   theme to `.claude/skills/slide/references/theme-active.json`
-2. **`validate_theme.py`** — schema check against the v1 contract.
-   Rejects with a pointed error list if anything is malformed.
-3. **`validate_fonts.py`** — checks the primary family in
-   `typography.font-chain` against `assets/fonts/`. If files are present
-   it logs OK; if not, it warns and (when "Arial" is missing from the
-   chain) auto-injects "Arial" before the trailing generic family so the
-   gallery and SVG output have a guaranteed system fallback.
-4. **Diff summary** — shows which token groups changed since the prior
-   theme.
-5. **Render chain** — regenerates `templates/layouts/<name>/*.svg`,
-   `colors_and_type.css` (HTML gallery), `design-system.md`,
-   `anti-slop-theme.md`, `strategist.md`, `executor.md`,
-   `image-generator.md` (AI-illustration palette/style lock — rendered
-   from `image-generator.tpl.md`), and a
-   `templates/layouts/<name>/DESIGN.md` skeleton (only when the file
-   does not already exist — hand-authored DESIGN.md is preserved on
-   re-runs; pass `--force` to `render_design_md.py` to overwrite).
-   `render_layouts.py` is **source-aware**: it renders the per-theme
-   composed source `templates/layouts/<name>/_shell_src/*.tpl.svg` when
-   it exists (the Step 5 output below), otherwise the global baseline
-   `templates/layouts/_source/*.tpl.svg` (stock jangpm geometry).
-6. **`validate_shells.py`** (FATAL) — checks the rendered shells against
-   the permanent locks (1280×720, font chain on every `<text>`, GM line
-   on the content shell, no banned SVG features, content shell stays
-   light). Aborts the chain before any downstream file references a
-   broken shell.
-7. **`preview_shells.py`** (non-fatal) — rasterizes the shells with
-   sample content into `templates/layouts/<name>/_preview/` for the
-   Step 5 review checkpoint. If neither `cairosvg` nor `svglib` is
-   installed it can only write filled SVGs (no PNG thumbnails) — the
-   Step 5c BLOCKING review then has nothing to show. Install a rasterizer
-   first (`pip install cairosvg`, the crispest path) so the PNG review
-   works; see the Step 5 header note.
-
-> The first `/theme-init` run for a brand-new theme has no `_shell_src/`
-> yet, so Step 3 renders the **baseline** (global `_source/`) shells —
-> these are the reference Step 5 then re-composes.
-
-The HTML gallery's `@font-face` block is generated dynamically from
-whatever weight files actually exist under `assets/fonts/` matching the
-active primary font (`<Family>-<Weight>.{otf,ttf,woff,woff2}`), so a new
-theme that supplies its own font files just needs them dropped into
-`assets/fonts/` before re-running.
-
-If the new theme changes the **primary font family**, also re-run
-`python3 .claude/skills/slide/scripts/dev/build_font_metrics.py` (after
-updating its `FONT_FAMILY`/`WEIGHT_FILES` for the new OTFs) so the PPTX
-exporter's glyph-advance cache (`svg_to_pptx/font_metrics.json`) matches.
-Until it is rebuilt the exporter detects the mismatch and falls back to
-heuristic text measurement with a `[WARN]` — safe, but text boxes get
-the older, looser sizing.
-
-If the validator rejects your draft, fix the specific field(s) it flags
-and re-run — the script is idempotent.
+핵심 게이트: `validate_shells.py`가 영구 락(1280×720, 폰트 체인, GM 라인,
+금지 SVG 피처, content 셸 라이트 유지)을 FATAL로 검사해 위반 시 체인을
+중단한다. 첫 베이크는 `_shell_src/`가 없어 글로벌 `_source/` 베이스라인
+셸을 렌더한다. 검증 실패 시 지적된 필드만 고쳐 재실행 — 스크립트는
+멱등이다. primary 폰트가 바뀌면 `build_font_metrics.py` 재실행 필요
+(상세는 레퍼런스 참조).
 
 ### 4. Author the DESIGN.md content (agent task — required for slide-plan)
 
@@ -242,68 +196,13 @@ decks inherit it.
 
 ### 5. Shell Composition (agent task — re-compose coordinates, alignment, decoration, band)
 
-Step 3 renders **baseline** shells from the global `_source/` (jangpm
-geometry) by substituting tokens only. That gives a working light deck,
-but the *composition* is still jangpm's. This step is where you (the
-agent) re-author the shell composition itself — coordinates, alignment,
-decorative elements, and (when the theme defines a band) the narrative
-band — so the deck skeleton matches the new design's signature.
+**이 스텝을 실행하기 전에 `references/shell-composition-guide.md`를 반드시 먼저 읽어라.**
 
-**This step is optional.** Skip it for a monochrome rebrand that's happy
-with jangpm geometry — the baseline shells already work. Run it whenever
-the design guide implies a distinct page architecture (a navy hero, a
-spectrum dot row, tag-chip headers, band cards, etc.).
-
-> **Rasterizer preflight (do this before 5b/5c).** The Step 5c review is a
-> render-first BLOCKING checkpoint that shows the user PNG thumbnails of the
-> composed shells. `preview_shells.py` needs `cairosvg` (crispest) or
-> `svglib`+`reportlab` to emit PNGs; without one it can only drop filled
-> SVGs and the visual review silently degrades. Install up front:
-> `pip install cairosvg` (or `pip install -r .claude/skills/slide/requirements.txt`).
-> The dual-mode "no browser binary" purity rule still holds — do **not** add
-> Playwright; the cairosvg/svglib path is the supported rasterizer.
-
-**Inputs** (read all four before composing):
-1. `theme-active.json` — tokens, including any `colors.shell-*` band tokens.
-2. This theme's `DESIGN.md` §1 (mood) · §5 (layout grammar) · §6.0 (shell
-   composition) / §6 (page anatomy) — authored in Step 4.
-3. The original `design.md` (the user's design guide) — the source of the
-   visual signature.
-4. The just-rendered **baseline shells** (`templates/layouts/<name>/*.svg`)
-   — the starting reference you re-compose.
-
-**5a. Compose the per-theme shell source.** Write four parametric
-templates to `templates/layouts/<name>/_shell_src/`:
-
-```
-01_cover.tpl.svg  02_chapter.tpl.svg  03_content.tpl.svg  04_ending.tpl.svg
-```
-
-Rules for the templates:
-- **Colors are tokens, never literals.** Use `{{TOKEN:colors.<name>}}`.
-  For the narrative band use `{{TOKEN:colors.shell-bg}}`,
-  `{{TOKEN:colors.shell-text}}`, `{{TOKEN:colors.shell-accent}}`; spectrum
-  dots address entries by index: `{{TOKEN:colors.shell-spectrum.0}}`,
-  `.1`, … (author exactly as many dots as the spectrum length). Null
-  band tokens fall back to their light sibling automatically
-  (`shell-text`→`text`, etc.), so a monochrome theme still renders.
-- **Keep content placeholders** (`{{TITLE}}`, `{{PAGE_TITLE}}`,
-  `{{GOVERNING_MESSAGE}}`, …) untouched for the Executor to fill.
-- **Narrative shells** (`01_cover` / `02_chapter` / `04_ending`) may go
-  full-bleed on `shell-bg`, place the spectrum row, and use a CTA button
-  in `shell-accent`.
-- **The content shell (`03_content`) stays light** — `bg`/`surface`
-  background, `text`/`text-secondary` ink, single `accent`. It MUST keep
-  the `{{GOVERNING_MESSAGE}}` GM line. Never paint the band fill or a
-  spectrum hue here. (The light-mode relaxation is scoped to the
-  narrative band; `validate_shells.py` enforces this.)
-- **Permanent locks apply** (see "Locks that persist across themes"):
-  viewBox `0 0 1280 720`; every `<text>` carries the full font chain; no
-  `<style>`/`class`/`@font-face`/`<foreignObject>`/`textPath`/`rgba()`/
-  `<mask>`/`<script>` (use `fill-opacity`, not `rgba`); native shapes,
-  no flattened images.
-
-**5b. Render + validate.**
+목적: 베이스라인(jangpm 지오메트리) 셸을 새 디자인의 시그니처에 맞게
+좌표·정렬·장식·내러티브 밴드까지 재작곡해
+`templates/layouts/<name>/_shell_src/*.tpl.svg`(4개 파라메트릭 템플릿)로
+작성한다. **이 스텝은 선택적** — jangpm 지오메트리로 충분한 모노크롬
+리브랜드는 건너뛴다. 5b/5c 전 래스터라이저 preflight(`pip install cairosvg`) 필수.
 
 ```bash
 python3 .claude/skills/theme-init/scripts/render_layouts.py     # now picks up _shell_src/
@@ -311,34 +210,11 @@ python3 .claude/skills/theme-init/scripts/validate_shells.py    # FATAL lock che
 python3 .claude/skills/theme-init/scripts/preview_shells.py     # build _preview/index.html
 ```
 
-Fix any `validate_shells` violation in `_shell_src/` and re-render — the
-render is deterministic, so identical source yields a clean diff.
-
-**5c. Review checkpoint (BLOCKING — render-first preview loop).** Open
-`templates/layouts/<name>/_preview/index.html` (built by
-`preview_shells.py`) and present the rendered shells to the user as the
-**reference for the proposed shell composition** — the actual rendered
-shells, not an ASCII sketch. State, per shell, the signature choices you
-made (band, alignment, decoration). Collect feedback, edit `_shell_src/`,
-re-render + re-preview, and **repeat until the user approves**. Do not
-proceed to sync/verify on the first render. (This is the shell-only loop
-inside optional Step 5; the whole-theme gate is Step 6.5 below, which runs
-on every completion path.)
-
-**5d. Sync DESIGN.md + anti-slop.** Once approved, bring the references
-into line with the composition:
-- `templates/layouts/<name>/DESIGN.md` §6.0 (shell composition table) and
-  §5/§6 — describe the new layout grammar / page anatomy.
-- `anti-slop-theme.md` — regenerated from `theme-active.json`; the band
-  allowed-colors table and Rule T9 (band scope) appear automatically when
-  `colors.shell-bg` is set. Re-run `init_theme.py` (or
-  `render_anti_slop_theme.py`) to refresh.
-
-**Idempotence / re-runs.** `_shell_src/` is agent-authored source and is
-**preserved** across `/theme-init` re-runs (like the hand-authored
-DESIGN.md) — `render_layouts.py` keeps consuming it, so a token-only
-change re-propagates colors with a clean diff and no re-composition. To
-re-compose from scratch, delete (or edit) `_shell_src/` and redo 5a–5c.
+핵심 게이트: content 셸(`03_content`)은 라이트 유지 + `{{GOVERNING_MESSAGE}}`
+GM 라인 필수, 영구 락은 `validate_shells.py`가 FATAL로 검사한다. **5c 리뷰
+체크포인트는 BLOCKING** — render-first 프리뷰 루프를 사용자 승인까지
+반복하고, 승인 후 5d에서 DESIGN.md §6.0 + anti-slop-theme.md를 동기화한다.
+`_shell_src/`는 `/theme-init` 재실행 간 보존된다.
 
 ### 6. Verify
 

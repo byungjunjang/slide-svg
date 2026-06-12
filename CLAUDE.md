@@ -54,84 +54,20 @@
 
 ## 디렉터리
 
-```
-slide-svg/
-├── CLAUDE.md                          ← 이 파일 (SSOT)
-├── README.md                          ← 짧은 프로젝트 README
-├── LICENSE                            ← 프로젝트 MIT (Byungjun Jang)
-├── LICENSE-ppt-master                 ← 업스트림 ppt-master MIT 고지 (MIT 의무 보존)
-├── LICENSE-diagram-design             ← 업스트림 diagram-design MIT 고지 (벤더링; MIT 의무 보존)
-├── .gitignore
-├── .claude/
-│   ├── settings.json                  ← 스크립트 실행 allow-list
-│   └── skills/
-│       ├── slide-plan/                ← 선택적 plan 스킬 (체계적인 데크용)
-│       │   ├── SKILL.md               ← deck_type/arc/role/chart 어휘 + Layer 1 R1–R5
-│       │   └── scripts/validate_plan.py ← R1/R2/R4/R5 + enum + 진단 비율 검증기
-│       ├── diagram-design/           ← 벤더링된 다이어그램 레퍼런스 라이브러리 (lean clone, MIT). /slide가 슬라이드 다이어그램에 소비 (로컬 전용, claude.ai 번들 미포함)
-│       ├── slide/
-│       ├── SKILL.md                   ← 스킬 엔트리 (활성 테마 락, 직렬 파이프라인, dual-mode)
-│       ├── requirements.txt           ← 파이썬 런타임 의존성 (`pip install -r`)
-│       ├── references/                ← 활성 테마 디자인 참조 + 파이프라인 기술 참조
-│       │   ├── design-system.tpl.md   ← 디자인 시스템 템플릿 (활성 테마에 따라 렌더)
-│       │   ├── design-system.md       ← 디자인 시스템 (`/theme-init` 시 생성)
-│       │   ├── theme-active.json      ← 활성 테마 스펙 (스키마: `.claude/skills/theme-init/references/token-contract.json`)
-│       │   ├── anti-slop-core.md      ← 18 구조적 금지 패턴 (테마 불가지)
-│       │   ├── anti-slop-theme.tpl.md ← 테마 리터럴 락 템플릿
-│       │   ├── anti-slop-theme.md     ← 테마 리터럴 락 (`/theme-init` 시 생성)
-│       │   ├── chart-rhetorical-roles.md ← 9 차트 수사적 역할 × charts_index.json 매핑 (slide-plan SSOT)
-│       │   ├── slide-role-enum.md     ← slide_role enum + deck_type별 확장 + 진단 비율 (slide-plan SSOT)
-│       │   ├── patterns.md            ← 30+ 레이아웃 패턴 레지스트리
-│       │   ├── diagram-types.md       ← 14종 다이어그램 타입 문법 브리지 (테마 비종속, strict SVG subset; Executor가 다이어그램 슬라이드에서 참조)
-│       │   ├── skeleton.md            ← HTML 프리뷰 스켈레톤
-│       │   ├── libraries.md           ← Reveal.js / Chart.js / Mermaid / Lucide
-│       │   ├── visual-assets.md       ← 일러스트 스타일
-│       │   ├── strategist.tpl.md      ← Eight Confirmations 템플릿
-│       │   ├── strategist.md          ← Eight Confirmations (활성 테마 락; `/theme-init` 시 생성)
-│       │   ├── executor.tpl.md        ← 단일 executor 템플릿
-│       │   ├── executor.md            ← 단일 executor (활성 테마 락; `/theme-init` 시 생성)
-│       │   ├── image-generator.tpl.md ← 일러스트 레시피 템플릿 (활성 테마 토큰으로 렌더)
-│       │   ├── image-generator.md     ← 활성 테마 일러스트 레시피 (`/theme-init` 시 image-generator.tpl.md에서 렌더; hue-neutral, 현재: Jangpm)
-│       │   ├── export.md              ← svg_to_pptx 파이프라인
-│       │   ├── shared-standards.md    ← SVG 기술 제약
-│       │   ├── canvas-formats.md      ← 1280×720 전용
-│       │   ├── image-layout-spec.md
-│       │   ├── svg-image-embedding.md
-│       │   ├── template-designer.md
-│       │   ├── reference-2-text.txt   ← 타깃 시각 기준 텍스트
-│       │   └── jangpm-patterns/       ← 25 HTML 샘플 (시각 레퍼런스 갤러리; 활성 테마 CSS로 reskin)
-│       ├── scripts/                   ← 파이썬 도구 모음 (source_to_md, svg_quality_checker, finalize_svg, svg_to_pptx, announce_theme, …)
-│       ├── assets/design-systems/     ← 테마 프리셋 카탈로그
-│       │   ├── active.json            ← 활성 프리셋 포인터 (init_theme.py --activate가 갱신)
-│       │   ├── README.md              ← 카탈로그 인덱스 (자동 생성 — 직접 편집 금지)
-│       │   └── <preset>/theme.json    ← 검증된 테마 스냅샷 (pristine — 폰트 폴백 주입 전)
-│       ├── templates/
-│       │   ├── layouts/<theme>/       ← 활성 테마 레이아웃 팩 (cover, chapter, content, ending + design_spec + DESIGN.md). 현재: `jangpm/`
-│       │   │   ├── DESIGN.md          ← preset 디자인 어휘 (`recommended_layout_family` + 차트 처리 + anti-pattern). slide-plan이 소비. jangpm은 수동 작성, 새 preset은 `/theme-init`이 skeleton 생성 후 agent가 마커 채움
-│       │   │   └── assets/            ← 테마 전용 자산 (`/theme-init` 시 테마별로 갈아끼움)
-│       │   │       ├── brand/         ← 저자 일러스트 (선택; 없으면 instructor-persona 슬라이드 생략)
-│       │   │       └── specimen/      ← colors_and_type, preview cards (테마 시점 스냅샷)
-│       │   ├── charts/                ← 56 차트 SVG (색은 사용 시점에 활성 테마 토큰으로 오버라이드)
-│       │   └── icons/tabler-outline/  ← claude.ai 업로드용 essentials ~20개 (flat SVG). Claude Code는 외부 assets/icons/를 우선 사용
-│       └── workflows/                 ← create-template, topic-research
-├── assets/
-│   ├── fonts/                         ← 공유 폰트 풀 (Pretendard 9 OTF + variable). theme-init이 이 디렉터리를 스캔해 @font-face를 동적 생성하고, 활성 테마의 primary 폰트가 없으면 Arial로 폴백
-│   └── icons/                         ← Tabler 풀 라이브러리 (tabler-outline/ 5000+ · tabler-filled/ 1000+ · icons_index.txt). Claude Code 전용 — 너무 커서 claude.ai 업로드 번들에 포함 안 됨
-└── output/                            ← 사용자 워크스페이스 (프로젝트 폴더는 주제명만, 예: `claude-mythos/`)
-```
+핵심 위치 요약:
+- 스킬: `.claude/skills/{slide, slide-plan, theme-init, diagram-design, codex-image, upload-drive}/` — 각 스킬은 SKILL.md + references/ + scripts/
+- 활성 테마 참조: `.claude/skills/slide/references/` (theme-active.json, design-system.md, anti-slop-*.md, …)
+- 테마 카탈로그: `.claude/skills/slide/assets/design-systems/`, 레이아웃 팩: `.claude/skills/slide/templates/layouts/<theme>/`
+- 공유 자산: `assets/fonts/` (Pretendard), `assets/icons/` (Tabler 풀 라이브러리, Claude Code 전용)
+- 산출물: `output/<project>/` (프로젝트 폴더는 주제명만)
 
 ## 이미지 생성 백엔드
 
-`/slide` Step 5(Image_Generator)가 이미지가 필요한 슬롯을 채울 때 쓰는 백엔드는 **호스트별로 정해진다** — Claude Code는 vendored `/codex-image` 스킬, Codex는 런타임 기본 `imagegen` 스킬 / 내장 `image_gen` 도구. 어느 호스트든 `references/image-generator.md` §🔒의 **활성 테마 Style Lock**(Deck Style Anchor + Negative Prompt)이 프롬프트 앞/뒤에 자동 prepend 된다. 이 Style Lock의 팔레트·테마명은 `image-generator.tpl.md`에서 `theme-active.json` 토큰으로 렌더되므로 `/theme-init` 교체 시 자동으로 새 테마 색을 따른다 (anti-slop 구조 락은 테마 불가지로 고정).
-
-- **Claude Code — `codex-image` 스킬** (`.claude/skills/codex-image/SKILL.md`) — API 키 불필요. Codex CLI OAuth(ChatGPT 로그인) 경유 `gpt-image-2` 호출. Step 5가 `/codex-image --out <project>/images --filename <slot> --size <매핑> --quality high "<Jangpm anchor> <prompt> Avoid: <negative>"` 형태로 호출. 사이즈는 `1024x1024` / `1024x1536` / `1536x1024` 중 선택 (gpt-image-2 제약). 16:9 슬롯은 `1536x1024` 생성 → SVG `preserveAspectRatio="xMidYMid slice"`로 1280×720 크롭.
-- **Codex — 기본 `imagegen` 스킬 / 내장 `image_gen` 도구.** `codex-image`는 `.codex/skills`에 패키징하지 않는다 (`sync_codex_mirror.py`가 미러에서 제외) — Codex 런타임에 동등 기능이 내장돼 있기 때문. `image_gen`으로 슬롯당 1장 생성 후 Codex 기본 출력 경로에서 `<project>/images/<slot>.png`로 이동·복사. `--size` / `--quality` / `--out` / `--filename` 같은 `/codex-image` CLI 플래그는 가정하지 않는다.
-
-이미지 백엔드 preflight 또는 실행이 실패하면 Step 5는 진행을 멈춘다 — Claude Code는 `codex login status`로 게이트하고 실패 시 `codex login`을 안내, Codex는 `imagegen` / `image_gen` 가용성을 Image_Generator 실행 시점에 확인한다. 어느 쪽도 다른 백엔드로 silent fallback 하지 않는다. 새 레이아웃 템플릿은 추가하지 않음 — 기존 `templates/layouts/jangpm/01_cover.svg`(풀-블리드 16:9 슬롯) + `references/patterns.md`의 `image-text`/`image-annotated` 패턴이 이미지 슬롯을 커버한다.
+🔒 **호스트별 백엔드 락**: Claude Code는 vendored `/codex-image` 스킬(Codex CLI OAuth 경유 `gpt-image-2`, API 키 불필요), Codex는 내장 `imagegen` 스킬 / `image_gen` 도구만. 다른 생성기 대체·silent fallback 금지 — preflight/실행 실패 시 Step 5는 halt하고 블로커 보고 (Claude Code는 `codex login status` 게이트). 모든 프롬프트에 `references/image-generator.md` §🔒의 활성 테마 Style Lock이 자동 prepend되며, 팔레트는 `/theme-init` 교체를 자동 추종한다. `codex-image`는 `.codex/skills` 미러에 패키징하지 않는다 (Codex 내장 기능과 중복). 호출 문법·사이즈 매핑·16:9 크롭 규칙 상세: `.claude/skills/slide/references/executor-steps-4-6.md` Step 5.
 
 ## 다이어그램
 
-시스템·관계·프로세스 시각물(architecture / flowchart / sequence / state / ER / timeline / swimlane / quadrant / nested / tree / org / layers / venn / pyramid)은 `/slide` Executor가 `references/diagram-types.md`를 참조해 **네이티브 DrawingML SVG**로 그린다. 이 브리지는 벤더링된 `.claude/skills/diagram-design/`(lean clone, MIT — `cathrynlavery/diagram-design`) 레퍼런스 라이브러리의 14종 타입 관례를 strict SVG subset(`shared-standards.md`) + 활성 테마 토큰으로 재서술한 것이다. **슬라이드 전용** — 독립 HTML 출력은 쓰지 않으며(네이티브 파이프라인 락), 이미지 플래튼도 금지. 브리지는 테마 비종속이라 `/theme-init` 교체에도 그대로 유지된다. 깊은 타입별 관례는 `.claude/skills/diagram-design/references/type-*.md`. (기존 Mermaid 경로는 HTML 프리뷰 전용으로 유지 — `libraries.md`.)
+시스템·관계·프로세스 시각물(14종: architecture, flowchart, sequence, state, ER, timeline, swimlane, quadrant, nested, tree, org, layers, venn, pyramid)은 `/slide` Executor가 `references/diagram-types.md`를 참조해 **네이티브 DrawingML SVG**로 그린다. **슬라이드 전용** — 독립 HTML 출력 없음, 이미지 플래튼 금지, 테마 비종속(`/theme-init` 교체에도 유지). 타입별 깊은 관례: `.claude/skills/diagram-design/references/type-*.md` (lean clone, MIT). (Mermaid 경로는 HTML 프리뷰 전용 — `libraries.md`.)
 
 ## SVG 기술 제약 (요약)
 
