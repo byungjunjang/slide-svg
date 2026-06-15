@@ -104,7 +104,7 @@ codex login status                 # "Logged in using ChatGPT" 표시되면 끝
 |---|---|
 | `auth expired` / 401 | `codex login` 재실행 (토큰 갱신) |
 | `NOT_FOUND` | `npm install -g @openai/codex` |
-| 트러스트 오류 | 스킬이 `--skip-git-repo-check` 사용 — 자세한 내용은 `.claude/skills/codex-image/README.md` |
+| 트러스트 오류 | 스킬이 `--skip-git-repo-check` 사용 — 자세한 내용은 `.claude/skills/codex-image/SKILL.md` |
 
 **Claude Code 스킬 위치:** `.claude/skills/codex-image/` (이 저장소에 vendored. 업스트림: [wjb127/codex-image](https://github.com/wjb127/codex-image))
 **Codex 패키지:** `.codex/skills/codex-image/`는 생성하지 않습니다. Codex 런타임의 기본 `imagegen` / `image_gen`을 사용합니다.
