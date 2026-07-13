@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" width="1280" height="720" viewBox="0 0 1280 720">
+  <!-- Lecture Deck — 03 Content (theme-parametric; header/footer shell only; body composed by Executor) -->
+
+  <rect width="1280" height="720" fill="#FAFAF9"/>
+
+  <!-- Headline bar: title at top (Headline) -->
+  <text x="56" y="96"
+        font-family="Pretendard, 'Apple SD Gothic Neo', 'Malgun Gothic', Arial, sans-serif"
+        font-size="32" font-weight="700"
+        letter-spacing="-0.64"
+        fill="#1A1A1A">
+    콘텐츠 셸 헤더라인
+  </text>
+
+  <!-- Optional subtitle under headline (Label, uppercase, tracked) -->
+  <text x="56" y="124"
+        font-family="Pretendard, 'Apple SD Gothic Neo', 'Malgun Gothic', Arial, sans-serif"
+        font-size="12.8" font-weight="600"
+        letter-spacing="0.64"
+        fill="#6B7280">
+    CONTENT
+  </text>
+
+  <!-- Thin accent rule under headline (editorial) -->
+  <rect x="56" y="140" width="48" height="2" fill="#4633E3"/>
+
+  <!-- CONTENT AREA (Executor fills this region freely) -->
+  <!-- x=56, y=160, w=1168, h=480 — everything above GM, below headline -->
+
+  <!-- Governing Message (GM) — mandatory on every content slide, centered, bottom 64px -->
+  <text x="640" y="680"
+        font-family="Pretendard, 'Apple SD Gothic Neo', 'Malgun Gothic', Arial, sans-serif"
+        font-size="15.2" font-weight="700"
+        text-anchor="middle"
+        fill="#6B7280">
+    거버닝 메시지는 모든 콘텐츠 슬라이드 하단에 한 줄
+  </text>
+
+  <!-- Page number (bottom right, caption) -->
+  <text x="1224" y="696"
+        font-family="Pretendard, 'Apple SD Gothic Neo', 'Malgun Gothic', Arial, sans-serif"
+        font-size="12.8" font-weight="500"
+        text-anchor="end"
+        fill="#9CA3AF">
+    03 / 12
+  </text>
+</svg>

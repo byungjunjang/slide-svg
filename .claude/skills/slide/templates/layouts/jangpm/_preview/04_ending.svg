@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" width="1280" height="720" viewBox="0 0 1280 720">
+  <!-- Lecture Deck — 04 Ending (theme-parametric) -->
+
+  <rect width="1280" height="720" fill="#FAFAF9"/>
+
+  <!-- Accent rule -->
+  <rect x="56" y="140" width="80" height="3" fill="#4633E3"/>
+
+  <!-- Eyebrow -->
+  <text x="56" y="180"
+        font-family="Pretendard, 'Apple SD Gothic Neo', 'Malgun Gothic', Arial, sans-serif"
+        font-size="12.8" font-weight="600"
+        letter-spacing="0.64"
+        fill="#6B7280">
+    CLOSING
+  </text>
+
+  <!-- Primary closing message (Display) -->
+  <text x="56" y="340"
+        font-family="Pretendard, 'Apple SD Gothic Neo', 'Malgun Gothic', Arial, sans-serif"
+        font-size="56" font-weight="800"
+        letter-spacing="-1.68"
+        fill="#1A1A1A">
+    마무리 셸
+  </text>
+
+  <!-- Secondary line (accent) -->
+  <text x="56" y="410"
+        font-family="Pretendard, 'Apple SD Gothic Neo', 'Malgun Gothic', Arial, sans-serif"
+        font-size="40" font-weight="800"
+        letter-spacing="-0.8"
+        fill="#4633E3">
+    Thank you
+  </text>
+
+  <!-- Contact / follow-up (Title) -->
+  <text x="56" y="470"
+        font-family="Pretendard, 'Apple SD Gothic Neo', 'Malgun Gothic', Arial, sans-serif"
+        font-size="18.4" font-weight="600"
+        fill="#1A1A1A">
+    contact@example.com
+  </text>
+
+  <!-- Divider -->
+  <line x1="56" y1="672" x2="1224" y2="672" stroke="#E5E7EB" stroke-width="1"/>
+
+  <!-- Presenter footer -->
+  <text x="56" y="696"
+        font-family="Pretendard, 'Apple SD Gothic Neo', 'Malgun Gothic', Arial, sans-serif"
+        font-size="12.8" font-weight="500"
+        fill="#9CA3AF">
+    장병준 · 2026
+  </text>
+</svg>
