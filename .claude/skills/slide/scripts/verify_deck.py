@@ -11,7 +11,10 @@ Usage:
 from __future__ import annotations
 
 import argparse
+import json
+import os
 import re
+import shutil
 import subprocess
 import sys
 import zipfile
@@ -181,6 +184,81 @@ def _sync_check() -> int:
     return subprocess.run([sys.executable, str(sync), "--check"]).returncode
 
 
+def _officecli_bin() -> str | None:
+    # OFFICECLI_BIN overrides discovery: a path forces that binary, an empty
+    # string disables the layer (hermetic tests / opting out).
+    env = os.environ.get("OFFICECLI_BIN")
+    if env is not None:
+        return env or None
+    found = shutil.which("officecli")
+    if found:
+        return found
+    for cand in ("/opt/homebrew/bin/officecli", "/usr/local/bin/officecli"):
+        if Path(cand).exists():
+            return cand
+    return None
+
+
+def _run_officecli(args: list[str], timeout: int) -> subprocess.CompletedProcess | None:
+    try:
+        return subprocess.run(args, capture_output=True, text=True, timeout=timeout)
+    except (subprocess.TimeoutExpired, OSError):
+        return None
+
+
+def officecli_checks(project: Path) -> tuple[list[str], list[str]]:
+    """OpenXML validation + converted-PPTX contact sheet via officecli.
+
+    Returns (failures, warnings). Skipped entirely when officecli is absent so
+    hosts without it (claude.ai, public users) see no behavior change.
+    Verdict policy (probed against officecli 1.0.135):
+      - `error` object -> file cannot be opened (corrupt): FAILURE
+      - success:false with only `warnings` -> schema strictness: WARNING
+      - unparseable output / timeout -> tool problem, not deck evidence: WARNING
+    """
+    binary = _officecli_bin()
+    if binary is None:
+        return [], []
+    natives = _native_pptx_files(project)
+    if not natives:
+        return [], []
+    pptx = max(natives, key=lambda p: p.stat().st_mtime)  # newest export
+    failures: list[str] = []
+    warnings: list[str] = []
+
+    rc = _run_officecli([binary, "validate", str(pptx), "--json"], timeout=120)
+    verdict = None
+    if rc is not None:
+        try:
+            verdict = json.loads(rc.stdout)
+        except Exception:
+            verdict = None
+    if verdict is None:
+        warnings.append("officecli validate produced no parseable verdict "
+                        "(timeout or bad output) — non-blocking")
+    elif verdict.get("error"):
+        failures.append(f"officecli validate: {pptx.name} unopenable — "
+                        f"{verdict['error']}")
+    elif not verdict.get("success"):
+        warns = verdict.get("warnings") or []
+        head = warns[0].get("message", "") if warns else ""
+        warnings.append(f"officecli validate schema warnings on {pptx.name} "
+                        f"({len(warns)} line(s), non-blocking): {head[:200]}")
+
+    if not failures:
+        out = project / "_pptx_render" / f"{pptx.stem}-grid.png"
+        out.parent.mkdir(parents=True, exist_ok=True)
+        rs = _run_officecli([binary, "view", str(pptx), "screenshot", "--grid",
+                             "--out", str(out), "--json"], timeout=180)
+        if rs is not None and rs.returncode == 0 and out.exists():
+            print(f"[verify_deck] pptx render: {out} — Read it to eyeball "
+                  f"overflow/collision issues in the exported deck")
+        else:
+            detail = "" if rs is None else (rs.stderr or rs.stdout)[-300:]
+            warnings.append(f"officecli screenshot failed (non-blocking): {detail}")
+    return failures, warnings
+
+
 # ---- orchestrator -------------------------------------------------------
 
 def run_checks(project: Path) -> list[str]:
@@ -270,6 +348,10 @@ def main() -> int:
         sys.stderr.write(f"[verify_deck] not a directory: {project}\n")
         return 2
     failures = run_checks(project)
+    cli_failures, cli_warnings = officecli_checks(project)
+    failures.extend(cli_failures)
+    for w in cli_warnings:
+        sys.stderr.write(f"  ! WARN {w}\n")
     if failures:
         sys.stderr.write(f"[verify_deck] FAIL ({len(failures)} issue(s)):\n")
         for f in failures:

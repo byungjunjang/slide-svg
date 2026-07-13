@@ -134,6 +134,7 @@ python3 .claude/skills/theme-init/scripts/init_theme.py --register-current    # 
 
 ## 참고
 
+- **officecli (선택)**: 설치 시 `verify_deck.py`(Step 7.4)가 최신 네이티브 PPTX에 OpenXML validate(열 수 없는 corrupt 파일 → 하드 페일, 스키마 warning → WARN)와 export된 PPTX 실물 컨택트 시트(`output/<project>/_pptx_render/<stem>-grid.png`, 눈검수용)를 추가 수행한다 — 미설치 시 자동 skip, `OFFICECLI_BIN`으로 지정/비활성 가능
 - **시각 기준 텍스트**: `.claude/skills/slide/references/reference-2-text.txt` — Jangpm 소스 타깃 데크에서 추출한 텍스트
 - **Pretendard 폰트**: `assets/fonts/` — PPTX 배포 시 함께 배포하면 수정자 환경에서도 그대로 렌더
 - **업스트림 출처**: `LICENSE-ppt-master` — 본 프로젝트가 포크한 `ppt-master` MIT 고지

@@ -237,6 +237,7 @@ ${SKILL_DIR}/scripts/_py.sh ${SKILL_DIR}/scripts/svg_to_pptx.py <project_path> -
 ${SKILL_DIR}/scripts/_py.sh ${SKILL_DIR}/scripts/verify_deck.py <project_path>
 ```
 - Runs the full gate: plan validation, stage parity, native PPTX integrity, **theme-palette compliance** (`svg_quality_checker.py --strict-theme` on `svg_output/`), image authenticity, governing-message discipline, canvas lock, mirror freshness.
+- When `officecli` is installed, the gate additionally runs OpenXML validation on the newest native PPTX (unopenable/corrupt file → hard fail; schema warnings → non-blocking WARN) and renders a contact sheet of the **exported PPTX itself** to `<project_path>/_pptx_render/<pptx-stem>-grid.png`. **Read that PNG** to eyeball overflow, collisions, and broken text in the converted deck — it complements (does not replace) the SVG-source review. Auto-skips when officecli is absent; the `OFFICECLI_BIN` env var forces a specific binary or disables the layer (empty value).
 - Off-theme colors fail the gate. Legitimate exceptions (e.g., partner brand colors) go in `<project_path>/.theme-color-allow` — one `#RRGGBB` per line.
 - The deck is **not done** until this step exits 0.
 
