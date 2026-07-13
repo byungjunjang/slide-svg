@@ -162,16 +162,35 @@ def parse_use_element(use_match: str) -> dict[str, str | float]:
     if icon_match:
         attrs['icon'] = icon_match.group(1)
 
-    # Extract numeric attributes
+    # Extract numeric attributes (word boundary so `width` never matches `stroke-width`)
     for attr in ['x', 'y', 'width', 'height']:
-        match = re.search(rf'{attr}="([^"]+)"', use_match)
+        match = re.search(rf'(?<![-\w]){attr}="([^"]+)"', use_match)
         if match:
             attrs[attr] = float(match.group(1))
 
-    # Extract fill color
-    fill_match = re.search(r'fill="([^"]+)"', use_match)
-    if fill_match:
-        attrs['fill'] = fill_match.group(1)
+    # Resolve the icon color. Placeholders come in two documented shapes:
+    #   <use data-icon="..." fill="#0076A8"/>                          (fill carries the color)
+    #   <use data-icon="..." fill="none" stroke="currentColor"
+    #        color="#6B7280" stroke-width="2" .../>                    (executor.md §5 line-art form)
+    # `currentColor` resolves to the `color` attribute per CSS semantics.
+    def _concrete(value: str | None) -> str | None:
+        return value if value and value.lower() not in ('none', 'currentcolor') else None
+
+    fill_match = re.search(r'(?<![-\w])fill="([^"]+)"', use_match)
+    stroke_match = re.search(r'(?<![-\w])stroke="([^"]+)"', use_match)
+    color_match = re.search(r'(?<![-\w])color="([^"]+)"', use_match)
+    resolved = (
+        _concrete(color_match.group(1) if color_match else None)
+        or _concrete(fill_match.group(1) if fill_match else None)
+        or _concrete(stroke_match.group(1) if stroke_match else None)
+    )
+    if resolved:
+        attrs['fill'] = resolved
+
+    # Preserve requested stroke weight for stroke-style icons
+    sw_match = re.search(r'stroke-width="([^"]+)"', use_match)
+    if sw_match:
+        attrs['stroke-width'] = sw_match.group(1)
 
     return attrs
 
@@ -209,7 +228,12 @@ def generate_icon_group(attrs: dict[str, str | float], elements: list[str], styl
     elements_str = '\n    '.join(elements)
 
     if style == 'stroke':
-        color_attrs = f'fill="none" stroke="{color}"'
+        # Tabler/Lucide line-art carries stroke-width/linecap/linejoin on the
+        # <svg> root, which _extract_shape_elements drops — restate them here
+        # so embedded icons keep the 2px line-art weight.
+        stroke_width = attrs.get('stroke-width', '2')
+        color_attrs = (f'fill="none" stroke="{color}" stroke-width="{stroke_width}" '
+                       f'stroke-linecap="round" stroke-linejoin="round"')
     else:
         color_attrs = f'fill="{color}"'
 
