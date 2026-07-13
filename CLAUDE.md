@@ -55,7 +55,7 @@
 ## 디렉터리
 
 핵심 위치 요약:
-- 스킬: `.claude/skills/{slide, slide-plan, theme-init, diagram-design, codex-image, upload-drive}/` — 각 스킬은 SKILL.md + references/ + scripts/
+- 스킬: `.claude/skills/{slide, slide-plan, theme-init, chart-design, diagram-design, codex-image, upload-drive}/` — 각 스킬은 SKILL.md + references/ + scripts/
 - 활성 테마 참조: `.claude/skills/slide/references/` (theme-active.json, design-system.md, anti-slop-*.md, …)
 - 테마 카탈로그: `.claude/skills/slide/assets/design-systems/`, 레이아웃 팩: `.claude/skills/slide/templates/layouts/<theme>/`
 - 공유 자산: `assets/fonts/` (Pretendard), `assets/icons/` (Tabler 풀 라이브러리, Claude Code 전용)
@@ -64,6 +64,10 @@
 ## 이미지 생성 백엔드
 
 🔒 **호스트별 백엔드 락**: Claude Code는 vendored `/codex-image` 스킬(Codex CLI OAuth 경유 `gpt-image-2`, API 키 불필요), Codex는 내장 `imagegen` 스킬 / `image_gen` 도구만. 다른 생성기 대체·silent fallback 금지 — preflight/실행 실패 시 Step 5는 halt하고 블로커 보고 (Claude Code는 `codex login status` 게이트). 모든 프롬프트에 `references/image-generator.md` §🔒의 활성 테마 Style Lock이 자동 prepend되며, 팔레트는 `/theme-init` 교체를 자동 추종한다. `codex-image`는 `.codex/skills` 미러에 패키징하지 않는다 (Codex 내장 기능과 중복). 호출 문법·사이즈 매핑·16:9 크롭 규칙 상세: `.claude/skills/slide/references/executor-steps-4-6.md` Step 5.
+
+## 차트 (데이터 기반)
+
+실제 숫자로 그리는 정량 차트(21종: bar 계열 5, line/area 계열 4, scatter/combo/waterfall/bullet, pie/donut/gauge/radar, kpi_cards/progress/funnel/heatmap/treemap)는 `/slide` Executor가 **`chart-design` 스킬의 렌더 엔진**으로 생성한다 — 데이터 spec JSON 작성 → `.claude/skills/chart-design/scripts/render_chart.py`가 지오메트리(스케일·틱·아크)를 계산하고 스타일은 전부 활성 테마 토큰에서 해석(하드코딩 색상 없음, 토큰 못 읽으면 fail). 순수 stdlib·네트워크 없음·컨버터 세이프 출력. 차트 선택 판단 규칙(bar 기본, pie/radar 게이트)은 `.claude/skills/chart-design/SKILL.md` §1, 슬라이드 임베딩 계약과 `chart_strategy` 매핑은 그 `references/integration.md`. 21종 외 타입(sankey, gantt, SWOT 등)과 구도 참고는 기존 `templates/charts/` 정적 라이브러리 경로 유지. 테마 교체 시 spec 재렌더로 자동 추종.
 
 ## 다이어그램
 

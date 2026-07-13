@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 380" width="800" height="380">
+  <rect width="800" height="380" fill="#FAFAF9"/>
+  <g transform="translate(40,40)">
+<g id="chart_progress" data-chart-type="progress">
+<text x="62.44" y="41.85" font-family="Pretendard, 'Apple SD Gothic Neo', 'Malgun Gothic', Arial, sans-serif" font-size="12.8" font-weight="500" fill="#6B7280" text-anchor="end">제품 로드맵</text>
+<rect x="72.44" y="31.5" width="583.56" height="12" fill="#F5F5F4" rx="6"/>
+<rect x="72.44" y="31.5" width="478.52" height="12" fill="#4633E3" rx="6"/>
+<text x="666.00" y="41.85" font-family="Pretendard, 'Apple SD Gothic Neo', 'Malgun Gothic', Arial, sans-serif" font-size="12.8" font-weight="600" fill="#1A1A1A">82%</text>
+<text x="62.44" y="116.85" font-family="Pretendard, 'Apple SD Gothic Neo', 'Malgun Gothic', Arial, sans-serif" font-size="12.8" font-weight="500" fill="#6B7280" text-anchor="end">글로벌 진출</text>
+<rect x="72.44" y="106.5" width="583.56" height="12" fill="#F5F5F4" rx="6"/>
+<rect x="72.44" y="106.5" width="373.48" height="12" fill="#4633E3" rx="6"/>
+<text x="666.00" y="116.85" font-family="Pretendard, 'Apple SD Gothic Neo', 'Malgun Gothic', Arial, sans-serif" font-size="12.8" font-weight="600" fill="#1A1A1A">64%</text>
+<text x="62.44" y="191.85" font-family="Pretendard, 'Apple SD Gothic Neo', 'Malgun Gothic', Arial, sans-serif" font-size="12.8" font-weight="500" fill="#6B7280" text-anchor="end">조직 확장</text>
+<rect x="72.44" y="181.5" width="583.56" height="12" fill="#F5F5F4" rx="6"/>
+<rect x="72.44" y="181.5" width="262.6" height="12" fill="#4633E3" rx="6"/>
+<text x="666.00" y="191.85" font-family="Pretendard, 'Apple SD Gothic Neo', 'Malgun Gothic', Arial, sans-serif" font-size="12.8" font-weight="600" fill="#1A1A1A">45%</text>
+<text x="62.44" y="266.85" font-family="Pretendard, 'Apple SD Gothic Neo', 'Malgun Gothic', Arial, sans-serif" font-size="12.8" font-weight="500" fill="#6B7280" text-anchor="end">보안 인증</text>
+<rect x="72.44" y="256.5" width="583.56" height="12" fill="#F5F5F4" rx="6"/>
+<rect x="72.44" y="256.5" width="531.04" height="12" fill="#4633E3" rx="6"/>
+<text x="666.00" y="266.85" font-family="Pretendard, 'Apple SD Gothic Neo', 'Malgun Gothic', Arial, sans-serif" font-size="12.8" font-weight="600" fill="#1A1A1A">91%</text>
+</g>
+  </g>
+</svg>

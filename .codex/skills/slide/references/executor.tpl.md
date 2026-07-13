@@ -62,7 +62,7 @@ In **Standalone** mode the Executor selects family and pattern both, as before �
 
 The Strategist's Design Spec (and, when present, `slide_plan.json`) may carry a per-page **`lead_type`** — its proposed *dominant evidence primitive* (`chart` / `diagram` / `image` / `table` / `text` / `null`; see the strategist Eight Confirmations and `chart-rhetorical-roles.md`). Treat it as a **first-choice hint, not a binding instruction**:
 
-- **Honor it** when it fits the content shape — build the proposed visual inline as native SVG (chart from `templates/charts/`, diagram per `diagram-types.md`, image per `patterns.md`).
+- **Honor it** when it fits the content shape — build the proposed visual inline as native SVG (chart per §7 — chart-design renderer for the 21 quantitative types, `templates/charts/` otherwise; diagram per `diagram-types.md`; image per `patterns.md`).
 - **Override it** when content shape or the **Dominant Primitive Cap** (§0.1 #4) dictates a different primitive — or when `slide_plan.json` disagrees (the plan wins).
 - **`lead_type: text` / `null` forces no visual.** Never invent a chart or diagram for a page with no evidence to show. (Rule 19 still wants ≥1 supporting visual on body slides — but an honest text-led composition beats a fabricated data viz.)
 
@@ -352,7 +352,19 @@ Title / chapter / ending slides do NOT carry `.gm`.
 
 ## 7. Visualization Reference
 
-When the Design Spec's §VII calls for a chart type, read the template first:
+### Data charts (quantitative, real numbers) — chart-design renderer
+
+When a slide needs a chart built from **actual data values** and the type is one of chart-design's 21 quantitative types (bar / horizontal_bar / grouped_bar / stacked_bar / stacked_bar_100 / line / multi_line / area / scatter / combo / waterfall / bullet / pie / donut / gauge / radar / kpi_cards / progress / funnel / heatmap / treemap), do NOT hand-draw the geometry. Write a data spec and render it:
+
+```
+python3 .codex/skills/chart-design/scripts/render_chart.py <spec.json> -o <frag.svg> --pos X,Y
+```
+
+The engine computes scales/ticks/arcs from the numbers and resolves every color/font from the active theme tokens — hand-adapted geometry is where mis-scaled bars and wrong percentages come from. Keep each spec JSON next to the project (specs are the source of truth; re-render after a theme swap). Selection judgment, spec schema, and the embedding contract: `.codex/skills/chart-design/SKILL.md` + its `references/spec-format.md` / `references/integration.md` (includes the `chart_strategy` → type map for plan-consuming mode).
+
+### Static chart templates (composition reference / non-quantitative types)
+
+For chart types outside the 21 (sankey, gantt, SWOT, …) or when browsing composition ideas, read the static template first:
 
 ```
 read_file templates/charts/<chart_name>.svg

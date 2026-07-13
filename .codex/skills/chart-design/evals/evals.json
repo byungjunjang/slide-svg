@@ -1,0 +1,33 @@
+{
+  "skill_name": "chart-design",
+  "evals": [
+    {
+      "id": 0,
+      "name": "trend-selection",
+      "prompt": "지난 12개월 MAU 추이 데이터야: 1월 102, 2월 108, 3월 115, 4월 121, 5월 128, 6월 137, 7월 145, 8월 151, 9월 160, 10월 172, 11월 181, 12월 194 (단위: 만 명). 발표 슬라이드에 넣을 차트를 SVG로 만들어서 저장해줘.",
+      "expected_output": "A line (or area) chart — NOT pie/radar/12-bar — as converter-safe SVG with Korean month labels, styled by active slide-svg theme tokens (Pretendard font-chain, accent #4633E3 for jangpm).",
+      "files": []
+    },
+    {
+      "id": 1,
+      "name": "pie-trap-composition",
+      "prompt": "우리 회사 매출 구성비를 부서별로 보여주는 차트가 필요해. 영업 32%, 마케팅 18%, 개발 15%, 운영 12%, 인사 8%, 재무 7%, 법무 5%, 기타 3% — 이렇게 8개야. 슬라이드용 SVG 차트로 만들어줘.",
+      "expected_output": "NOT a pie/donut (8 slices exceeds the ≤5 gate). A sorted horizontal_bar (or a justified aggregation). The chart-design gate should force the correct choice.",
+      "files": []
+    },
+    {
+      "id": 2,
+      "name": "kpi-trap-three-numbers",
+      "prompt": "3분기 핵심 지표 3개를 시각화해줘: 매출 12.4억 (+18.2%), 신규 고객 1,840명 (+12.4%), NPS 62 (-3p). 슬라이드에 들어갈 SVG로 저장해줘.",
+      "expected_output": "KPI stat cards (kpi_cards), not a 3-bar/pie chart — ≤3 data points rule. Deltas colored with semantic positive/negative tokens.",
+      "files": []
+    },
+    {
+      "id": 3,
+      "name": "token-propagation",
+      "prompt": "차트가 slide-svg 테마 변경을 자동으로 따라가는지 검증해줘. 활성 테마(jangpm)로 부서별 매출 bar 차트(영업 124억, 마케팅 87억, 개발 62억, 운영 41억)를 렌더링하고, theme-active.json을 복사해서 accent만 #D97706, accent-soft #FEF3C7, accent-ink #B45309으로 바꾼 임시 테마 파일로 같은 스펙을 다시 렌더링해. 두 SVG를 저장하고, 색상이 각 테마 토큰을 따르는지·스킬 코드 수정이 없었는지를 report.md로 정리해줘.",
+      "expected_output": "Two SVGs from one spec: v1 uses #4633E3 accent, v2 uses #D97706 — with zero edits to chart-design skill files. report.md documents the color diff.",
+      "files": []
+    }
+  ]
+}

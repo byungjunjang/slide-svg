@@ -1,0 +1,36 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 500" width="800" height="500">
+  <rect width="800" height="500" fill="#FAFAF9"/>
+  <g transform="translate(40,40)">
+<g id="chart_multi_line" data-chart-type="multi_line">
+<rect x="39.48" y="3.4" width="10" height="10" fill="#4633E3" rx="4" fill-opacity="0.85"/>
+<text x="55.48" y="12.75" font-family="Pretendard, 'Apple SD Gothic Neo', 'Malgun Gothic', Arial, sans-serif" font-size="12.8" font-weight="500" fill="#6B7280">리텐션</text>
+<rect x="106.66" y="3.4" width="10" height="10" fill="#4633E3" rx="4" fill-opacity="0.6"/>
+<text x="122.66" y="12.75" font-family="Pretendard, 'Apple SD Gothic Neo', 'Malgun Gothic', Arial, sans-serif" font-size="12.8" font-weight="500" fill="#6B7280">전환율</text>
+<line x1="39.48" y1="395.68" x2="712" y2="395.68" stroke="#E5E7EB" stroke-width="1"/>
+<text x="31.48" y="400.03" font-family="Pretendard, 'Apple SD Gothic Neo', 'Malgun Gothic', Arial, sans-serif" font-size="12.8" font-weight="500" fill="#6B7280" text-anchor="end">10%</text>
+<line x1="39.48" y1="323.44" x2="712" y2="323.44" stroke="#E5E7EB" stroke-width="1"/>
+<text x="31.48" y="327.79" font-family="Pretendard, 'Apple SD Gothic Neo', 'Malgun Gothic', Arial, sans-serif" font-size="12.8" font-weight="500" fill="#6B7280" text-anchor="end">20%</text>
+<line x1="39.48" y1="251.2" x2="712" y2="251.2" stroke="#E5E7EB" stroke-width="1"/>
+<text x="31.48" y="255.55" font-family="Pretendard, 'Apple SD Gothic Neo', 'Malgun Gothic', Arial, sans-serif" font-size="12.8" font-weight="500" fill="#6B7280" text-anchor="end">30%</text>
+<line x1="39.48" y1="178.96" x2="712" y2="178.96" stroke="#E5E7EB" stroke-width="1"/>
+<text x="31.48" y="183.31" font-family="Pretendard, 'Apple SD Gothic Neo', 'Malgun Gothic', Arial, sans-serif" font-size="12.8" font-weight="500" fill="#6B7280" text-anchor="end">40%</text>
+<line x1="39.48" y1="106.72" x2="712" y2="106.72" stroke="#E5E7EB" stroke-width="1"/>
+<text x="31.48" y="111.07" font-family="Pretendard, 'Apple SD Gothic Neo', 'Malgun Gothic', Arial, sans-serif" font-size="12.8" font-weight="500" fill="#6B7280" text-anchor="end">50%</text>
+<line x1="39.48" y1="34.48" x2="712" y2="34.48" stroke="#E5E7EB" stroke-width="1"/>
+<text x="31.48" y="38.83" font-family="Pretendard, 'Apple SD Gothic Neo', 'Malgun Gothic', Arial, sans-serif" font-size="12.8" font-weight="500" fill="#6B7280" text-anchor="end">60%</text>
+<text x="116.34" y="412.96" font-family="Pretendard, 'Apple SD Gothic Neo', 'Malgun Gothic', Arial, sans-serif" font-size="12.8" font-weight="500" fill="#6B7280" text-anchor="middle">1월</text>
+<text x="220.10" y="412.96" font-family="Pretendard, 'Apple SD Gothic Neo', 'Malgun Gothic', Arial, sans-serif" font-size="12.8" font-weight="500" fill="#6B7280" text-anchor="middle">2월</text>
+<text x="323.86" y="412.96" font-family="Pretendard, 'Apple SD Gothic Neo', 'Malgun Gothic', Arial, sans-serif" font-size="12.8" font-weight="500" fill="#6B7280" text-anchor="middle">3월</text>
+<text x="427.62" y="412.96" font-family="Pretendard, 'Apple SD Gothic Neo', 'Malgun Gothic', Arial, sans-serif" font-size="12.8" font-weight="500" fill="#6B7280" text-anchor="middle">4월</text>
+<text x="531.38" y="412.96" font-family="Pretendard, 'Apple SD Gothic Neo', 'Malgun Gothic', Arial, sans-serif" font-size="12.8" font-weight="500" fill="#6B7280" text-anchor="middle">5월</text>
+<text x="635.14" y="412.96" font-family="Pretendard, 'Apple SD Gothic Neo', 'Malgun Gothic', Arial, sans-serif" font-size="12.8" font-weight="500" fill="#6B7280" text-anchor="middle">6월</text>
+<line x1="39.48" y1="395.68" x2="712" y2="395.68" stroke="#D4D4D4" stroke-width="1"/>
+<path d="M116.34,164.51 L220.10,150.06 L323.86,128.39 L427.62,99.50 L531.38,70.60 L635.14,48.93" fill="none" stroke="#4633E3" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/>
+<circle cx="635.14" cy="48.93" r="3.2" fill="#4633E3"/>
+<text x="643.14" y="53.28" font-family="Pretendard, 'Apple SD Gothic Neo', 'Malgun Gothic', Arial, sans-serif" font-size="12.8" font-weight="600" fill="#1A1A1A">58%</text>
+<path d="M116.34,381.23 L220.10,374.01 L323.86,359.56 L427.62,366.78 L531.38,345.11 L635.14,330.66" fill="none" stroke="#4633E3" stroke-width="2" stroke-linejoin="round" stroke-linecap="round" stroke-opacity="0.6"/>
+<circle cx="635.14" cy="330.66" r="3.2" fill="#4633E3" fill-opacity="0.6"/>
+<text x="643.14" y="335.02" font-family="Pretendard, 'Apple SD Gothic Neo', 'Malgun Gothic', Arial, sans-serif" font-size="12.8" font-weight="600" fill="#1A1A1A">19%</text>
+</g>
+  </g>
+</svg>

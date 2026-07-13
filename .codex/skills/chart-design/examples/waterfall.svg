@@ -1,0 +1,40 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 500" width="800" height="500">
+  <rect width="800" height="500" fill="#FAFAF9"/>
+  <g transform="translate(40,40)">
+<g id="chart_waterfall" data-chart-type="waterfall">
+<text x="38.48" y="400.03" font-family="Pretendard, 'Apple SD Gothic Neo', 'Malgun Gothic', Arial, sans-serif" font-size="12.8" font-weight="500" fill="#6B7280" text-anchor="end">0억</text>
+<line x1="46.48" y1="298.26" x2="712" y2="298.26" stroke="#E5E7EB" stroke-width="1"/>
+<text x="38.48" y="302.61" font-family="Pretendard, 'Apple SD Gothic Neo', 'Malgun Gothic', Arial, sans-serif" font-size="12.8" font-weight="500" fill="#6B7280" text-anchor="end">50억</text>
+<line x1="46.48" y1="200.84" x2="712" y2="200.84" stroke="#E5E7EB" stroke-width="1"/>
+<text x="38.48" y="205.19" font-family="Pretendard, 'Apple SD Gothic Neo', 'Malgun Gothic', Arial, sans-serif" font-size="12.8" font-weight="500" fill="#6B7280" text-anchor="end">100억</text>
+<line x1="46.48" y1="103.42" x2="712" y2="103.42" stroke="#E5E7EB" stroke-width="1"/>
+<text x="38.48" y="107.77" font-family="Pretendard, 'Apple SD Gothic Neo', 'Malgun Gothic', Arial, sans-serif" font-size="12.8" font-weight="500" fill="#6B7280" text-anchor="end">150억</text>
+<line x1="46.48" y1="6" x2="712" y2="6" stroke="#E5E7EB" stroke-width="1"/>
+<text x="38.48" y="10.35" font-family="Pretendard, 'Apple SD Gothic Neo', 'Malgun Gothic', Arial, sans-serif" font-size="12.8" font-weight="500" fill="#6B7280" text-anchor="end">200억</text>
+<text x="122.53" y="412.96" font-family="Pretendard, 'Apple SD Gothic Neo', 'Malgun Gothic', Arial, sans-serif" font-size="12.8" font-weight="500" fill="#6B7280" text-anchor="middle">기초 이익</text>
+<text x="225.22" y="412.96" font-family="Pretendard, 'Apple SD Gothic Neo', 'Malgun Gothic', Arial, sans-serif" font-size="12.8" font-weight="500" fill="#6B7280" text-anchor="middle">매출 증가</text>
+<text x="327.90" y="412.96" font-family="Pretendard, 'Apple SD Gothic Neo', 'Malgun Gothic', Arial, sans-serif" font-size="12.8" font-weight="500" fill="#6B7280" text-anchor="middle">원가 상승</text>
+<text x="430.58" y="412.96" font-family="Pretendard, 'Apple SD Gothic Neo', 'Malgun Gothic', Arial, sans-serif" font-size="12.8" font-weight="500" fill="#6B7280" text-anchor="middle">환율 효과</text>
+<text x="533.26" y="412.96" font-family="Pretendard, 'Apple SD Gothic Neo', 'Malgun Gothic', Arial, sans-serif" font-size="12.8" font-weight="500" fill="#6B7280" text-anchor="middle">비용 절감</text>
+<text x="635.94" y="412.96" font-family="Pretendard, 'Apple SD Gothic Neo', 'Malgun Gothic', Arial, sans-serif" font-size="12.8" font-weight="500" fill="#6B7280" text-anchor="middle">기말 이익</text>
+<line x1="46.48" y1="395.68" x2="712" y2="395.68" stroke="#D4D4D4" stroke-width="1"/>
+<rect x="84.5" y="161.87" width="76.06" height="233.81" fill="#4633E3" rx="3"/>
+<text x="122.53" y="155.87" font-family="Pretendard, 'Apple SD Gothic Neo', 'Malgun Gothic', Arial, sans-serif" font-size="12.8" font-weight="600" fill="#1A1A1A" text-anchor="middle">120억</text>
+<rect x="187.19" y="74.19" width="76.06" height="87.68" fill="#059669" rx="3"/>
+<text x="225.22" y="68.19" font-family="Pretendard, 'Apple SD Gothic Neo', 'Malgun Gothic', Arial, sans-serif" font-size="12.8" font-weight="600" fill="#1A1A1A" text-anchor="middle">+45억</text>
+<line x1="160.56" y1="161.87" x2="187.19" y2="161.87" stroke="#D4D4D4" stroke-width="1" stroke-dasharray="3,3"/>
+<rect x="289.87" y="74.19" width="76.06" height="54.56" fill="#E11D48" rx="3"/>
+<text x="327.90" y="68.19" font-family="Pretendard, 'Apple SD Gothic Neo', 'Malgun Gothic', Arial, sans-serif" font-size="12.8" font-weight="600" fill="#1A1A1A" text-anchor="middle">-28억</text>
+<line x1="263.25" y1="74.19" x2="289.87" y2="74.19" stroke="#D4D4D4" stroke-width="1" stroke-dasharray="3,3"/>
+<rect x="392.55" y="128.75" width="76.06" height="23.38" fill="#E11D48" rx="3"/>
+<text x="430.58" y="122.75" font-family="Pretendard, 'Apple SD Gothic Neo', 'Malgun Gothic', Arial, sans-serif" font-size="12.8" font-weight="600" fill="#1A1A1A" text-anchor="middle">-12억</text>
+<line x1="365.93" y1="128.75" x2="392.55" y2="128.75" stroke="#D4D4D4" stroke-width="1" stroke-dasharray="3,3"/>
+<rect x="495.23" y="117.06" width="76.06" height="35.07" fill="#059669" rx="3"/>
+<text x="533.26" y="111.06" font-family="Pretendard, 'Apple SD Gothic Neo', 'Malgun Gothic', Arial, sans-serif" font-size="12.8" font-weight="600" fill="#1A1A1A" text-anchor="middle">+18억</text>
+<line x1="468.61" y1="152.13" x2="495.23" y2="152.13" stroke="#D4D4D4" stroke-width="1" stroke-dasharray="3,3"/>
+<rect x="597.91" y="117.06" width="76.06" height="278.62" fill="#4633E3" rx="3"/>
+<text x="635.94" y="111.06" font-family="Pretendard, 'Apple SD Gothic Neo', 'Malgun Gothic', Arial, sans-serif" font-size="12.8" font-weight="600" fill="#1A1A1A" text-anchor="middle">143억</text>
+<line x1="571.29" y1="117.06" x2="597.91" y2="117.06" stroke="#D4D4D4" stroke-width="1" stroke-dasharray="3,3"/>
+</g>
+  </g>
+</svg>

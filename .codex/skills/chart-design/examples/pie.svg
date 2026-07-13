@@ -1,0 +1,15 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 500" width="640" height="500">
+  <rect width="640" height="500" fill="#FAFAF9"/>
+  <g transform="translate(40,40)">
+<g id="chart_pie" data-chart-type="pie">
+<path d="M280.00,210.00 L280.00,33.28 A176.72,176.72 0 0 1 365.14,364.86 Z" fill="#4633E3" stroke="#FAFAF9" stroke-width="2" stroke-linejoin="round" fill-opacity="0.85"/>
+<text x="460.85" y="166.12" font-family="Pretendard, 'Apple SD Gothic Neo', 'Malgun Gothic', Arial, sans-serif" font-size="12.8" font-weight="500" fill="#6B7280">네이버 42%</text>
+<path d="M280.00,210.00 L365.14,364.86 A176.72,176.72 0 0 1 104.67,232.15 Z" fill="#4633E3" stroke="#FAFAF9" stroke-width="2" stroke-linejoin="round" fill-opacity="0.6"/>
+<text x="195.23" y="378.93" font-family="Pretendard, 'Apple SD Gothic Neo', 'Malgun Gothic', Arial, sans-serif" font-size="12.8" font-weight="500" fill="#6B7280" text-anchor="end">구글 31%</text>
+<path d="M280.00,210.00 L104.67,232.15 A176.72,176.72 0 0 1 151.18,89.03 Z" fill="#4633E3" stroke="#FAFAF9" stroke-width="2" stroke-linejoin="round" fill-opacity="0.4"/>
+<text x="102.42" y="154.86" font-family="Pretendard, 'Apple SD Gothic Neo', 'Malgun Gothic', Arial, sans-serif" font-size="12.8" font-weight="500" fill="#6B7280" text-anchor="end">다음 14%</text>
+<path d="M280.00,210.00 L151.18,89.03 A176.72,176.72 0 0 1 280.00,33.28 Z" fill="#4633E3" stroke="#FAFAF9" stroke-width="2" stroke-linejoin="round" fill-opacity="0.25"/>
+<text x="205.84" y="41.20" font-family="Pretendard, 'Apple SD Gothic Neo', 'Malgun Gothic', Arial, sans-serif" font-size="12.8" font-weight="500" fill="#6B7280" text-anchor="end">기타 13%</text>
+</g>
+  </g>
+</svg>

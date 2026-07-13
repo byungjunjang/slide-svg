@@ -1,0 +1,29 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 500" width="800" height="500">
+  <rect width="800" height="500" fill="#FAFAF9"/>
+  <g transform="translate(40,40)">
+<g id="chart_area" data-chart-type="area">
+<text x="43.38" y="400.03" font-family="Pretendard, 'Apple SD Gothic Neo', 'Malgun Gothic', Arial, sans-serif" font-size="12.8" font-weight="500" fill="#6B7280" text-anchor="end">0TB</text>
+<line x1="51.38" y1="317.74" x2="712" y2="317.74" stroke="#E5E7EB" stroke-width="1"/>
+<text x="43.38" y="322.10" font-family="Pretendard, 'Apple SD Gothic Neo', 'Malgun Gothic', Arial, sans-serif" font-size="12.8" font-weight="500" fill="#6B7280" text-anchor="end">50TB</text>
+<line x1="51.38" y1="239.81" x2="712" y2="239.81" stroke="#E5E7EB" stroke-width="1"/>
+<text x="43.38" y="244.16" font-family="Pretendard, 'Apple SD Gothic Neo', 'Malgun Gothic', Arial, sans-serif" font-size="12.8" font-weight="500" fill="#6B7280" text-anchor="end">100TB</text>
+<line x1="51.38" y1="161.87" x2="712" y2="161.87" stroke="#E5E7EB" stroke-width="1"/>
+<text x="43.38" y="166.22" font-family="Pretendard, 'Apple SD Gothic Neo', 'Malgun Gothic', Arial, sans-serif" font-size="12.8" font-weight="500" fill="#6B7280" text-anchor="end">150TB</text>
+<line x1="51.38" y1="83.94" x2="712" y2="83.94" stroke="#E5E7EB" stroke-width="1"/>
+<text x="43.38" y="88.29" font-family="Pretendard, 'Apple SD Gothic Neo', 'Malgun Gothic', Arial, sans-serif" font-size="12.8" font-weight="500" fill="#6B7280" text-anchor="end">200TB</text>
+<line x1="51.38" y1="6" x2="712" y2="6" stroke="#E5E7EB" stroke-width="1"/>
+<text x="43.38" y="10.35" font-family="Pretendard, 'Apple SD Gothic Neo', 'Malgun Gothic', Arial, sans-serif" font-size="12.8" font-weight="500" fill="#6B7280" text-anchor="end">250TB</text>
+<text x="126.88" y="412.96" font-family="Pretendard, 'Apple SD Gothic Neo', 'Malgun Gothic', Arial, sans-serif" font-size="12.8" font-weight="500" fill="#6B7280" text-anchor="middle">2021</text>
+<text x="228.80" y="412.96" font-family="Pretendard, 'Apple SD Gothic Neo', 'Malgun Gothic', Arial, sans-serif" font-size="12.8" font-weight="500" fill="#6B7280" text-anchor="middle">2022</text>
+<text x="330.73" y="412.96" font-family="Pretendard, 'Apple SD Gothic Neo', 'Malgun Gothic', Arial, sans-serif" font-size="12.8" font-weight="500" fill="#6B7280" text-anchor="middle">2023</text>
+<text x="432.65" y="412.96" font-family="Pretendard, 'Apple SD Gothic Neo', 'Malgun Gothic', Arial, sans-serif" font-size="12.8" font-weight="500" fill="#6B7280" text-anchor="middle">2024</text>
+<text x="534.58" y="412.96" font-family="Pretendard, 'Apple SD Gothic Neo', 'Malgun Gothic', Arial, sans-serif" font-size="12.8" font-weight="500" fill="#6B7280" text-anchor="middle">2025</text>
+<text x="636.50" y="412.96" font-family="Pretendard, 'Apple SD Gothic Neo', 'Malgun Gothic', Arial, sans-serif" font-size="12.8" font-weight="500" fill="#6B7280" text-anchor="middle">2026</text>
+<line x1="51.38" y1="395.68" x2="712" y2="395.68" stroke="#D4D4D4" stroke-width="1"/>
+<path d="M126.88,376.98 L228.80,356.71 L330.73,327.10 L432.65,274.10 L534.58,193.05 L636.50,68.35 L636.50,395.68 L126.88,395.68 Z" fill="#4633E3" fill-opacity="0.18"/>
+<path d="M126.88,376.98 L228.80,356.71 L330.73,327.10 L432.65,274.10 L534.58,193.05 L636.50,68.35" fill="none" stroke="#4633E3" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/>
+<circle cx="636.5" cy="68.35" r="3.2" fill="#4633E3"/>
+<text x="644.50" y="72.70" font-family="Pretendard, 'Apple SD Gothic Neo', 'Malgun Gothic', Arial, sans-serif" font-size="12.8" font-weight="600" fill="#1A1A1A">210TB</text>
+</g>
+  </g>
+</svg>

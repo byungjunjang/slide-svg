@@ -69,7 +69,8 @@ For complete tool documentation, see `${SKILL_DIR}/scripts/README.md`.
 | Index | Path | Purpose |
 |-------|------|---------|
 | Layout template (active theme) | `${SKILL_DIR}/templates/layouts/<active-theme>/` (currently `jangpm/`) | The active theme's layout pack: `01_cover.svg`, `02_chapter.svg`, `03_content.svg`, `04_ending.svg`, `design_spec.md`. `/theme-init` renames this directory on a swap |
-| Visualization templates | `${SKILL_DIR}/templates/charts/charts_index.json` | Chart / infographic / diagram SVG templates. **Under the active-theme lock**: Executor overrides fills to the active accent's opacity ladder regardless of template's native palette |
+| Visualization templates | `${SKILL_DIR}/templates/charts/charts_index.json` | Chart / infographic / diagram SVG templates — composition reference and the path for types outside chart-design's 21. **Under the active-theme lock**: Executor overrides fills to the active accent's opacity ladder regardless of template's native palette |
+| Data-driven chart renderer | `${REPO_ROOT}/.claude/skills/chart-design/` | 21 quantitative chart types rendered from data spec JSONs (`scripts/render_chart.py`); geometry computed, style resolved from active theme tokens. Executor uses this instead of hand-drawing whenever a slide charts real numbers (executor.md §7) |
 | Icon library | `${REPO_ROOT}/assets/icons/tabler-outline/<name>.svg` (Claude Code) · `${SKILL_DIR}/templates/icons/tabler-outline/<name>.svg` (claude.ai essentials) | Lucide-compatible line-art icons (Jangpm-preferred). Fallback library: `tabler-filled/`. `embed_icons.py` resolves `data-icon="tabler-outline/<name>"` against the external repo asset first, then the bundled essentials inside the skill, then warns and skips. Search the full library with `grep <keyword> ${REPO_ROOT}/assets/icons/icons_index.txt`; the bundled essentials are listable via `ls ${SKILL_DIR}/templates/icons/tabler-outline/`. |
 
 ## Standalone Workflows
@@ -270,6 +271,7 @@ Before switching roles, you **MUST first read** the corresponding reference file
 | Anti-slop theme literals (regenerated on /theme-init) | `references/anti-slop-theme.md` |
 | Layout pattern registry (30+ patterns) | `references/patterns.md` |
 | Diagram type grammar (14 types, native SVG) | `references/diagram-types.md` |
+| Data chart selection + spec schema + embedding contract | `../chart-design/SKILL.md` (+ its `references/spec-format.md`, `references/integration.md`) |
 | HTML skeleton (for preview mode) | `references/skeleton.md` |
 | Library usage (Reveal.js, Chart.js, Mermaid, Lucide) | `references/libraries.md` |
 | Visual assets (illustration style) | `references/visual-assets.md` |

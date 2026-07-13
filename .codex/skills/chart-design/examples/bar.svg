@@ -1,0 +1,38 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 500" width="800" height="500">
+  <rect width="800" height="500" fill="#FAFAF9"/>
+  <g transform="translate(40,40)">
+<g id="chart_bar" data-chart-type="bar">
+<text x="36.83" y="400.03" font-family="Pretendard, 'Apple SD Gothic Neo', 'Malgun Gothic', Arial, sans-serif" font-size="12.8" font-weight="500" fill="#6B7280" text-anchor="end">0억</text>
+<line x1="44.83" y1="340.01" x2="712" y2="340.01" stroke="#E5E7EB" stroke-width="1"/>
+<text x="36.83" y="344.36" font-family="Pretendard, 'Apple SD Gothic Neo', 'Malgun Gothic', Arial, sans-serif" font-size="12.8" font-weight="500" fill="#6B7280" text-anchor="end">20억</text>
+<line x1="44.83" y1="284.34" x2="712" y2="284.34" stroke="#E5E7EB" stroke-width="1"/>
+<text x="36.83" y="288.69" font-family="Pretendard, 'Apple SD Gothic Neo', 'Malgun Gothic', Arial, sans-serif" font-size="12.8" font-weight="500" fill="#6B7280" text-anchor="end">40억</text>
+<line x1="44.83" y1="228.67" x2="712" y2="228.67" stroke="#E5E7EB" stroke-width="1"/>
+<text x="36.83" y="233.03" font-family="Pretendard, 'Apple SD Gothic Neo', 'Malgun Gothic', Arial, sans-serif" font-size="12.8" font-weight="500" fill="#6B7280" text-anchor="end">60억</text>
+<line x1="44.83" y1="173.01" x2="712" y2="173.01" stroke="#E5E7EB" stroke-width="1"/>
+<text x="36.83" y="177.36" font-family="Pretendard, 'Apple SD Gothic Neo', 'Malgun Gothic', Arial, sans-serif" font-size="12.8" font-weight="500" fill="#6B7280" text-anchor="end">80억</text>
+<line x1="44.83" y1="117.34" x2="712" y2="117.34" stroke="#E5E7EB" stroke-width="1"/>
+<text x="36.83" y="121.69" font-family="Pretendard, 'Apple SD Gothic Neo', 'Malgun Gothic', Arial, sans-serif" font-size="12.8" font-weight="500" fill="#6B7280" text-anchor="end">100억</text>
+<line x1="44.83" y1="61.67" x2="712" y2="61.67" stroke="#E5E7EB" stroke-width="1"/>
+<text x="36.83" y="66.02" font-family="Pretendard, 'Apple SD Gothic Neo', 'Malgun Gothic', Arial, sans-serif" font-size="12.8" font-weight="500" fill="#6B7280" text-anchor="end">120억</text>
+<line x1="44.83" y1="6" x2="712" y2="6" stroke="#E5E7EB" stroke-width="1"/>
+<text x="36.83" y="10.35" font-family="Pretendard, 'Apple SD Gothic Neo', 'Malgun Gothic', Arial, sans-serif" font-size="12.8" font-weight="500" fill="#6B7280" text-anchor="end">140억</text>
+<text x="134.98" y="412.96" font-family="Pretendard, 'Apple SD Gothic Neo', 'Malgun Gothic', Arial, sans-serif" font-size="12.8" font-weight="500" fill="#6B7280" text-anchor="middle">서울</text>
+<text x="256.70" y="412.96" font-family="Pretendard, 'Apple SD Gothic Neo', 'Malgun Gothic', Arial, sans-serif" font-size="12.8" font-weight="500" fill="#6B7280" text-anchor="middle">부산</text>
+<text x="378.41" y="412.96" font-family="Pretendard, 'Apple SD Gothic Neo', 'Malgun Gothic', Arial, sans-serif" font-size="12.8" font-weight="500" fill="#6B7280" text-anchor="middle">대구</text>
+<text x="500.13" y="412.96" font-family="Pretendard, 'Apple SD Gothic Neo', 'Malgun Gothic', Arial, sans-serif" font-size="12.8" font-weight="500" fill="#6B7280" text-anchor="middle">인천</text>
+<text x="621.84" y="412.96" font-family="Pretendard, 'Apple SD Gothic Neo', 'Malgun Gothic', Arial, sans-serif" font-size="12.8" font-weight="500" fill="#6B7280" text-anchor="middle">광주</text>
+<line x1="44.83" y1="395.68" x2="712" y2="395.68" stroke="#D4D4D4" stroke-width="1"/>
+<rect x="89.9" y="50.53" width="90.16" height="345.15" fill="#4633E3" rx="4" fill-opacity="0.85"/>
+<text x="134.98" y="44.53" font-family="Pretendard, 'Apple SD Gothic Neo', 'Malgun Gothic', Arial, sans-serif" font-size="12.8" font-weight="600" fill="#1A1A1A" text-anchor="middle">124억</text>
+<rect x="211.62" y="153.52" width="90.16" height="242.16" fill="#6B7280" rx="4" fill-opacity="0.3"/>
+<text x="256.70" y="147.52" font-family="Pretendard, 'Apple SD Gothic Neo', 'Malgun Gothic', Arial, sans-serif" font-size="12.8" font-weight="600" fill="#1A1A1A" text-anchor="middle">87억</text>
+<rect x="333.33" y="223.11" width="90.16" height="172.57" fill="#6B7280" rx="4" fill-opacity="0.3"/>
+<text x="378.41" y="217.11" font-family="Pretendard, 'Apple SD Gothic Neo', 'Malgun Gothic', Arial, sans-serif" font-size="12.8" font-weight="600" fill="#1A1A1A" text-anchor="middle">62억</text>
+<rect x="455.05" y="131.25" width="90.16" height="264.43" fill="#6B7280" rx="4" fill-opacity="0.3"/>
+<text x="500.13" y="125.25" font-family="Pretendard, 'Apple SD Gothic Neo', 'Malgun Gothic', Arial, sans-serif" font-size="12.8" font-weight="600" fill="#1A1A1A" text-anchor="middle">95억</text>
+<rect x="576.76" y="281.56" width="90.16" height="114.12" fill="#6B7280" rx="4" fill-opacity="0.3"/>
+<text x="621.84" y="275.56" font-family="Pretendard, 'Apple SD Gothic Neo', 'Malgun Gothic', Arial, sans-serif" font-size="12.8" font-weight="600" fill="#1A1A1A" text-anchor="middle">41억</text>
+</g>
+  </g>
+</svg>

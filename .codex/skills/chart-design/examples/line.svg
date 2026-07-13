@@ -1,0 +1,35 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 500" width="800" height="500">
+  <rect width="800" height="500" fill="#FAFAF9"/>
+  <g transform="translate(40,40)">
+<g id="chart_line" data-chart-type="line">
+<line x1="46.48" y1="395.68" x2="712" y2="395.68" stroke="#E5E7EB" stroke-width="1"/>
+<text x="38.48" y="400.03" font-family="Pretendard, 'Apple SD Gothic Neo', 'Malgun Gothic', Arial, sans-serif" font-size="12.8" font-weight="500" fill="#6B7280" text-anchor="end">100만</text>
+<line x1="46.48" y1="317.74" x2="712" y2="317.74" stroke="#E5E7EB" stroke-width="1"/>
+<text x="38.48" y="322.10" font-family="Pretendard, 'Apple SD Gothic Neo', 'Malgun Gothic', Arial, sans-serif" font-size="12.8" font-weight="500" fill="#6B7280" text-anchor="end">120만</text>
+<line x1="46.48" y1="239.81" x2="712" y2="239.81" stroke="#E5E7EB" stroke-width="1"/>
+<text x="38.48" y="244.16" font-family="Pretendard, 'Apple SD Gothic Neo', 'Malgun Gothic', Arial, sans-serif" font-size="12.8" font-weight="500" fill="#6B7280" text-anchor="end">140만</text>
+<line x1="46.48" y1="161.87" x2="712" y2="161.87" stroke="#E5E7EB" stroke-width="1"/>
+<text x="38.48" y="166.22" font-family="Pretendard, 'Apple SD Gothic Neo', 'Malgun Gothic', Arial, sans-serif" font-size="12.8" font-weight="500" fill="#6B7280" text-anchor="end">160만</text>
+<line x1="46.48" y1="83.94" x2="712" y2="83.94" stroke="#E5E7EB" stroke-width="1"/>
+<text x="38.48" y="88.29" font-family="Pretendard, 'Apple SD Gothic Neo', 'Malgun Gothic', Arial, sans-serif" font-size="12.8" font-weight="500" fill="#6B7280" text-anchor="end">180만</text>
+<line x1="46.48" y1="6" x2="712" y2="6" stroke="#E5E7EB" stroke-width="1"/>
+<text x="38.48" y="10.35" font-family="Pretendard, 'Apple SD Gothic Neo', 'Malgun Gothic', Arial, sans-serif" font-size="12.8" font-weight="500" fill="#6B7280" text-anchor="end">200만</text>
+<text x="85.97" y="412.96" font-family="Pretendard, 'Apple SD Gothic Neo', 'Malgun Gothic', Arial, sans-serif" font-size="12.8" font-weight="500" fill="#6B7280" text-anchor="middle">1월</text>
+<text x="139.29" y="412.96" font-family="Pretendard, 'Apple SD Gothic Neo', 'Malgun Gothic', Arial, sans-serif" font-size="12.8" font-weight="500" fill="#6B7280" text-anchor="middle">2월</text>
+<text x="192.61" y="412.96" font-family="Pretendard, 'Apple SD Gothic Neo', 'Malgun Gothic', Arial, sans-serif" font-size="12.8" font-weight="500" fill="#6B7280" text-anchor="middle">3월</text>
+<text x="245.94" y="412.96" font-family="Pretendard, 'Apple SD Gothic Neo', 'Malgun Gothic', Arial, sans-serif" font-size="12.8" font-weight="500" fill="#6B7280" text-anchor="middle">4월</text>
+<text x="299.26" y="412.96" font-family="Pretendard, 'Apple SD Gothic Neo', 'Malgun Gothic', Arial, sans-serif" font-size="12.8" font-weight="500" fill="#6B7280" text-anchor="middle">5월</text>
+<text x="352.58" y="412.96" font-family="Pretendard, 'Apple SD Gothic Neo', 'Malgun Gothic', Arial, sans-serif" font-size="12.8" font-weight="500" fill="#6B7280" text-anchor="middle">6월</text>
+<text x="405.90" y="412.96" font-family="Pretendard, 'Apple SD Gothic Neo', 'Malgun Gothic', Arial, sans-serif" font-size="12.8" font-weight="500" fill="#6B7280" text-anchor="middle">7월</text>
+<text x="459.22" y="412.96" font-family="Pretendard, 'Apple SD Gothic Neo', 'Malgun Gothic', Arial, sans-serif" font-size="12.8" font-weight="500" fill="#6B7280" text-anchor="middle">8월</text>
+<text x="512.54" y="412.96" font-family="Pretendard, 'Apple SD Gothic Neo', 'Malgun Gothic', Arial, sans-serif" font-size="12.8" font-weight="500" fill="#6B7280" text-anchor="middle">9월</text>
+<text x="565.86" y="412.96" font-family="Pretendard, 'Apple SD Gothic Neo', 'Malgun Gothic', Arial, sans-serif" font-size="12.8" font-weight="500" fill="#6B7280" text-anchor="middle">10월</text>
+<text x="619.18" y="412.96" font-family="Pretendard, 'Apple SD Gothic Neo', 'Malgun Gothic', Arial, sans-serif" font-size="12.8" font-weight="500" fill="#6B7280" text-anchor="middle">11월</text>
+<text x="672.50" y="412.96" font-family="Pretendard, 'Apple SD Gothic Neo', 'Malgun Gothic', Arial, sans-serif" font-size="12.8" font-weight="500" fill="#6B7280" text-anchor="middle">12월</text>
+<line x1="46.48" y1="395.68" x2="712" y2="395.68" stroke="#D4D4D4" stroke-width="1"/>
+<path d="M85.97,387.89 L139.29,364.51 L192.61,337.23 L245.94,313.85 L299.26,286.57 L352.58,251.50 L405.90,220.32 L459.22,196.94 L512.54,161.87 L565.86,115.11 L619.18,80.04 L672.50,29.38" fill="none" stroke="#4633E3" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/>
+<circle cx="672.5" cy="29.38" r="3.2" fill="#4633E3"/>
+<text x="680.50" y="33.73" font-family="Pretendard, 'Apple SD Gothic Neo', 'Malgun Gothic', Arial, sans-serif" font-size="12.8" font-weight="600" fill="#1A1A1A">194만</text>
+</g>
+  </g>
+</svg>

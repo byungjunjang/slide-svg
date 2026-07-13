@@ -1,0 +1,37 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 500" width="800" height="500">
+  <rect width="800" height="500" fill="#FAFAF9"/>
+  <g transform="translate(40,40)">
+<g id="chart_horizontal_bar" data-chart-type="horizontal_bar">
+<text x="113.88" y="413.60" font-family="Pretendard, 'Apple SD Gothic Neo', 'Malgun Gothic', Arial, sans-serif" font-size="12.8" font-weight="500" fill="#6B7280" text-anchor="middle">0점</text>
+<line x1="233.5" y1="6" x2="233.5" y2="396.96" stroke="#E5E7EB" stroke-width="1"/>
+<text x="233.50" y="413.60" font-family="Pretendard, 'Apple SD Gothic Neo', 'Malgun Gothic', Arial, sans-serif" font-size="12.8" font-weight="500" fill="#6B7280" text-anchor="middle">20점</text>
+<line x1="353.12" y1="6" x2="353.12" y2="396.96" stroke="#E5E7EB" stroke-width="1"/>
+<text x="353.12" y="413.60" font-family="Pretendard, 'Apple SD Gothic Neo', 'Malgun Gothic', Arial, sans-serif" font-size="12.8" font-weight="500" fill="#6B7280" text-anchor="middle">40점</text>
+<line x1="472.75" y1="6" x2="472.75" y2="396.96" stroke="#E5E7EB" stroke-width="1"/>
+<text x="472.75" y="413.60" font-family="Pretendard, 'Apple SD Gothic Neo', 'Malgun Gothic', Arial, sans-serif" font-size="12.8" font-weight="500" fill="#6B7280" text-anchor="middle">60점</text>
+<line x1="592.38" y1="6" x2="592.38" y2="396.96" stroke="#E5E7EB" stroke-width="1"/>
+<text x="592.38" y="413.60" font-family="Pretendard, 'Apple SD Gothic Neo', 'Malgun Gothic', Arial, sans-serif" font-size="12.8" font-weight="500" fill="#6B7280" text-anchor="middle">80점</text>
+<line x1="712" y1="6" x2="712" y2="396.96" stroke="#E5E7EB" stroke-width="1"/>
+<text x="712.00" y="413.60" font-family="Pretendard, 'Apple SD Gothic Neo', 'Malgun Gothic', Arial, sans-serif" font-size="12.8" font-weight="500" fill="#6B7280" text-anchor="middle">100점</text>
+<text x="103.88" y="55.03" font-family="Pretendard, 'Apple SD Gothic Neo', 'Malgun Gothic', Arial, sans-serif" font-size="12.8" font-weight="500" fill="#6B7280" text-anchor="end">고객 만족도 개선</text>
+<text x="103.88" y="115.35" font-family="Pretendard, 'Apple SD Gothic Neo', 'Malgun Gothic', Arial, sans-serif" font-size="12.8" font-weight="500" fill="#6B7280" text-anchor="end">신규 기능 출시 속도</text>
+<text x="103.88" y="175.67" font-family="Pretendard, 'Apple SD Gothic Neo', 'Malgun Gothic', Arial, sans-serif" font-size="12.8" font-weight="500" fill="#6B7280" text-anchor="end">운영 비용 절감</text>
+<text x="103.88" y="235.99" font-family="Pretendard, 'Apple SD Gothic Neo', 'Malgun Gothic', Arial, sans-serif" font-size="12.8" font-weight="500" fill="#6B7280" text-anchor="end">브랜드 인지도 상승</text>
+<text x="103.88" y="296.31" font-family="Pretendard, 'Apple SD Gothic Neo', 'Malgun Gothic', Arial, sans-serif" font-size="12.8" font-weight="500" fill="#6B7280" text-anchor="end">내부 협업 효율</text>
+<text x="103.88" y="356.63" font-family="Pretendard, 'Apple SD Gothic Neo', 'Malgun Gothic', Arial, sans-serif" font-size="12.8" font-weight="500" fill="#6B7280" text-anchor="end">파트너 생태계 확장</text>
+<line x1="113.88" y1="6" x2="113.88" y2="396.96" stroke="#D4D4D4" stroke-width="1"/>
+<rect x="113.88" y="28.34" width="526.35" height="44.68" fill="#4633E3" rx="4" fill-opacity="0.85"/>
+<text x="648.23" y="55.03" font-family="Pretendard, 'Apple SD Gothic Neo', 'Malgun Gothic', Arial, sans-serif" font-size="12.8" font-weight="600" fill="#1A1A1A">88점</text>
+<rect x="113.88" y="88.66" width="454.58" height="44.68" fill="#6B7280" rx="4" fill-opacity="0.3"/>
+<text x="576.45" y="115.35" font-family="Pretendard, 'Apple SD Gothic Neo', 'Malgun Gothic', Arial, sans-serif" font-size="12.8" font-weight="600" fill="#1A1A1A">76점</text>
+<rect x="113.88" y="148.98" width="412.71" height="44.68" fill="#6B7280" rx="4" fill-opacity="0.3"/>
+<text x="534.58" y="175.67" font-family="Pretendard, 'Apple SD Gothic Neo', 'Malgun Gothic', Arial, sans-serif" font-size="12.8" font-weight="600" fill="#1A1A1A">69점</text>
+<rect x="113.88" y="209.3" width="382.8" height="44.68" fill="#6B7280" rx="4" fill-opacity="0.3"/>
+<text x="504.68" y="235.99" font-family="Pretendard, 'Apple SD Gothic Neo', 'Malgun Gothic', Arial, sans-serif" font-size="12.8" font-weight="600" fill="#1A1A1A">64점</text>
+<rect x="113.88" y="269.62" width="340.93" height="44.68" fill="#6B7280" rx="4" fill-opacity="0.3"/>
+<text x="462.81" y="296.31" font-family="Pretendard, 'Apple SD Gothic Neo', 'Malgun Gothic', Arial, sans-serif" font-size="12.8" font-weight="600" fill="#1A1A1A">57점</text>
+<rect x="113.88" y="329.94" width="269.16" height="44.68" fill="#6B7280" rx="4" fill-opacity="0.3"/>
+<text x="391.03" y="356.63" font-family="Pretendard, 'Apple SD Gothic Neo', 'Malgun Gothic', Arial, sans-serif" font-size="12.8" font-weight="600" fill="#1A1A1A">45점</text>
+</g>
+  </g>
+</svg>

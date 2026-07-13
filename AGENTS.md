@@ -45,6 +45,13 @@ When the user asks for slides ("슬라이드", "프레젠테이션", "생성PPT"
    the requested `images/<slot>.png` path. If `imagegen` / `image_gen` is not
    available, **HALT** — no PIL/solid-color/placeholder fallback and no
    `/codex-image` dependency in the Codex package.
+5b. **Data charts:** when a slide needs a chart built from real numbers and the
+   type is one of chart-design's 21 quantitative types, do NOT hand-draw the
+   geometry — write a data spec JSON and render it with
+   `python3 .codex/skills/chart-design/scripts/render_chart.py <spec.json> -o <frag.svg> --pos X,Y`.
+   Selection rules + spec schema + embedding contract:
+   `.codex/skills/chart-design/SKILL.md` and its `references/`. Static
+   `templates/charts/` remain the path for types outside the 21.
 6. **Post-processing discipline:** run, as three separate calls,
    `total_md_split.py` → `finalize_svg.py` → `svg_to_pptx.py <project> -s final`.
    Never `cp`. Never add undocumented flags. `-s final` is required.

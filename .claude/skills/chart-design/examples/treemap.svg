@@ -1,0 +1,25 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 500" width="800" height="500">
+  <rect width="800" height="500" fill="#FAFAF9"/>
+  <g transform="translate(40,40)">
+<g id="chart_treemap" data-chart-type="treemap">
+<rect x="1.5" y="1.5" width="233.25" height="417" fill="#4633E3" rx="4" fill-opacity="0.9"/>
+<text x="10.00" y="19.20" font-family="Pretendard, 'Apple SD Gothic Neo', 'Malgun Gothic', Arial, sans-serif" font-size="12.8" font-weight="600" fill="#FFFFFF">클라우드</text>
+<text x="10.00" y="37.12" font-family="Pretendard, 'Apple SD Gothic Neo', 'Malgun Gothic', Arial, sans-serif" font-size="12.8" font-weight="500" fill="#FFFFFF">420억 · 33%</text>
+<rect x="237.75" y="1.5" width="283.88" height="252.29" fill="#4633E3" rx="4" fill-opacity="0.76"/>
+<text x="246.25" y="19.20" font-family="Pretendard, 'Apple SD Gothic Neo', 'Malgun Gothic', Arial, sans-serif" font-size="12.8" font-weight="600" fill="#FFFFFF">모바일</text>
+<text x="246.25" y="37.12" font-family="Pretendard, 'Apple SD Gothic Neo', 'Malgun Gothic', Arial, sans-serif" font-size="12.8" font-weight="500" fill="#FFFFFF">310억 · 24%</text>
+<rect x="237.75" y="256.79" width="283.88" height="161.71" fill="#4633E3" rx="4" fill-opacity="0.62"/>
+<text x="246.25" y="274.49" font-family="Pretendard, 'Apple SD Gothic Neo', 'Malgun Gothic', Arial, sans-serif" font-size="12.8" font-weight="600" fill="#FFFFFF">커머스</text>
+<text x="246.25" y="292.41" font-family="Pretendard, 'Apple SD Gothic Neo', 'Malgun Gothic', Arial, sans-serif" font-size="12.8" font-weight="500" fill="#FFFFFF">200억 · 16%</text>
+<rect x="524.62" y="1.5" width="193.88" height="177" fill="#4633E3" rx="4" fill-opacity="0.49"/>
+<text x="533.12" y="19.20" font-family="Pretendard, 'Apple SD Gothic Neo', 'Malgun Gothic', Arial, sans-serif" font-size="12.8" font-weight="600" fill="#1A1A1A">콘텐츠</text>
+<text x="533.12" y="37.12" font-family="Pretendard, 'Apple SD Gothic Neo', 'Malgun Gothic', Arial, sans-serif" font-size="12.8" font-weight="500" fill="#1A1A1A">150억 · 12%</text>
+<rect x="524.62" y="181.5" width="193.88" height="141" fill="#4633E3" rx="4" fill-opacity="0.35"/>
+<text x="533.12" y="199.20" font-family="Pretendard, 'Apple SD Gothic Neo', 'Malgun Gothic', Arial, sans-serif" font-size="12.8" font-weight="600" fill="#1A1A1A">광고</text>
+<text x="533.12" y="217.12" font-family="Pretendard, 'Apple SD Gothic Neo', 'Malgun Gothic', Arial, sans-serif" font-size="12.8" font-weight="500" fill="#1A1A1A">120억 · 9%</text>
+<rect x="524.62" y="325.5" width="193.88" height="93" fill="#4633E3" rx="4" fill-opacity="0.21"/>
+<text x="533.12" y="343.20" font-family="Pretendard, 'Apple SD Gothic Neo', 'Malgun Gothic', Arial, sans-serif" font-size="12.8" font-weight="600" fill="#1A1A1A">기타</text>
+<text x="533.12" y="361.12" font-family="Pretendard, 'Apple SD Gothic Neo', 'Malgun Gothic', Arial, sans-serif" font-size="12.8" font-weight="500" fill="#1A1A1A">80억 · 6%</text>
+</g>
+  </g>
+</svg>

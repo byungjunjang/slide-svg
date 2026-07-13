@@ -1,0 +1,47 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 500" width="800" height="500">
+  <rect width="800" height="500" fill="#FAFAF9"/>
+  <g transform="translate(40,40)">
+<g id="chart_stacked_bar" data-chart-type="stacked_bar">
+<rect x="44.6" y="3.4" width="10" height="10" fill="#4633E3" rx="4" fill-opacity="0.85"/>
+<text x="60.60" y="12.75" font-family="Pretendard, 'Apple SD Gothic Neo', 'Malgun Gothic', Arial, sans-serif" font-size="12.8" font-weight="500" fill="#6B7280">구독</text>
+<rect x="100.72" y="3.4" width="10" height="10" fill="#4633E3" rx="4" fill-opacity="0.6"/>
+<text x="116.72" y="12.75" font-family="Pretendard, 'Apple SD Gothic Neo', 'Malgun Gothic', Arial, sans-serif" font-size="12.8" font-weight="500" fill="#6B7280">광고</text>
+<rect x="156.85" y="3.4" width="10" height="10" fill="#4633E3" rx="4" fill-opacity="0.4"/>
+<text x="172.85" y="12.75" font-family="Pretendard, 'Apple SD Gothic Neo', 'Malgun Gothic', Arial, sans-serif" font-size="12.8" font-weight="500" fill="#6B7280">기타</text>
+<text x="36.60" y="400.03" font-family="Pretendard, 'Apple SD Gothic Neo', 'Malgun Gothic', Arial, sans-serif" font-size="12.8" font-weight="500" fill="#6B7280" text-anchor="end">0억</text>
+<line x1="44.6" y1="335.48" x2="712" y2="335.48" stroke="#E5E7EB" stroke-width="1"/>
+<text x="36.60" y="339.83" font-family="Pretendard, 'Apple SD Gothic Neo', 'Malgun Gothic', Arial, sans-serif" font-size="12.8" font-weight="500" fill="#6B7280" text-anchor="end">20억</text>
+<line x1="44.6" y1="275.28" x2="712" y2="275.28" stroke="#E5E7EB" stroke-width="1"/>
+<text x="36.60" y="279.63" font-family="Pretendard, 'Apple SD Gothic Neo', 'Malgun Gothic', Arial, sans-serif" font-size="12.8" font-weight="500" fill="#6B7280" text-anchor="end">40억</text>
+<line x1="44.6" y1="215.08" x2="712" y2="215.08" stroke="#E5E7EB" stroke-width="1"/>
+<text x="36.60" y="219.43" font-family="Pretendard, 'Apple SD Gothic Neo', 'Malgun Gothic', Arial, sans-serif" font-size="12.8" font-weight="500" fill="#6B7280" text-anchor="end">60억</text>
+<line x1="44.6" y1="154.88" x2="712" y2="154.88" stroke="#E5E7EB" stroke-width="1"/>
+<text x="36.60" y="159.23" font-family="Pretendard, 'Apple SD Gothic Neo', 'Malgun Gothic', Arial, sans-serif" font-size="12.8" font-weight="500" fill="#6B7280" text-anchor="end">80억</text>
+<line x1="44.6" y1="94.68" x2="712" y2="94.68" stroke="#E5E7EB" stroke-width="1"/>
+<text x="36.60" y="99.03" font-family="Pretendard, 'Apple SD Gothic Neo', 'Malgun Gothic', Arial, sans-serif" font-size="12.8" font-weight="500" fill="#6B7280" text-anchor="end">100억</text>
+<line x1="44.6" y1="34.48" x2="712" y2="34.48" stroke="#E5E7EB" stroke-width="1"/>
+<text x="36.60" y="38.83" font-family="Pretendard, 'Apple SD Gothic Neo', 'Malgun Gothic', Arial, sans-serif" font-size="12.8" font-weight="500" fill="#6B7280" text-anchor="end">120억</text>
+<text x="154.91" y="412.96" font-family="Pretendard, 'Apple SD Gothic Neo', 'Malgun Gothic', Arial, sans-serif" font-size="12.8" font-weight="500" fill="#6B7280" text-anchor="middle">2023</text>
+<text x="303.84" y="412.96" font-family="Pretendard, 'Apple SD Gothic Neo', 'Malgun Gothic', Arial, sans-serif" font-size="12.8" font-weight="500" fill="#6B7280" text-anchor="middle">2024</text>
+<text x="452.76" y="412.96" font-family="Pretendard, 'Apple SD Gothic Neo', 'Malgun Gothic', Arial, sans-serif" font-size="12.8" font-weight="500" fill="#6B7280" text-anchor="middle">2025</text>
+<text x="601.69" y="412.96" font-family="Pretendard, 'Apple SD Gothic Neo', 'Malgun Gothic', Arial, sans-serif" font-size="12.8" font-weight="500" fill="#6B7280" text-anchor="middle">2026</text>
+<line x1="44.6" y1="395.68" x2="712" y2="395.68" stroke="#D4D4D4" stroke-width="1"/>
+<rect x="99.76" y="305.38" width="110.31" height="90.3" fill="#4633E3" fill-opacity="0.85"/>
+<rect x="99.76" y="239.16" width="110.31" height="66.22" fill="#4633E3" fill-opacity="0.6"/>
+<rect x="99.76" y="215.08" width="110.31" height="24.08" fill="#4633E3" fill-opacity="0.4"/>
+<text x="154.91" y="209.08" font-family="Pretendard, 'Apple SD Gothic Neo', 'Malgun Gothic', Arial, sans-serif" font-size="12.8" font-weight="600" fill="#1A1A1A" text-anchor="middle">60억</text>
+<rect x="248.68" y="269.26" width="110.31" height="126.42" fill="#4633E3" fill-opacity="0.85"/>
+<rect x="248.68" y="194.01" width="110.31" height="75.25" fill="#4633E3" fill-opacity="0.6"/>
+<rect x="248.68" y="166.92" width="110.31" height="27.09" fill="#4633E3" fill-opacity="0.4"/>
+<text x="303.84" y="160.92" font-family="Pretendard, 'Apple SD Gothic Neo', 'Malgun Gothic', Arial, sans-serif" font-size="12.8" font-weight="600" fill="#1A1A1A" text-anchor="middle">76억</text>
+<rect x="397.6" y="221.1" width="110.31" height="174.58" fill="#4633E3" fill-opacity="0.85"/>
+<rect x="397.6" y="139.83" width="110.31" height="81.27" fill="#4633E3" fill-opacity="0.6"/>
+<rect x="397.6" y="106.72" width="110.31" height="33.11" fill="#4633E3" fill-opacity="0.4"/>
+<text x="452.76" y="100.72" font-family="Pretendard, 'Apple SD Gothic Neo', 'Malgun Gothic', Arial, sans-serif" font-size="12.8" font-weight="600" fill="#1A1A1A" text-anchor="middle">96억</text>
+<rect x="546.53" y="172.94" width="110.31" height="222.74" fill="#4633E3" fill-opacity="0.85"/>
+<rect x="546.53" y="82.64" width="110.31" height="90.3" fill="#4633E3" fill-opacity="0.6"/>
+<rect x="546.53" y="46.52" width="110.31" height="36.12" fill="#4633E3" fill-opacity="0.4"/>
+<text x="601.69" y="40.52" font-family="Pretendard, 'Apple SD Gothic Neo', 'Malgun Gothic', Arial, sans-serif" font-size="12.8" font-weight="600" fill="#1A1A1A" text-anchor="middle">116억</text>
+</g>
+  </g>
+</svg>

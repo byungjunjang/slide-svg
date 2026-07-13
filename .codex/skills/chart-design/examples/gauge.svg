@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 560 380" width="560" height="380">
+  <rect width="560" height="380" fill="#FAFAF9"/>
+  <g transform="translate(40,40)">
+<g id="chart_gauge" data-chart-type="gauge">
+<path d="M80.88,276.00 L6.00,276.00 A234.00,234.00 0 0 1 474.00,276.00 L399.12,276.00 A159.12,159.12 0 0 0 80.88,276.00 Z" fill="#F5F5F4"/>
+<path d="M80.88,276.00 L6.00,276.00 A234.00,234.00 0 0 1 394.75,100.47 L345.23,156.64 A159.12,159.12 0 0 0 80.88,276.00 Z" fill="#4633E3"/>
+<text x="240.00" y="250.54" font-family="Pretendard, 'Apple SD Gothic Neo', 'Malgun Gothic', Arial, sans-serif" font-size="40" font-weight="800" fill="#1A1A1A" text-anchor="middle" letter-spacing="-0.8">73%</text>
+<text x="240.00" y="272.30" font-family="Pretendard, 'Apple SD Gothic Neo', 'Malgun Gothic', Arial, sans-serif" font-size="12.8" font-weight="500" fill="#6B7280" text-anchor="middle">연간 목표 달성률</text>
+<text x="43.44" y="293.28" font-family="Pretendard, 'Apple SD Gothic Neo', 'Malgun Gothic', Arial, sans-serif" font-size="12.8" font-weight="500" fill="#9CA3AF" text-anchor="middle">0</text>
+<text x="436.56" y="293.28" font-family="Pretendard, 'Apple SD Gothic Neo', 'Malgun Gothic', Arial, sans-serif" font-size="12.8" font-weight="500" fill="#9CA3AF" text-anchor="middle">100</text>
+</g>
+  </g>
+</svg>

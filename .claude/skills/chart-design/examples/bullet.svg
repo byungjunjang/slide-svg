@@ -1,0 +1,22 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 380" width="800" height="380">
+  <rect width="800" height="380" fill="#FAFAF9"/>
+  <g transform="translate(40,40)">
+<g id="chart_bullet" data-chart-type="bullet">
+<text x="51.38" y="54.35" font-family="Pretendard, 'Apple SD Gothic Neo', 'Malgun Gothic', Arial, sans-serif" font-size="12.8" font-weight="500" fill="#6B7280" text-anchor="end">매출</text>
+<rect x="61.38" y="32" width="574.62" height="36" fill="#F5F5F4" rx="4"/>
+<rect x="61.38" y="41" width="415.61" height="18" fill="#4633E3" rx="4"/>
+<line x1="513.12" y1="25.7" x2="513.12" y2="74.3" stroke="#1A1A1A" stroke-width="2"/>
+<text x="646.00" y="54.35" font-family="Pretendard, 'Apple SD Gothic Neo', 'Malgun Gothic', Arial, sans-serif" font-size="12.8" font-weight="600" fill="#1A1A1A">92억 (92%)</text>
+<text x="51.38" y="154.35" font-family="Pretendard, 'Apple SD Gothic Neo', 'Malgun Gothic', Arial, sans-serif" font-size="12.8" font-weight="500" fill="#6B7280" text-anchor="end">신규 고객</text>
+<rect x="61.38" y="132" width="574.62" height="36" fill="#F5F5F4" rx="4"/>
+<rect x="61.38" y="141" width="422.84" height="18" fill="#4633E3" rx="4"/>
+<line x1="440.84" y1="125.7" x2="440.84" y2="174.3" stroke="#1A1A1A" stroke-width="2"/>
+<text x="646.00" y="154.35" font-family="Pretendard, 'Apple SD Gothic Neo', 'Malgun Gothic', Arial, sans-serif" font-size="12.8" font-weight="600" fill="#1A1A1A">78억 (111%)</text>
+<text x="51.38" y="254.35" font-family="Pretendard, 'Apple SD Gothic Neo', 'Malgun Gothic', Arial, sans-serif" font-size="12.8" font-weight="500" fill="#6B7280" text-anchor="end">NPS</text>
+<rect x="61.38" y="232" width="574.62" height="36" fill="#F5F5F4" rx="4"/>
+<rect x="61.38" y="241" width="292.73" height="18" fill="#4633E3" rx="4"/>
+<line x1="386.63" y1="225.7" x2="386.63" y2="274.3" stroke="#1A1A1A" stroke-width="2"/>
+<text x="646.00" y="254.35" font-family="Pretendard, 'Apple SD Gothic Neo', 'Malgun Gothic', Arial, sans-serif" font-size="12.8" font-weight="600" fill="#1A1A1A">54억 (90%)</text>
+</g>
+  </g>
+</svg>

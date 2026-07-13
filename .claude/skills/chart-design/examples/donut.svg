@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 500" width="640" height="500">
+  <rect width="640" height="500" fill="#FAFAF9"/>
+  <g transform="translate(40,40)">
+<g id="chart_donut" data-chart-type="donut">
+<path d="M280.00,100.43 L280.00,33.28 A176.72,176.72 0 1 1 194.86,364.86 L227.22,306.01 A109.57,109.57 0 1 0 280.00,100.43 Z" fill="#4633E3" stroke="#FAFAF9" stroke-width="2" stroke-linejoin="round" fill-opacity="0.85"/>
+<text x="460.85" y="259.00" font-family="Pretendard, 'Apple SD Gothic Neo', 'Malgun Gothic', Arial, sans-serif" font-size="12.8" font-weight="500" fill="#6B7280">구독 58%</text>
+<path d="M227.22,306.01 L194.86,364.86 A176.72,176.72 0 0 1 137.03,106.13 L191.36,145.60 A109.57,109.57 0 0 0 227.22,306.01 Z" fill="#4633E3" stroke="#FAFAF9" stroke-width="2" stroke-linejoin="round" fill-opacity="0.6"/>
+<text x="97.78" y="253.29" font-family="Pretendard, 'Apple SD Gothic Neo', 'Malgun Gothic', Arial, sans-serif" font-size="12.8" font-weight="500" fill="#6B7280" text-anchor="end">광고 27%</text>
+<path d="M191.36,145.60 L137.03,106.13 A176.72,176.72 0 0 1 280.00,33.28 L280.00,100.43 A109.57,109.57 0 0 0 191.36,145.60 Z" fill="#4633E3" stroke="#FAFAF9" stroke-width="2" stroke-linejoin="round" fill-opacity="0.4"/>
+<text x="195.23" y="46.19" font-family="Pretendard, 'Apple SD Gothic Neo', 'Malgun Gothic', Arial, sans-serif" font-size="12.8" font-weight="500" fill="#6B7280" text-anchor="end">커머스 15%</text>
+<text x="280.00" y="224.40" font-family="Pretendard, 'Apple SD Gothic Neo', 'Malgun Gothic', Arial, sans-serif" font-size="40" font-weight="800" fill="#1A1A1A" text-anchor="middle" letter-spacing="-0.8">1,240억</text>
+</g>
+  </g>
+</svg>

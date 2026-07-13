@@ -1,0 +1,41 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 540" width="640" height="540">
+  <rect width="640" height="540" fill="#FAFAF9"/>
+  <g transform="translate(40,40)">
+<g id="chart_radar" data-chart-type="radar">
+<polygon points="280.00,186.58 322.04,210.85 322.04,259.39 280.00,283.66 237.96,259.39 237.96,210.85" fill="none" stroke="#E5E7EB" stroke-width="1" stroke-linejoin="round"/>
+<polygon points="280.00,138.04 364.07,186.58 364.07,283.66 280.00,332.20 195.93,283.66 195.93,186.58" fill="none" stroke="#E5E7EB" stroke-width="1" stroke-linejoin="round"/>
+<polygon points="280.00,89.50 406.11,162.31 406.11,307.93 280.00,380.74 153.89,307.93 153.89,162.31" fill="none" stroke="#E5E7EB" stroke-width="1" stroke-linejoin="round"/>
+<polygon points="280.00,40.96 448.15,138.04 448.15,332.20 280.00,429.28 111.85,332.20 111.85,138.04" fill="none" stroke="#E5E7EB" stroke-width="1" stroke-linejoin="round"/>
+<line x1="280" y1="235.12" x2="280" y2="40.96" stroke="#E5E7EB" stroke-width="1"/>
+<text x="280.00" y="32.80" font-family="Pretendard, 'Apple SD Gothic Neo', 'Malgun Gothic', Arial, sans-serif" font-size="12.8" font-weight="500" fill="#6B7280" text-anchor="middle">기획</text>
+<line x1="280" y1="235.12" x2="448.15" y2="138.04" stroke="#E5E7EB" stroke-width="1"/>
+<text x="458.54" y="135.88" font-family="Pretendard, 'Apple SD Gothic Neo', 'Malgun Gothic', Arial, sans-serif" font-size="12.8" font-weight="500" fill="#6B7280">개발</text>
+<line x1="280" y1="235.12" x2="448.15" y2="332.2" stroke="#E5E7EB" stroke-width="1"/>
+<text x="458.54" y="342.04" font-family="Pretendard, 'Apple SD Gothic Neo', 'Malgun Gothic', Arial, sans-serif" font-size="12.8" font-weight="500" fill="#6B7280">디자인</text>
+<line x1="280" y1="235.12" x2="280" y2="429.28" stroke="#E5E7EB" stroke-width="1"/>
+<text x="280.00" y="445.12" font-family="Pretendard, 'Apple SD Gothic Neo', 'Malgun Gothic', Arial, sans-serif" font-size="12.8" font-weight="500" fill="#6B7280" text-anchor="middle">마케팅</text>
+<line x1="280" y1="235.12" x2="111.85" y2="332.2" stroke="#E5E7EB" stroke-width="1"/>
+<text x="101.46" y="342.04" font-family="Pretendard, 'Apple SD Gothic Neo', 'Malgun Gothic', Arial, sans-serif" font-size="12.8" font-weight="500" fill="#6B7280" text-anchor="end">운영</text>
+<line x1="280" y1="235.12" x2="111.85" y2="138.04" stroke="#E5E7EB" stroke-width="1"/>
+<text x="101.46" y="135.88" font-family="Pretendard, 'Apple SD Gothic Neo', 'Malgun Gothic', Arial, sans-serif" font-size="12.8" font-weight="500" fill="#6B7280" text-anchor="end">데이터</text>
+<polygon points="280.00,75.91 433.01,146.78 404.43,306.96 280.00,357.44 148.84,310.84 137.07,152.60" fill="#4633E3" stroke="#4633E3" stroke-width="2" stroke-linejoin="round" fill-opacity="0.16"/>
+<circle cx="280" cy="75.91" r="3" fill="#4633E3"/>
+<circle cx="433.01" cy="146.78" r="3" fill="#4633E3"/>
+<circle cx="404.43" cy="306.96" r="3" fill="#4633E3"/>
+<circle cx="280" cy="357.44" r="3" fill="#4633E3"/>
+<circle cx="148.84" cy="310.84" r="3" fill="#4633E3"/>
+<circle cx="137.07" cy="152.6" r="3" fill="#4633E3"/>
+<polygon points="280.00,99.21 406.11,162.31 394.34,301.13 280.00,374.92 169.02,299.19 177.43,175.90" fill="#4633E3" stroke="#4633E3" stroke-width="2" stroke-linejoin="round" fill-opacity="0.1" stroke-opacity="0.6"/>
+<circle cx="280" cy="99.21" r="3" fill="#4633E3" fill-opacity="0.6"/>
+<circle cx="406.11" cy="162.31" r="3" fill="#4633E3" fill-opacity="0.6"/>
+<circle cx="394.34" cy="301.13" r="3" fill="#4633E3" fill-opacity="0.6"/>
+<circle cx="280" cy="374.92" r="3" fill="#4633E3" fill-opacity="0.6"/>
+<circle cx="169.02" cy="299.19" r="3" fill="#4633E3" fill-opacity="0.6"/>
+<circle cx="177.43" cy="175.9" r="3" fill="#4633E3" fill-opacity="0.6"/>
+<rect x="8" y="4" width="10" height="10" fill="#4633E3" rx="2" fill-opacity="0.85"/>
+<text x="24.00" y="14.88" font-family="Pretendard, 'Apple SD Gothic Neo', 'Malgun Gothic', Arial, sans-serif" font-size="12.8" font-weight="500" fill="#6B7280">우리 팀</text>
+<rect x="78.31" y="4" width="10" height="10" fill="#4633E3" rx="2" fill-opacity="0.6"/>
+<text x="94.31" y="14.88" font-family="Pretendard, 'Apple SD Gothic Neo', 'Malgun Gothic', Arial, sans-serif" font-size="12.8" font-weight="500" fill="#6B7280">업계 평균</text>
+</g>
+  </g>
+</svg>
