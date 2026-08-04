@@ -21,6 +21,19 @@ pipeline). Read it. These rules add Codex-side enforcement on top.
 When the user asks for slides ("슬라이드", "프레젠테이션", "생성PPT",
 "make slides", "/slide"):
 
+0. **Fresh-build gate for new-deck requests:** "만들어줘", "생성해줘", or
+   equivalent wording means a new build unless the user explicitly asks to
+   revise, continue, resume, or base the work on an existing deck. Start from a
+   new project slug and run the pipeline from preflight and project init.
+   Same-topic directories under `output/` are reference-only: do not copy,
+   edit, rename, or reuse their plan, design spec, SVGs, notes, images, charts,
+   or PPTX. Create `pipeline_status.json` before generation and record
+   current-run timestamps, artifacts, and command/result evidence for every
+   required stage. Existing files or old timestamps never prove that a stage
+   ran for the current request. Do not declare completion or upload until the
+   full current-run chain has passed export, `verify_deck.py`, exported-render
+   visual inspection, and PPTX archive-integrity verification.
+
 1. **Run preflight first:**
    `.codex/skills/slide/scripts/_py.sh .codex/skills/slide/scripts/preflight.py`
    (add `--needs-images` if the deck needs generated images). If it fails, STOP
@@ -58,6 +71,10 @@ When the user asks for slides ("슬라이드", "프레젠테이션", "생성PPT"
 7. **Completion gate:** before saying the deck is done, run
    `.codex/skills/slide/scripts/_py.sh .codex/skills/slide/scripts/verify_deck.py output/<project>`
    It must exit 0. If it fails, fix the deck — do not declare completion.
+
+For a revision/continuation request, preserve the named existing project and
+mark the run as revision mode in `pipeline_status.json`. Never describe revision
+mode as a fresh full-pipeline build.
 
 ## Non-negotiables (mirror of CLAUDE.md)
 
