@@ -111,6 +111,10 @@ temp_files/
 # resolve icons from assets/icons/<lib>/<name>.svg or the bundled essentials.
 !.claude/skills/slide/references/jangpm-patterns.tar.gz
 !.claude/skills/slide/templates/layouts/jangpm/assets/specimen/preview.tar.gz
+# The Codex mirror carries the same archives; without these a fresh clone lacks
+# them and sync_codex_mirror.py --check reports the mirror as stale.
+!.codex/skills/slide/references/jangpm-patterns.tar.gz
+!.codex/skills/slide/templates/layouts/jangpm/assets/specimen/preview.tar.gz
 
 # Documentation build outputs
 docs/_build/
