@@ -125,7 +125,7 @@ Executor MUST write this full chain in `font-family` on every `<text>` element.
 
 ## VIII. Image Resource List
 
-[Filled by Strategist. For AI-generated images, use the Jangpm visual-assets prompt recipe: `minimal flat illustration, muted / pastel tones, transparent background, line-art style, no gradients, no glow`.]
+[Filled by Strategist. For AI-generated images, use the Jangpm visual-assets prompt recipe: `minimal flat illustration, muted / pastel tones, clean solid #FAFAF9 background, line-art style, no gradients, no glow`.]
 
 ---
 

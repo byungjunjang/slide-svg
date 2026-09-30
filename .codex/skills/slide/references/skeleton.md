@@ -1,7 +1,7 @@
 <!-- Rendered from skeleton.tpl.md by render_prompts.py on /theme-init. Never hand-edit skeleton.md — edit skeleton.tpl.md. -->
 # HTML Skeleton Template
 
-> Every `/slide` output MUST start from this skeleton.
+> HTML preview skeleton — not used by the SVG→PPTX pipeline. Slide pages start from `templates/layouts/<theme>/*.svg`.
 >
 > The colors, font chain, weights, and accent tints in `:root` below are the
 > **active theme** tokens (rendered from `theme-active.json`) — NOT literal jangpm

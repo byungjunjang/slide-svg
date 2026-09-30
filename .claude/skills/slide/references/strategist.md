@@ -24,9 +24,9 @@ Under the `slide` skill, the canvas is **always PPT 16:9 (1280×720)**. The acti
 
 ## 1. Eight Confirmations Process
 
-🚧 **GATE — Mandatory read before proceeding**: Before starting analysis or writing any part of the Design Specification, you **MUST** `read_file` the reference template:
+🚧 **GATE — Mandatory read before proceeding**: Before starting analysis or writing any part of the Design Specification, you **MUST** Read the reference template:
 ```
-read_file templates/design_spec_reference.md
+Read templates/design_spec_reference.md
 ```
 The design_spec.md output **MUST** follow this template's structure exactly (Sections I through XI). After writing, perform a section-by-section self-check: I Project Information ✓ → II Canvas Spec ✓ → III Visual Theme ✓ → IV Typography ✓ → V Layout Principles ✓ → VI Icon Usage ✓ → VII Visualization Reference List ✓ → VIII Image Resource List ✓ → IX Content Outline ✓ → X Speaker Notes Requirements ✓ → XI Technical Constraints Reminder ✓. Any missing section must be completed before outputting the file.
 
@@ -34,7 +34,7 @@ The design_spec.md output **MUST** follow this template's structure exactly (Sec
 
 > **Execution discipline**: This is the only BLOCKING checkpoint remaining in the pipeline under this skill (template selection is automatic — the active theme `jangpm` is always used). Once the user confirms these eight, the AI must automatically complete the Design Specification & Content Outline and seamlessly proceed to subsequent image generation (if applicable), SVG generation, and post-processing — no additional questions or pauses in between.
 
-> **Active Theme Lock (`jangpm`)**: Items (a), (d), (e), (g), and (h) have **locked defaults** under this skill. Present the locked values to the user as confirmations (not choices). Only (b) page count, (c) key information, (f) icon library (within active-theme-compatible options), and content-specific details are genuinely open.
+> **Active Theme Lock (`jangpm`)**: Items (a), (d), (e), (f), and (g) have **locked defaults** under this skill — present them to the user as confirmations (not choices). Only (b) page count, (c) key information, and (h) image approach are open, plus content-specific details.
 
 ### a. Canvas Format — LOCKED
 
@@ -123,12 +123,12 @@ Font OTFs are at `assets/fonts/`. Distribute with the PPTX for recipients who wi
 |--------|----------|-------------------|
 | **A** | No images | Data reports, process documentation (active-theme default — prefer text blocks + charts over decorative imagery) |
 | **B** | User-provided | Has existing image assets |
-| **C** | AI-generated (active-theme style) | Concept explanations, hero illustrations — minimal flat, muted/pastel, transparent bg |
+| **C** | AI-generated (active-theme style) | Concept explanations, hero illustrations — minimal flat, muted/pastel, clean solid #FAFAF9 bg |
 | **D** | Placeholders | Images to be added later |
 
 Anti-slop Rule 13 bans decorative-only images; every image must explain the content. Brand character: `.claude/skills/slide/templates/layouts/jangpm/assets/brand/jangpm-character.png`. When provided, it is available for instructor-persona slides; when not, do not invent a stand-in.
 
-**When selection includes B**, you must run `python3 scripts/analyze_images.py <project_path>/images` before outputting the spec, and integrate scan results into the image resource list.
+**When selection includes B**, you must run `${SKILL_DIR}/scripts/_py.sh ${SKILL_DIR}/scripts/analyze_images.py <project_path>/images` before outputting the spec, and integrate scan results into the image resource list.
 
 **When B/C/D is selected**, add an image resource list to the spec:
 
@@ -176,11 +176,9 @@ Anti-slop Rule 13 bans decorative-only images; every image must explain the cont
 
 Core logic: The layout container's aspect ratio must closely match the image's original ratio. Never force a wide image into a square container or a portrait image into a narrow horizontal strip.
 
-> **Portrait canvases** (Xiaohongshu, Story): Layout rules differ — top-bottom is preferred for most ratios since left-right columns become too narrow. See "Portrait Canvas Override" in `references/image-layout-spec.md`.
-
 > **Multi-image slides**: When multiple images appear on one page, use the grid formulas in the "Multi-Image Layout" section of `references/image-layout-spec.md`.
 
-> **Pipeline handoff**: When C) AI generation is selected, after outputting the design spec, prompt the user to invoke Image_Generator. Once images are collected in `images/`, proceed to Executor.
+> **Pipeline handoff**: When C) AI generation is selected, proceed to Image_Generator automatically after writing the spec. Once images are collected in `images/`, proceed to Executor.
 
 ### Visualization Reference (Non-blocking — Strategist recommends, no user confirmation needed)
 
@@ -238,13 +236,13 @@ See `chart-rhetorical-roles.md` for the chart (§1–9) and diagram/image eviden
 | Layout | Suitable Scenarios | PPT 16:9 Reference Dimensions |
 |--------|-------------------|-------------------------------|
 | Single column centered | Covers, conclusions, key points | Content width 800-1000px, horizontally centered |
-| Two-column | Comparative analysis, left-image right-text | Column ratio 1:1 or 3:2, gap 40-60px |
-| Three-column | Parallel points, process steps | Column ratio 1:1:1, gap 30-40px |
-| Four-quadrant | Matrix analysis, classification | Quadrant 560x250px, gap 20-30px |
+| Two-column | Comparative analysis, left-image right-text | Column ratio 1:1 or 3:2 |
+| Three-column | Parallel points, process steps | Column ratio 1:1:1 |
+| Four-quadrant | Matrix analysis, classification | 2×2 grid |
 | Top-bottom split | Ultra-wide images + text | Image full-width, text area >= 150px height |
 | Left-right split | Standard/portrait images + text | Image on side, text area >= 280px width |
 
-**PPT 16:9 (1280x720) key dimensions**: Safe area 1200x640 (40px margins); Title area 1200x100; Content area 1200x500; Footer area 1200x40.
+**PPT 16:9 (1280x720) key dimensions**: Content area x=56, y=160, w=1168, h=480; column gap 24 (`executor.md` §4 is the geometry SSOT).
 
 ---
 
@@ -252,13 +250,7 @@ See `chart-rhetorical-roles.md` for the chart (§1–9) and diagram/image eviden
 
 > Templates are starting points, not endpoints.
 
-The Strategist should make professional judgments on the template basis generated by `scripts/project_manager.py`, considering user needs, content characteristics, and audience:
-
-1. Ratio systems are adjustable (font size ratios are reference values)
-2. Color schemes are customizable (based on brand and content)
-3. Layout modes can be combined (6 base layouts with free variation)
-4. Content structure is extensible (12-chapter framework can be expanded or reduced)
-5. Spacing / border radius details adjusted by Executor based on content density
+Templates are starting points: spacing, radius and layout combinations flex with content density; canvas, palette and typography stay theme-locked.
 
 ---
 
@@ -278,7 +270,7 @@ The active theme `jangpm` enforces the visual language; the Strategist's job is 
 |---------|---------------------|
 | I. Project Information | Project name, canvas format, page count, style, audience, scenario, date |
 | II. Canvas Specification | Format, dimensions, viewBox, margins, content area |
-| III. Visual Theme | Style description, light/dark theme, tone, color scheme (with HEX table), gradient scheme |
+| III. Visual Theme | Style description, light/dark theme, tone, color scheme (with HEX table) |
 | IV. Typography System | Font plan (P1-P5), font size hierarchy (H1-Code, 7 levels) |
 | V. Layout Principles | Page structure (header/content/footer zones), 6 layout modes, spacing spec |
 | VI. Icon Usage Spec | Source description, placeholder syntax, recommended icon list |
@@ -300,20 +292,13 @@ The active theme `jangpm` enforces the visual language; the Strategist's job is 
 The project folder should be created before entering the Strategist role. If not yet created, execute:
 
 ```bash
-python3 scripts/project_manager.py init <project_name> --format <canvas_format>
+${SKILL_DIR}/scripts/_py.sh ${SKILL_DIR}/scripts/project_manager.py init <project_name> --format ppt169
 ```
 
 The Strategist saves the Design Specification & Content Outline to `output/<project_name>/design_spec.md`. Project folders are named by topic only (e.g., `output/claude-mythos/`); no `_<format>_<YYYYMMDD>` suffix.
 
 ---
 
-## 6. Complete Design Spec and Prompt Next Steps
+## 6. Handoff
 
-After writing `design_spec.md`, emit the following next-step prompt verbatim. This is a workflow handoff instruction, not a section inside `design_spec.md`.
-
-```
-✅ Design spec complete. Active theme: Jangpm.
-Next step:
-- Images include AI generation → Invoke Image_Generator
-- Images do not include AI generation → Invoke Executor
-```
+After writing `design_spec.md`, proceed to Image_Generator if the image list includes AI generation, otherwise to Executor.

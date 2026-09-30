@@ -44,8 +44,9 @@ When the user asks for slides ("슬라이드", "프레젠테이션", "생성PPT"
    and improvise. **Forbidden:** reimplementing the pipeline yourself (hand-built
    PPTX, ad-hoc React/HTML, placeholder images). If a step's tool is unavailable,
    HALT and report — never silently fall back.
-3. **Plan auto-entry:** if the deck is **≥ 8 slides** OR a lecture / executive
-   report / sales / multi-source / explicit-quality deck, run
+3. **Plan auto-entry:** if the deck is **≥ 10 slides** OR the user provided
+   source files OR the brief carries a quality keyword OR it is a lecture /
+   executive report / sales deck, run
    `.codex/skills/slide-plan/SKILL.md` first and produce
    `output/<project>/slide_plan.json`. Only the bypass words (`간단히`, `빠르게`,
    `quick`, `simple로`, `plan 없이`) skip this — and then create

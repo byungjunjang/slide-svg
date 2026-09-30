@@ -20,17 +20,17 @@ description: >
 > The active theme (read from `references/theme-active.json`) is the single visual language for this skill. **1280×720 is permanently locked**; the accent, typography, and palette come from the active theme (default: Jangpm — monochrome, single `#4633E3` indigo accent, Pretendard, editorial report tone). See `references/design-system.md`, `references/anti-slop-core.md` (structural), and `references/anti-slop-theme.md` (theme-literal enforcement). The active theme's `templates/layouts/<theme>/` pack (currently `jangpm/`) is the only layout pack.
 
 > [!CAUTION]
-> ## 🚨 Global Execution Discipline (MANDATORY)
+> ## Global Execution Discipline
 >
-> **This workflow is a strict serial pipeline. The following rules have the highest priority — violating any one of them constitutes execution failure:**
+> This pipeline runs serially; each step's output feeds the next.
 >
-> 1. **SERIAL EXECUTION** — Steps MUST be executed in order; the output of each step is the input for the next. Non-BLOCKING adjacent steps may proceed continuously once prerequisites are met, without waiting for the user to say "continue"
-> 2. **BLOCKING = HARD STOP** — Steps marked ⛔ BLOCKING require a full stop; the AI MUST wait for an explicit user response before proceeding and MUST NOT make any decisions on behalf of the user
-> 3. **NO CROSS-PHASE BUNDLING** — Cross-phase bundling is FORBIDDEN. (Note: the Eight Confirmations in Step 4 are ⛔ BLOCKING — the AI MUST present recommendations and wait for explicit user confirmation before proceeding. Once the user confirms, all subsequent non-BLOCKING steps — design spec output, SVG generation, speaker notes, and post-processing — may proceed automatically without further user confirmation)
-> 4. **GATE BEFORE ENTRY** — Each Step has prerequisites (🚧 GATE) listed at the top; these MUST be verified before starting that Step
-> 5. **NO SPECULATIVE EXECUTION** — "Pre-preparing" content for subsequent Steps is FORBIDDEN (e.g., writing SVG code during the Strategist phase)
-> 6. **NO SUB-AGENT SVG GENERATION** — Executor Step 6 SVG generation is context-dependent and MUST be completed by the current main agent end-to-end. Delegating page SVG generation to sub-agents is FORBIDDEN
-> 7. **SEQUENTIAL PAGE GENERATION ONLY** — In Executor Step 6, after the global design context is confirmed, SVG pages MUST be generated sequentially page by page in one continuous pass. Grouped page batches (for example, 5 pages at a time) are FORBIDDEN
+> 1. **Serial execution** — Run the steps in order. Non-BLOCKING adjacent steps proceed continuously once their prerequisites are met; there is no need to wait for the user to say "continue".
+> 2. **BLOCKING steps wait for the user** — At a step marked ⛔ BLOCKING, stop and wait for an explicit user response, and don't make the decision on the user's behalf — those choices belong to the user.
+> 3. **No cross-phase bundling** — Keep each phase's output in its own step. The Step 4 confirmation (Eight Confirmations in Standalone, the active-theme lock in Plan-Consuming) is ⛔ BLOCKING; once the user confirms, design spec output, SVG generation, speaker notes, and post-processing proceed without further confirmation.
+> 4. **Gate before entry** — Check the 🚧 GATE prerequisites listed at the top of each step before starting it.
+> 5. **No speculative execution** — Don't pre-prepare content for later steps (e.g., writing SVG during the Strategist phase); later steps depend on the confirmed output of earlier ones.
+> 6. **Main agent writes the SVGs** — Executor Step 6 stays with the current main agent end-to-end. Page design depends on the full upstream context (source content, design spec, template mapping, image decisions, cross-page consistency), which a sub-agent does not have.
+> 7. **One page at a time, one pass** — Generate SVG pages sequentially in one continuous pass, not in grouped batches (e.g., 5 pages at a time) — cross-page rhythm (headline position, GM voice, primitive rotation) depends on seeing the previous page.
 
 > [!CAUTION]
 > ## 🚧 Fresh-Build Entry Gate (신규 제작 진입 게이트, MANDATORY)
@@ -41,8 +41,8 @@ description: >
 > 4. 기존 산출물 재사용은 사용자가 "기존 덱 수정", "이어서", "기존 덱 기반"이라고 명시한 경우에만 허용한다. 이 경우 `pipeline_status.json`에 **revision mode**로 기록하고, 신규 풀 파이프라인 제작으로 보고하지 않는다.
 > 5. 신규 제작은 이번 run에서 다음 단계의 **실행 증거**가 모두 있어야 완료·업로드할 수 있다: preflight → active-theme load → project init → source processing/import → slide-plan 생성·validate·fact-check(트리거 시) → Strategist/design_spec → confirmation gate 또는 원격 auto-proceed 기록 → 이미지/차트 생성(필요 시) → 메인 에이전트의 페이지별 순차 SVG 생성 → speaker notes → total_md_split → finalize_svg → svg_to_pptx -s final → verify_deck → exported PPTX render 눈검수 → unzip -t 무결성 검증 → 업로드.
 > 6. 기존 파일의 존재나 과거 timestamp는 이번 run의 실행 증거로 인정하지 않는다.
-> 7. 작업 시작 전에 `pipeline_status.json`을 만들고 각 stage에 `status`, `started_at`, `completed_at`, `artifacts`, command/result summary를 기록한다.
-> 8. 모든 적용 단계가 통과하기 전에는 "시작", "완료", "풀 파이프라인 수행"이라고 보고하지 않는다.
+> 7. 작업 시작 전에 `pipeline_status.json`을 만들고 각 stage에 `status`, `started_at`, `completed_at`, `artifacts`, command/result summary를 기록한다. 파일이 없거나 읽을 수 없으면 Step 7.4 `verify_deck.py`가 WARN을 낸다.
+> 8. "완료"·"풀 파이프라인 수행"은 모든 적용 단계가 통과한 뒤에만 보고한다. 진행 중에는 현재 단계를 알려도 된다.
 
 > [!IMPORTANT]
 > ## 🌐 Language & Communication Rule
@@ -55,8 +55,9 @@ description: >
 > ## 🔌 Compatibility With Generic Coding Skills
 >
 > - `slide` is a repository-specific workflow skill, not a general application scaffold
-> - Do NOT create or require `.worktrees/`, `tests/`, branch workflows, or other generic engineering structure by default
-> - If another generic coding skill suggests repository conventions that conflict with this workflow, follow this skill first unless the user explicitly asks otherwise
+> - A deck run writes only under its project folder (`output/<project>/`). It does not need a worktree, a branch, or new test scaffolding.
+> - The repo's `tests/` suite and gitignored `.worktrees/` are for changing the pipeline scripts themselves; when you edit a script under `scripts/`, run `tests/` as usual.
+> - If another generic coding skill suggests repository conventions that conflict with this workflow during a deck run, follow this skill first unless the user explicitly asks otherwise
 
 ## Main Pipeline Scripts
 
@@ -66,7 +67,7 @@ description: >
 | `${SKILL_DIR}/scripts/source_to_md/doc_to_md.py` | Documents to Markdown — native Python for DOCX/HTML/EPUB/IPYNB, pandoc fallback for legacy formats (.doc/.odt/.rtf/.tex/.rst/.org/.typ) |
 | `${SKILL_DIR}/scripts/source_to_md/ppt_to_md.py` | PowerPoint to Markdown |
 | `${SKILL_DIR}/scripts/source_to_md/web_to_md.py` | Web page to Markdown |
-| `${SKILL_DIR}/scripts/source_to_md/web_to_md.cjs` | Node.js fallback for WeChat / TLS-blocked sites (use only if `curl_cffi` is unavailable; `web_to_md.py` now handles WeChat when `curl_cffi` is installed) |
+| `${SKILL_DIR}/scripts/source_to_md/web_to_md.cjs` | Node.js fallback for WeChat / TLS-blocked sites (use only if `curl_cffi` is unavailable; `web_to_md.py` handles WeChat when `curl_cffi` is installed) |
 | `${SKILL_DIR}/scripts/project_manager.py` | Project init / validate / manage |
 | `${SKILL_DIR}/scripts/analyze_images.py` | Image analysis (size / aspect inspection only — AI generation is host-specific: Claude Code uses `/codex-image`; Codex uses built-in `imagegen`) |
 | `${SKILL_DIR}/scripts/svg_quality_checker.py` | SVG quality check |
@@ -186,11 +187,11 @@ cp ${SKILL_DIR}/templates/layouts/$THEME/design_spec.md <project_path>/templates
 **이 스텝을 실행하기 전에 `references/executor-steps-4-6.md`의 해당 섹션을 반드시 먼저 읽어라.**
 
 - 🚧 GATE: Step 3 완료 — active-theme 템플릿 팩이 `<project_path>/templates/`에 복사됨.
-- 목적: 소스 콘텐츠를 `design_spec.md`로 변환. Step 4.0 모드 감지로 `slide_plan.json` 존재 시 **Plan-Consuming**, 부재 시 **Standalone** (Eight Confirmations) 자동 분기 — auto-trigger 조건(슬라이드 ≥ 10, 소스 파일, 품질 키워드) 충족 시 `/slide-plan`을 먼저 호출.
+- 목적: 소스 콘텐츠를 `design_spec.md`로 변환. Step 4.0 모드 감지로 `slide_plan.json` 존재 시 **Plan-Consuming**, 부재 시 **Standalone** (Eight Confirmations) 자동 분기 — auto-trigger 조건(슬라이드 ≥ 10, 소스 파일, 품질 키워드, 강의/임원 보고서/세일즈 데크) 중 하나라도 충족 시 `/slide-plan`을 먼저 호출 — 우회 키워드(`간단히`·`빠르게`·`quick`·`simple로`·`plan 없이`)만 Standalone으로 보낸다.
 - 입력: 소스 콘텐츠, `references/strategist.md`, (plan 모드) `slide_plan.json` + `templates/layouts/<theme>/DESIGN.md` · 출력: `<project_path>/design_spec.md`.
 - ⛔ **BLOCKING (사용자 확인 필수)**: Plan-Consuming은 active-theme lock 1화면 확인, Standalone은 Eight Confirmations 일괄 제시 — 명시적 사용자 확인 전 진행 금지.
-- Plan-Consuming 필수 절차: `validate_plan.py` 재검증 → plan fingerprint dump (생략 시 plan-drift 회귀 #1 원인).
-- 이미지가 제공된 경우 `analyze_images.py` 스크립트 출력만 사용 — 이미지 파일 직접 열람 금지.
+- Plan-Consuming 필수 절차: `validate_plan.py` 재검증 → 슬라이드별 plan fingerprint 출력 (B-plan-fidelity 체크리스트).
+- 이미지가 제공된 경우 크기·비율 같은 레이아웃 정보는 `analyze_images.py` 출력(`image_analysis.csv`)에서 가져온다. 이미지를 Read 로 여는 것은 내용 확인용이다(내용이 배치를 정할 때, Step 5 생성 이미지 검수, Step 7 렌더 확인).
 - Step 4.5 Quality Floor (R2/R3/R4/R6 self-check + B-density / B-r2-simple / B-gm-simple / B-family-diversity / B-plan-count / B-plan-fidelity 검증 스크립트) 통과 후에만 다음 스텝 진행.
 
 ---
@@ -203,7 +204,7 @@ cp ${SKILL_DIR}/templates/layouts/$THEME/design_spec.md <project_path>/templates
 - 목적: design spec의 "pending generation" 이미지 슬롯을 활성 테마 Style Lock(Deck Style Anchor prefix + `Avoid:` negative suffix) 프롬프트로 생성.
 - 입력: design_spec.md 이미지 목록 + `references/image-generator.md` · 출력: `<project_path>/images/image_prompts.md` + `images/<slot_name>.png`.
 - 🔒 **호스트 백엔드 락**: Claude Code는 vendored `/codex-image`, Codex는 내장 `imagegen` 스킬 / `image_gen` 도구만. 다른 생성기(Gemini, DALL·E, Midjourney 등) 대체 금지 — 백엔드 실패/불가 시 `image_prompts.md`를 보존하고 halt, 정확한 블로커 보고. 슬롯 silent skip 금지.
-- 슬롯당 1장, 직렬 생성 — 파일 존재 확인 후 다음 슬롯. 사이즈 매핑(16:9 wide / 1:1 square / 3:4 portrait)은 상세 절차 참조.
+- 슬롯당 1장, 직렬 생성 — 파일 존재를 확인하고 Read 로 열어 프롬프트와 맞는지 본 뒤 다음 슬롯(`/codex-image` Step 6). 슬롯을 다시 생성하려면 거부한 PNG 를 먼저 지운다(`/codex-image` 는 기존 파일을 덮어쓰지 않는다). 사이즈 매핑(16:9 wide / 1:1 square / 3:4 portrait)은 상세 절차 참조.
 
 ---
 
@@ -263,19 +264,13 @@ ${SKILL_DIR}/scripts/_py.sh ${SKILL_DIR}/scripts/verify_deck.py <project_path>
 
 ## Role Switching Protocol
 
-Before switching roles, you **MUST first read** the corresponding reference file — skipping is FORBIDDEN. Output marker:
-
-```markdown
-## [Role Switch: <Role Name>]
-📖 Reading role definition: references/<filename>.md
-📋 Current task: <brief description>
-```
+Before acting in a role, read its reference file (`references/strategist.md` / `references/executor.md` / `references/image-generator.md`) — the role's rules live there, not in this file.
 
 ---
 
 ## Reference Resources
 
-### Jangpm Design Language (read when in doubt)
+### Active-Theme Design Language (read when in doubt)
 | Resource | Path |
 |----------|------|
 | Design system (tokens, spacing, typography) | `references/design-system.md` |

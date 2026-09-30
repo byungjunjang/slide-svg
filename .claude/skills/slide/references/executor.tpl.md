@@ -1,6 +1,6 @@
 # Role: Executor ({{TOKEN:display_name}})
 
-> The single executor role for the `slide` skill. Replaces the legacy `executor-base.md`, `executor-general.md`, `executor-consultant.md`, and `executor-consultant-top.md` — they were calibrated for multiple style variants; {{TOKEN:display_name}} is a single visual language. Technical SVG constraints are in `shared-standards.md`. Design tokens are in `design-system.md`; structural anti-patterns in `anti-slop-core.md`; theme-literal enforcement in `anti-slop-theme.md`.
+> The single executor role for the `slide` skill; {{TOKEN:display_name}} is a single visual language. Technical SVG constraints are in `shared-standards.md`. Design tokens are in `design-system.md`; structural anti-patterns in `anti-slop-core.md`; theme-literal enforcement in `anti-slop-theme.md`.
 
 ---
 
@@ -17,7 +17,7 @@ Two upstream sources may feed this Executor. Identify which one is active before
 | Mode | Trigger | Per-slide SSOT |
 |------|---------|----------------|
 | **Plan-Consuming** | `<project_path>/slide_plan.json` exists | `slide_plan.slides[i]` — use `recommended_layout_family`, `chart_strategy`, `content_blocks[]`, `evidence_to_use`, `chart_takeaway` directly. `design_spec.md` §IX is the formatted transcription, not the SSOT. |
-| **Standalone** | No `slide_plan.json` | `design_spec.md` §IX (Content Outline) — the legacy single-source flow. |
+| **Standalone** | No `slide_plan.json` | `design_spec.md` §IX (Content Outline). |
 
 **If both exist and disagree** (user hand-edited one), trust `slide_plan.json` and call out the inconsistency to the user before continuing. Do NOT silently merge.
 
@@ -52,9 +52,9 @@ The plan is a **content rationale + family + chart_strategy** contract — NOT a
 
    **Why a hard cap**: 3+ consecutive `boxed-cards` produces "every slide looks the same" decks. 3+ consecutive `hairline-list` produces "monolithic editorial gray" decks. Forced primitive rotation is what actually creates visual rhythm.
 
-When in doubt, look at how the canonical jangpm reference deck composes a body slide: typically 1 primary visual (chart/table/diagram) + 1–2 supporting cards + 1 verdict/takeaway band. A page that reduces to "headline + cards" is the failure mode this skill exists to prevent.
+When in doubt, look at how the canonical {{TOKEN:display_name}} reference deck composes a body slide: typically 1 primary visual (chart/table/diagram) + 1–2 supporting cards + 1 verdict/takeaway band. A page that reduces to "headline + cards" is the failure mode this skill exists to prevent.
 
-In **Standalone** mode the Executor selects family and pattern both, as before — the autonomy contract above already matches Standalone defaults.
+In **Standalone** mode the Executor selects both family and pattern — the autonomy contract above already matches Standalone defaults.
 
 ---
 
@@ -108,20 +108,23 @@ Before generating page 1, output a confirmation block reading the Design Spec's 
 
 If any value conflicts with the Design Spec, stop — the Strategist's spec has drifted from the active-theme lock. Do NOT proceed.
 
-### Per-Page Self-Audit (Mandatory Before Moving to Next Page)
+### Per-Page Self-Audit (Before Moving to Next Page)
 
-After writing each content SVG and before moving to the next page, verify these items in one line each:
+Per content page, decide and record these judgments (one line each):
 
 ```
 ✏️ Variation applied: <chosen variation from DESIGN.md §5.2 Variation Inspirations for this pattern, OR "표준" (anchor only) — body slides only; structure family exempt>
-🔍 Accent audit: <count> occurrences of {{TOKEN:colors.accent}}/{{TOKEN:colors.accent-soft}} on this page (must be ≤ 2; chart opacity ladders count as 1 event regardless of bar count)
-🎯 Focal point: <one-line description of the page's dominant element — stat, headline, diagram, etc.> — MUST be visibly ~2× the weight of the next-largest element (via size, weight, or accent fill)
-💭 GM check: .gm says "<gm text>" — editorial so-what, not title restatement? <yes/rewrite>
-📐 Type levels: <N> distinct active-theme scale steps on this page (target ≥ 3 from: display {{TOKEN:typography.display.size}} / headline {{TOKEN:typography.headline.size}} / title {{TOKEN:typography.title.size}} / body {{TOKEN:typography.body.size}} / caption {{TOKEN:typography.caption.size}})
-📏 Bounds check: every <text> element's visual box fits within x∈[56, 1224], y∈[96, 700]; every <rect>/<image> fits within x∈[56, 1224], y∈[140, 680].
-🚫 Overlap check: no element overlaps another sibling (except text fully contained inside its designated card). Also check text-vs-text pairs — no two <text> baselines/bboxes may intersect ≥40% of the smaller bbox.
-🧭 Alignment check: text left-edges cluster on ≤5 distinct x-columns (±4px); ≥60% of all <text> share one of the top 5 columns AND ≤25% are off-grid (singletons). Common columns: 56 (main left), 80 (indented body), 140 (card padding), 352/440/572/652/784/824/944 (multi-column layouts per §4).
+🎯 Focal point: <the page's dominant element — stat, headline, diagram, etc.> — visibly ~2× the weight of the next-largest element (via size, weight, or accent fill)
+💭 GM check: is the .gm an editorial so-what, not a title restatement? <yes/rewrite>
 ```
+
+Then run the mechanical gate on the page and fix every safe-area / text-overlap WARN before the next page:
+
+```bash
+${SKILL_DIR}/scripts/_py.sh ${SKILL_DIR}/scripts/svg_quality_checker.py <project_path>/svg_output/<page>.svg
+```
+
+The checker measures real glyph advances, so its bounds and overlap numbers are the SSOT — don't hand-compute them. The composition rules it does not count still hold on every page: ≤ 2 accent events ({{TOKEN:colors.accent}}/{{TOKEN:colors.accent-soft}}; a chart opacity ladder counts as 1), ≥ 3 distinct type-scale steps (display {{TOKEN:typography.display.size}} / headline {{TOKEN:typography.headline.size}} / title {{TOKEN:typography.title.size}} / body {{TOKEN:typography.body.size}} / caption {{TOKEN:typography.caption.size}}), and text left-edges on the §4 column grid.
 
 > **Variation applied — purpose**: Body slides default to the anchor pattern unless the executor consciously selects one of the variation inspirations from `DESIGN.md §5.2`. Recording the chosen variation per slide breaks the "anchor copy" failure mode and forces intentional differentiation across the deck. **Target: ≥ 70% of body slides apply a non-`표준` variation across the full deck.** `표준` is allowed when the content genuinely needs the unembellished anchor (rare).
 
@@ -132,7 +135,7 @@ After writing each content SVG and before moving to the next page, verify these 
 - **Focal point unclear**: promote one element (enlarge, bolden, accent) until it reaches ≥2× weight of the next-largest.
 - **GM restates title**: rewrite as an editorial insight.
 - **Type levels < 3**: add or re-weight a label/caption line to create a missing tier (uppercase eyebrow, promote a metric to title size).
-- **Bounds overflow** — compute per-`<text>` visual width: `char_count × font_size × 0.55` (Latin) or `× 0.95` (Korean). If `text-anchor="middle"`, bbox = `[x − w/2, x + w/2]`; if `"end"`, `[x − w, x]`; else `[x, x + w]`. If any edge exceeds bounds, pick a fix based on the text's **tier**:
+- **Bounds overflow** (checker safe-area WARN) — pick a fix based on the text's **tier**:
 
   **Title tier** — any `<text>` with `font-size ≥ 24` OR `font-weight ≥ 700`. This covers: cover title (display 56 / display-sm 40), page headline (32), card headline / section heading / table header / big-number metric (24+). **Never break a title across two lines and never split a single noun phrase / equation / colon-joined title.** Fix in this priority:
     1. **Widen the column** by shifting adjacent elements horizontally. Examples: in a 2-column (`56|784`) layout, move the right column to `880+` and shrink it, or collapse a sibling card's width; for a centered headline, expand the headline zone to full canvas width (`x=56, w=1168, text-anchor="start"` or `x=640, text-anchor="middle"`). If two columns both need space, re-plan the layout as 1-column or stack vertically.
@@ -150,7 +153,7 @@ After writing each content SVG and before moving to the next page, verify these 
     4. Stack into a bulleted list if multiple body lines share a parent concept.
 
   **Universal rule (both tiers)**: **Font-size reduction is FORBIDDEN.** Do NOT use shrinkText, autoFit, or any form of font shrinking. Never reduce font-size below the design-spec body baseline (15.2px / 18.4px) or below the per-tier headline baseline (body headline 32, section 24) to make text fit. If copy is too long even after applying the tier's allowed fixes, trim copy further — never shrink the type.
-- **Overlap detected**: separate the colliding elements by shifting one on the primary axis (increase y for stacked items, increase x for side-by-side). Rectangles inside cards are fine; unrelated siblings must have ≥8px gap.
+- **Overlap detected** (checker text-overlap WARN): separate the colliding elements by shifting one on the primary axis (increase y for stacked items, increase x for side-by-side). Rectangles inside cards are fine; unrelated siblings must have ≥8px gap.
 - **Alignment failure**: identify which text elements are off-grid (not sharing an x-column with ≥1 sibling). Snap each off-grid `x` to the nearest column from §4's layout table (56, 80, 140, 352, 440, 572, 652, 784, 824, 944, 1168, 1224). For elements that should center-align within a column, snap the midpoint to the column center. Charts: align all category labels to the same baseline y; align all value labels to the same x-offset from their bar.
 
 This audit applies to **content slides only**. Cover / chapter / ending pages are exempt.
@@ -166,7 +169,7 @@ This audit applies to **content slides only**. Cover / chapter / ending pages ar
   2. **Logic Construction Phase** — after all SVGs are finalized, batch-write speaker notes for narrative coherence
 - **Proximity principle** — related elements close together; unrelated groups separated by increased space or a rule line
 - **Absolute spec adherence** — Canvas size, color palette, typography scale, and layout grid come from the Design Spec. No improvisation.
-- **{{TOKEN:display_name}} anti-slop** — Read `anti-slop-core.md` (23 structural rules) and `anti-slop-theme.md` (active-theme literal enforcement) once at session start; apply both (see §6 below for executor-relevant summary)
+- **{{TOKEN:display_name}} anti-slop** — Read `anti-slop-core.md` (structural rules) and `anti-slop-theme.md` (active-theme literal enforcement) once at session start; apply both (see §6 below for executor-relevant summary)
 - **Visual depth via hierarchy, not effects** — {{TOKEN:display_name}} rejects filter shadows, glow, gradient overlays, same-hue gradient title bars, numbered circles with theme-fill backgrounds. Create depth through typographic contrast, rule lines, card containment (sparingly), and whitespace — NOT through visual effects.
 
 ### SVG File Naming Convention
@@ -242,7 +245,7 @@ Never use the chart template's original palette (mckinsey blues, rainbow, etc.).
 
 ## 5. Icon Usage
 
-Lucide line-art style. Default library: `tabler-outline/`. Fallback: `tabler-filled/` only when a filled glyph is editorially necessary (rare). The legacy `chunk/` library is no longer shipped.
+Lucide line-art style. Default library: `tabler-outline/`. Fallback: `tabler-filled/` only when a filled glyph is editorially necessary (rare).
 
 Icons resolve at finalize time via a two-step chain inside `embed_icons.py`:
 
@@ -316,7 +319,7 @@ Concept → tabler-outline icon (common picks):
 
 ## 6. Anti-Slop Summary (Executor-Relevant)
 
-Full lists in `anti-slop-core.md` (23 structural rules) and `anti-slop-theme.md` (theme-literal rules). The executor must respect every rule in both files; the structural rules that bite hardest during SVG generation:
+Full lists in `anti-slop-core.md` (structural rules) and `anti-slop-theme.md` (theme-literal rules). The executor must respect every rule in both files; the structural rules that bite hardest during SVG generation:
 
 1. **No gradient orbs** — no radial gradients as background decoration
 2. **No rainbow / gradient borders** — all borders are `1px solid {{TOKEN:colors.border}}`
@@ -325,7 +328,6 @@ Full lists in `anti-slop-core.md` (23 structural rules) and `anti-slop-theme.md`
 5. **No glow effects** — no `filter: drop-shadow(... rgba(…,0.5))` with colored glow
 6. **No decorative animations** — no `<animate>`, no `<animateTransform>`
 7. **No decorative partial borders** — no left-only colored strips on cards
-8. **No inline decorative styles** — SVG attributes (`fill`, `stroke`, `stroke-width`, `x/y/width/height`) are fine; anything else requires a utility-class equivalent
 11. **No uncontrolled text density** — max 4–5 bullets, short sentences, controlled line length
 13. **No decorative-only images** — every image must explain; no background wallpaper
 15. **No card-first layouts** — prefer text blocks + rule lines; cards are for genuine containment (metrics, callouts)
@@ -367,16 +369,16 @@ The engine computes scales/ticks/arcs from the numbers and resolves every color/
 For chart types outside the 21 (sankey, gantt, SWOT, …) or when browsing composition ideas, read the static template first:
 
 ```
-read_file templates/charts/<chart_name>.svg
+Read templates/charts/<chart_name>.svg
 ```
 
 Extract layout coordinates, card structure, spacing rhythm as creative reference — then redraw in the {{TOKEN:display_name}} palette (accent + opacity ladder). Do NOT copy the template's colors verbatim. Re-reading is needed only when the chart type changes.
 
-Full index: `templates/charts/charts_index.json` (56 chart types).
+Full index: `templates/charts/charts_index.json` (52 templates).
 
 ### Diagrams (system / relationship / process visuals)
 
-When a slide's job is a **diagram** — architecture, flowchart, sequence, state machine, ER, timeline, swimlane, quadrant, nested, tree, org chart, layer stack, venn, pyramid — rather than a Chart.js chart, consult `references/diagram-types.md`:
+When a slide's job is a **diagram** — architecture, flowchart, sequence, state machine, ER, timeline, swimlane, quadrant, nested, tree, org chart, layer stack, venn, pyramid — rather than a data chart (§7 chart-design renderer), consult `references/diagram-types.md`:
 
 1. Pick the type from its §1 selection guide (if a table/paragraph says the same thing, don't draw).
 2. Obey that type's complexity budget + the single-accent focal rule (≤ 2 accent nodes).
@@ -394,7 +396,7 @@ This is the diagram counterpart to the chart handling above. It does NOT produce
 | **AI-generated** | Image_Generator output (in `../images/`) | Same — reference directly |
 | **Placeholder** | Not yet prepared | Dashed-border rect + description text |
 
-**Do NOT** directly read or open image files. All image information comes from `analyze_images.py` output (Strategist) or the Design Spec's Image Resource List.
+Take image size and aspect ratio from `analyze_images.py` output (`image_analysis.csv`, Strategist) or the Design Spec's Image Resource List rather than from the files. Generated images were already opened and checked in Step 5; open an image with Read only when its content decides the page composition.
 
 ```xml
 <image href="../images/market_overview.png" x="56" y="180" width="560" height="315"
@@ -415,7 +417,7 @@ Placeholder:
 ### {{TOKEN:display_name}} Illustration Style
 
 When AI-generated illustrations are used (via Image_Generator), they MUST match the {{TOKEN:display_name}} visual-assets recipe:
-- **minimal flat illustration**, **muted / pastel tones**, **transparent background**, **line-art style**, **no gradients, no glow, no 3D renders**
+- **minimal flat illustration**, **muted / pastel tones**, **clean solid {{TOKEN:colors.bg}} background**, **line-art style**, **no gradients, no glow, no 3D renders**
 - Match the page background `{{TOKEN:colors.bg}}`; tones that harmonize with the active palette (see `image-generator.md` §🔒 for the full active-theme style lock)
 - Brand character: `{{TOKEN:assets.character|optional}}`. When provided, it can be used on slides that benefit from an instructor persona; when not provided, omit persona slides entirely.
 
@@ -513,13 +515,13 @@ After Visual Construction Phase (all SVGs generated to `svg_output/`) and Logic 
 
 ```bash
 # 7.1 — Split speaker notes into per-page files
-python3 ${SKILL_DIR}/scripts/total_md_split.py <project_path>
+${SKILL_DIR}/scripts/_py.sh ${SKILL_DIR}/scripts/total_md_split.py <project_path>
 
 # 7.2 — SVG post-processing (icon embed, image crop/embed, text flatten, rounded-rect)
-python3 ${SKILL_DIR}/scripts/finalize_svg.py <project_path>
+${SKILL_DIR}/scripts/_py.sh ${SKILL_DIR}/scripts/finalize_svg.py <project_path>
 
 # 7.3 — Export PPTX (embeds speaker notes, native DrawingML)
-python3 ${SKILL_DIR}/scripts/svg_to_pptx.py <project_path> -s final
+${SKILL_DIR}/scripts/_py.sh ${SKILL_DIR}/scripts/svg_to_pptx.py <project_path> -s final
 ```
 
 Each command runs in its own bash call — never bundled into one block. See `references/export.md` for details.

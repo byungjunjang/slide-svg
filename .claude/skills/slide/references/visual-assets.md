@@ -41,7 +41,7 @@ FLUX, Imagen, any unrelated MCP image tool, or any other generator. Full recipe
 
 ### Calling the Backend
 
-- **Claude Code**: call `/codex-image` and write to `<project_path>/images/<slot_name>.png`.
+- **Claude Code**: call `/codex-image` and write to `<project_path>/images/<slot_name>.png`, then open the PNG with Read to check it against the prompt.
 - **Codex**: trigger `imagegen`, call built-in `image_gen` for the slot prompt, then move/copy the selected generated asset into `<project_path>/images/<slot_name>.png`.
 
 Within the `/slide` workflow this runs in Step 5 (Image_Generator). If the sanctioned
@@ -51,9 +51,9 @@ any other generator.
 ### Prompt Guidelines
 
 **Good prompts** — specific, describe the visual concept:
-- "Minimal flat illustration of a robot reading documents, pastel blue tones, transparent background"
-- "Isometric illustration of a data pipeline with three stages, clean lines, transparent background"
-- "Simple line art of two people collaborating on a whiteboard, minimal style, transparent background"
+- "Minimal flat illustration of a robot reading documents, pastel blue tones, clean solid background matching the slide"
+- "Isometric illustration of a data pipeline with three stages, clean lines, clean solid background matching the slide"
+- "Simple line art of two people collaborating on a whiteboard, minimal style, clean solid background matching the slide"
 
 **Bad prompts** — vague, describe the topic not the visual:
 - "AI" (too vague)
@@ -65,12 +65,12 @@ any other generator.
 Use these in prompts for consistent visual tone:
 - **Style**: `minimal`, `flat`, `isometric`, `line art`, `geometric`
 - **Tone**: `professional`, `clean`, `modern`, `simple`
-- **Background**: Always include `transparent background`
+- **Background**: clean solid backdrop matching the slide bg (gpt-image-2 cannot emit true alpha)
 - **Colors**: `pastel`, `monochrome`, `muted tones` (avoid vibrant/neon)
 
 ### Output Constraints
 
-- Format: PNG with transparent background
+- Format: PNG on a clean solid background matching the slide bg
 - Max per slide: 2 images
 - Min resolution: 640×480
 - File location: `output/{slug}/assets/{slug}-{n}.png`

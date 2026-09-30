@@ -46,7 +46,6 @@
 | **Secondary bg** | `#......` | Card background, section background |
 | **Primary** | `#......` | Title decorations, key sections, icons |
 | **Accent** | `#......` | Data highlights, key information, links |
-| **Secondary accent** | `#......` | Secondary emphasis, gradient transitions |
 | **Body text** | `#......` | Main body text (dark theme uses light text) |
 | **Secondary text** | `#......` | Captions, annotations |
 | **Tertiary text** | `#......` | Supplementary info, footers |
@@ -56,21 +55,7 @@
 
 > **Reference**: Active theme palette is locked by `references/theme-active.json`. Strategist must follow that palette and the color rules in `references/anti-slop-theme.md`.
 
-### Gradient Scheme (if needed, using SVG syntax)
-
-```xml
-<!-- Title gradient -->
-<linearGradient id="titleGradient" x1="0%" y1="0%" x2="100%" y2="100%">
-  <stop offset="0%" stop-color="#[primary]"/>
-  <stop offset="100%" stop-color="#[secondary accent]"/>
-</linearGradient>
-
-<!-- Background decorative gradient (note: rgba forbidden, use stop-opacity) -->
-<radialGradient id="bgDecor" cx="80%" cy="20%" r="50%">
-  <stop offset="0%" stop-color="#[primary]" stop-opacity="0.15"/>
-  <stop offset="100%" stop-color="#[primary]" stop-opacity="0"/>
-</radialGradient>
-```
+> **Accent**: single `accent` token only (theme lock) — no secondary accent, no gradient scheme.
 
 ---
 

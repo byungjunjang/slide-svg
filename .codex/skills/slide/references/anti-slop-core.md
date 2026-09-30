@@ -211,88 +211,19 @@ h1, h2 {
 
 ---
 
-## Rule 8: Avoid Inline Styles
+## Rule 8 — HTML preview only
 
-**Forbidden:**
-```html
-<div style="background: #6366f1; padding: 16px; border-radius: 8px; color: white;">
-  Content
-</div>
-
-<h2 style="font-size: 2.5rem; font-weight: 700; color: #1e293b;">
-  Title
-</h2>
-```
-
-**Correct alternative:**
-```html
-<!-- Use CSS variables + utility classes -->
-<div class="card card-accent">
-  Content
-</div>
-
-<h2 class="slide-title">
-  Title
-</h2>
-```
-
-**Why:** Arbitrary inline styles bypass the design system, making global updates impossible and producing inconsistent output.
-
-**Allowed inline styles (exhaustive list):**
-- Chart canvas container height: `<div style="height: 320px;">` (Chart.js requires fixed pixel height on parent)
-- SVG attributes: `width`, `height`, `viewBox`, `stroke`, `fill`, `stroke-width` on `<svg>` / `<path>` elements
-- Position callouts: `position: absolute; top: Xpx; left: Xpx;` on annotated image overlays (canonical pattern in `patterns.md`)
-- Token-driven emphasis: `color: var(--accent);` or `color: var(--positive);` on individual `<span>` when no utility class exists
-- `max-width` on text blocks: `style="max-width: 680px;"` when controlling line length for readability
-- Grid column ratio overrides: `style="grid-template-columns: 2fr 1fr;"` for non-standard splits not covered by `.grid-2`
-
-**Everything else is forbidden.** If you find yourself writing `style="background: ...; padding: ...;"`, create a CSS class instead.
-
-**Self-check before saving:** Scan the entire HTML for `style="` attributes. Remove every instance that is not in the allowed list above. Use utility classes (`.text-left`, `.italic`, `.fs-display-sm`, `.trend-positive`, `.trend-negative`, `.agenda-item`, etc.) or CSS variables instead.
+Inline-style discipline applies to the HTML preview; see `libraries.md` §HTML Preview Discipline.
 
 ---
 
-## Rule 9: No Hardcoded HEX Values in CSS
+## Rule 9 — HTML preview only
 
-**Forbidden:**
-```css
-.heading {
-  color: #1e293b;
-}
-
-.card {
-  background: #f8fafc;
-  border-color: #e2e8f0;
-}
-
-.accent-text {
-  color: #6366f1;
-}
-```
-
-**Correct alternative:**
-```css
-.heading {
-  color: var(--text);
-}
-
-.card {
-  background: var(--surface);
-  border-color: var(--border);
-}
-
-.accent-text {
-  color: var(--accent);
-}
-```
-
-**Why:** Hardcoded values break theme switching and make design-system maintenance impossible.
+CSS hex-literal discipline applies to the HTML preview; see `libraries.md` §HTML Preview Discipline.
 
 ---
 
-## Rule 10: (Removed — text-only restriction no longer applies)
-
-Well-structured text blocks with clear typographic hierarchy are valid visual modules in the report-style system. A slide with a heading, subheading, and a concise bulleted list does not need a card, icon, or chart to justify its existence.
+## Rule 10 — reserved
 
 ---
 
@@ -394,24 +325,9 @@ Well-structured text blocks with clear typographic hierarchy are valid visual mo
 
 ---
 
-## Rule 14: No `position: relative` on Slide Sections
+## Rule 14 — HTML preview only
 
-**Forbidden:**
-```css
-.reveal .slides section {
-  position: relative;
-}
-```
-
-**Correct alternative:**
-```css
-/* Do NOT set position on .reveal .slides section — Reveal.js manages it internally */
-.reveal .slides section {
-  /* position is controlled by Reveal.js (absolute) — never override */
-}
-```
-
-**Why:** Reveal.js requires `position: absolute` on `<section>` elements to overlay slides and apply transforms for navigation. Setting `position: relative` causes all slides to stack vertically in normal document flow, making only the first (title) slide visible in the viewport while all other slides are pushed below.
+Reveal.js section positioning applies to the HTML preview; see `libraries.md` §HTML Preview Discipline.
 
 ---
 
@@ -712,83 +628,3 @@ A photographic `<image>` is **evidence shown at legible size**, never wallpaper 
 **Why:** Text on a photograph harms legibility for both, and demotes the photograph from *evidence* to *decoration*. The image has to be readable **as** the argument (the visual-evidence principle: the visual is the evidence), which it cannot be with type sitting on it.
 
 **Detection heuristic (warn):** any `<text>`/`<tspan>` whose anchor lies inside an `<image>`'s `x/y/width/height` bbox → text-on-photo warn. An `<image>` with bbox area < ~15% of canvas placed alongside heavy body copy → decorative-thumbnail warn.
-
----
-
-## Production Principles
-
-These rules apply to all JavaScript in slide files. They are theme-agnostic; palette-specific guidance lives in `anti-slop-theme.md`.
-
-### Variable Declarations
-
-Use `var` for top-level JS variables to prevent Temporal Dead Zone (TDZ) errors in slides:
-
-```js
-// Correct — var hoists to function scope, safe for slide execution order
-var chartData = { ... };
-var ctx = document.getElementById('myChart');
-
-// Forbidden — let/const TDZ can cause ReferenceError if script order shifts
-let chartData = { ... };
-const ctx = document.getElementById('myChart');
-```
-
-### Disable Chart Animations
-
-Set `Chart.defaults.animation = false` before any chart instantiation:
-
-```js
-// Correct
-Chart.defaults.animation = false;
-
-var ctx = document.getElementById('chart').getContext('2d');
-var myChart = new Chart(ctx, { ... });
-
-// Forbidden — animation plays during presentation, distracts audience
-var myChart = new Chart(ctx, { ... }); // animation not disabled
-```
-
-### Chart Colors Must Be Literal rgba()
-
-Use `rgba()` for chart dataset colors. Never use CSS variables in Chart.js config — Chart.js cannot resolve CSS variables at paint time:
-
-```js
-// Correct shape — use rgba literals
-data: {
-  datasets: [{
-    backgroundColor: 'rgba(<r>, <g>, <b>, 0.8)',
-    borderColor: 'rgba(<r>, <g>, <b>, 1)',
-  }]
-}
-
-// Forbidden
-data: {
-  datasets: [{
-    backgroundColor: 'var(--accent)',
-    borderColor: 'var(--border)',
-  }]
-}
-```
-
-**The exact rgba values for the active theme's accent** (including the opacity ladder for multi-series charts) are specified in `anti-slop-theme.md`.
-
-### Spacing
-
-Use CSS Grid `gap` for all multi-element layouts. Never use margin hacks:
-
-```css
-/* Correct */
-.grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-  gap: var(--gap);
-}
-
-/* Forbidden */
-.grid > * + * {
-  margin-left: 16px;
-}
-.grid > *:nth-child(2) {
-  margin-top: 0;
-}
-```

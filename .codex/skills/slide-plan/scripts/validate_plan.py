@@ -1,10 +1,9 @@
 #!/usr/bin/env python3
 """Validate slide_plan.json against Layer 1 R1-R5 + enum constraints.
 
-Three slide pipelines (slide-html, slide-svg, slide-pencil) share R1-R5 as the
-universal contract. slide-svg locks layout_family to a fixed 7-value enum
-(structure / insight / breakdown / compare / data / process / visual); see
-slide-pencil/validate_plan.py for the R6 (density prescription) extension.
+R1-R5 are the universal plan contract. slide-svg locks layout_family to a
+fixed 7-value enum (structure / insight / breakdown / compare / data / process /
+visual).
 
 Usage:
     python3 validate_plan.py <path/to/slide_plan.json>

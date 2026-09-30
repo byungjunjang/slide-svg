@@ -23,7 +23,7 @@ from pathlib import Path
 HERE = Path(__file__).resolve().parent          # .../slide/scripts
 SKILLS_DIR = HERE.parents[1]                     # .../skills (slide-plan lives beside slide)
 
-SYSTEMATIC_MIN_PAGES = 8
+SYSTEMATIC_MIN_PAGES = 10  # /slide Step 4.0 auto-entry threshold (executor-steps-4-6.md)
 GM_Y_RANGE = (655, 705)
 IMAGE_SUFFIXES = {".png", ".jpg", ".jpeg", ".webp"}
 NATIVE_SHAPE_TAGS = ("sp", "grpSp", "cxnSp", "graphicFrame")
@@ -155,6 +155,18 @@ def deck_needs_plan(project: Path) -> bool:
     if (project / ".standalone").exists():
         return False
     return page_count(project, "svg_output") >= SYSTEMATIC_MIN_PAGES
+
+
+def pipeline_status_warnings(project: Path) -> list[str]:
+    """Non-blocking check for the current-run stage log (SKILL.md Fresh-Build Entry Gate #7)."""
+    status = project / "pipeline_status.json"
+    if not status.exists():
+        return ["pipeline_status.json missing — current-run stage evidence was not recorded"]
+    try:
+        json.loads(status.read_text(encoding="utf-8"))
+    except (OSError, ValueError):
+        return ["pipeline_status.json is not readable JSON — stage evidence cannot be checked"]
+    return []
 
 
 # ---- external tool wrappers (monkeypatched in tests) --------------------
@@ -350,7 +362,7 @@ def main() -> int:
     failures = run_checks(project)
     cli_failures, cli_warnings = officecli_checks(project)
     failures.extend(cli_failures)
-    for w in cli_warnings:
+    for w in pipeline_status_warnings(project) + cli_warnings:
         sys.stderr.write(f"  ! WARN {w}\n")
     if failures:
         sys.stderr.write(f"[verify_deck] FAIL ({len(failures)} issue(s)):\n")

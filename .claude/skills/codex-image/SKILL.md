@@ -4,7 +4,7 @@ description: |
   Generate images via Codex CLI's built-in image_gen tool (gpt-image-2). OAuth auth — no API key needed.
   Codex CLI의 내장 image_gen 도구로 이미지 생성. OAuth 인증으로 API 키 불필요.
   Usage: /codex-image cherry blossom hanok, /codex-image --size 1024x1536 space cat, /codex-image --quality high seoul night
-argument-hint: "[--size <WxH>] [--quality low|medium|high] [--out <path>] [--filename <name>] [-n <count>] <image prompt>"
+argument-hint: "[--size <WxH>] [--quality low|medium|high] [--out <dir>] [--filename <stem>] [-n <count>] [--ref <image>]... <image prompt>"
 allowed-tools:
   - Bash
   - Read
@@ -13,31 +13,26 @@ allowed-tools:
 
 # codex-image — AI Image Generation via Codex OAuth
 
-Generate images using OpenAI's `gpt-image-2` model through Codex CLI.
-**No API key required** — uses Codex OAuth (ChatGPT login) authentication.
+Generate images with OpenAI's `gpt-image-2` model through Codex CLI.
+No API key is needed: Codex OAuth (ChatGPT login) handles authentication.
 
-OpenAI Codex CLI의 내장 `image_gen` 도구를 통해 `gpt-image-2` 모델로 이미지를 생성한다.
-**API 키 불필요** — Codex OAuth(ChatGPT 로그인) 인증 사용.
+User-facing messages below are bilingual (EN / KO). Print the one that matches the user's chat language.
 
-## How it works / 동작 원리
+## How it works
 
 ```
 User prompt → Claude Code (/codex-image)
   → codex exec (OAuth token auto-managed)
     → built-in image_gen tool (gpt-image-2)
       → ~/.codex/generated_images/<session>/
-        → copy to project root
+        → copy to <out dir>/<filename>.png
 ```
 
-> **Important**: OAuth tokens cannot call OpenAI REST API directly (returns 401).
-> Must go through `codex exec` which handles auth internally.
->
-> OAuth 토큰으로 OpenAI REST API 직접 호출 불가 (401 반환).
-> 반드시 `codex exec` 경유 — Codex가 내부적으로 인증 처리.
+OAuth tokens cannot call the OpenAI REST API directly (it returns 401), so generation goes through `codex exec`, which handles auth internally.
 
 ---
 
-## Step 1 — Verify Codex CLI & Auth / Codex CLI 및 인증 확인
+## Step 1 — Verify Codex CLI & Auth
 
 ```bash
 which codex 2>/dev/null && codex --version 2>/dev/null || echo "NOT_FOUND"
@@ -51,107 +46,125 @@ If `NOT_FOUND`, stop:
 codex login status 2>&1
 ```
 
-If not "Logged in":
+If not "Logged in", stop:
 > "Codex login required. Run `codex login` in terminal. OAuth login enables image generation without API key."
 > "Codex 로그인 필요. 터미널에서 `codex login` 실행. OAuth 로그인하면 API 키 없이 이미지 생성 가능."
 
-## Step 2 — Parse Arguments / 인자 파싱
+## Step 2 — Parse Arguments
 
 Extract from `$ARGUMENTS`:
 
 | Flag | Values | Default | Description |
 |------|--------|---------|-------------|
-| `--size` | `1024x1024`, `1024x1536`, `1536x1024`, `auto` | `1024x1024` | Image dimensions / 이미지 크기 |
-| `--quality` | `low`, `medium`, `high`, `auto` | `auto` | Generation quality / 생성 품질 |
-| `--out` | directory path | project root | Save location / 저장 위치 |
-| `--filename` | name without extension | `codex-image-<timestamp>` | Output filename stem / 출력 파일명 (확장자 제외) |
-| `-n` | 1–10 | `1` | Number of images / 생성 장수 |
+| `--size` | `1024x1024`, `1024x1536`, `1536x1024`, `auto` | `1024x1024` | Image dimensions |
+| `--quality` | `low`, `medium`, `high`, `auto` | `auto` | Generation quality |
+| `--out` | directory path (inside the project root) | project root | Save location |
+| `--filename` | name without extension | `codex-image-<timestamp>` | Output filename stem |
+| `-n` | 1–10 | `1` | Number of images |
+| `--ref` | image file path, repeatable | none | Reference image attached to Codex (Step 4) |
 
-Remaining text → image prompt / 나머지 텍스트 → 이미지 프롬프트
+Remaining text → image prompt.
 
-If prompt is empty, ask via AskUserQuestion:
+If the prompt is empty, ask via AskUserQuestion:
 > "What image should I generate? Enter a prompt."
 > "어떤 이미지를 생성할까? 프롬프트를 입력해줘."
 
-## Step 2.5 — Background normalization (avoid the transparency checkerboard) / 배경 정규화
+If a user typed a prompt that is too vague to act on, ask what they want before spending a generation. When another skill or pipeline passes a finished prompt, generate it as given.
 
-> **Known `gpt-image-2` failure mode.** When a prompt asks for a `transparent background`,
-> `gpt-image-2` does NOT return true alpha — it **paints a literal gray-and-white
-> checkerboard** (the pattern editors use to *display* transparency) into the RGB pixels.
-> The result looks broken on any real backdrop. This skill therefore never passes a
-> transparency request straight through.
->
-> **알려진 `gpt-image-2` 버그.** 프롬프트가 `transparent background`를 요청하면 실제 알파
-> 투명도가 아니라 **회색·흰색 체커보드 무늬를 픽셀로 그려 넣는다**(편집기가 투명도를 *표시*할
-> 때 쓰는 격자). 어떤 배경에 올려도 깨져 보인다. 그래서 이 스킬은 투명 요청을 그대로 넘기지 않는다.
+## Step 3 — Normalize Background Phrasing
 
-Strip transparency phrasing from the prompt before generating (the Step 4 task carries a
-hard background rule as a second guard, so this is belt-and-suspenders):
+`gpt-image-2` cannot output real alpha. Asked for a "transparent background", it paints a gray-and-white checkerboard (the pattern editors use to display transparency) into the pixels, which looks broken on any backdrop. Rewrite transparency phrasing to a clean solid background before generating. A backdrop color the caller named (`#FAFAF9 background`, `white background`, `흰색 배경`) is left as is and becomes the solid fill.
 
 ```bash
-# Neutralize "transparent background" / "transparent bg" / "no background" so the model
-# does not bake a checkerboard. Caller-named backdrop colors (e.g. "#FAFAF9 background",
-# "white background") are kept and become the clean solid fill.
-_PROMPT=$(printf '%s' "${_PROMPT}" \
-  | sed -E 's/(fully |truly )?transparent[ -]+(background|bg)/clean solid background/Ig' \
-  | sed -E 's/\bno background\b/clean solid background/Ig')
+_PROMPT=$(printf '%s' "${_PROMPT}" | perl -CSD -Mutf8 -pe '
+  s/\b(?:fully |truly |perfectly |pure )?transparent[ -]+(?:background|backdrop|bg)\b/clean solid background/gi;
+  s/\bno background\b/clean solid background/gi;
+  s/투명(?:한)?\s*배경/단색 배경/g;
+  s/배경\s*없(?:음|이|는|다)/단색 배경/g;')
+echo "[codex-image] prompt after background normalization: ${_PROMPT}"
 ```
 
-If the user genuinely needs a cut-out asset, tell them `gpt-image-2` (via the codex
-`image_gen` tool) cannot emit reliable alpha; generate on a **flat solid color** and remove
-the background afterward with an image editor. Do NOT request "transparent" to get it.
+When writing prompts for this skill, ask for `clean solid <color> background` directly instead of a transparent one. If the user needs a cut-out asset, generate on a flat solid color and remove the background afterward in an image editor.
 
-## Step 3 — Determine Save Path / 저장 경로 결정
+## Step 4 — Resolve Paths
 
 ```bash
-_PROJECT_ROOT=$(git rev-parse --show-toplevel 2>/dev/null || pwd)
-_OUT_DIR="${_PROJECT_ROOT}"
-_TIMESTAMP=$(date +%Y%m%d-%H%M%S)
-# --filename takes precedence; fall back to timestamp stem
-_FILENAME="${_FILENAME_ARG:-codex-image-${_TIMESTAMP}}"
+_PROJECT_ROOT=$(git rev-parse --show-toplevel 2>/dev/null || pwd -W 2>/dev/null || pwd)
+_OUT_DIR="${_OUT_ARG:-${_PROJECT_ROOT}}"
+case "${_OUT_DIR}" in /*|[A-Za-z]:*) ;; *) _OUT_DIR="${_PROJECT_ROOT}/${_OUT_DIR}" ;; esac
+mkdir -p "${_OUT_DIR}"
+_FILENAME="${_FILENAME_ARG:-codex-image-$(date +%Y%m%d-%H%M%S)}"
+
+# Existing outputs: stop if anything prints.
+ls "${_OUT_DIR}/${_FILENAME}.png" "${_OUT_DIR}/${_FILENAME}"-[0-9]*.png 2>/dev/null
+
+# References: absolute paths; stop if anything prints MISSING.
+_REFS=()
+for r in "${_REF_ARGS[@]}"; do
+  case "$r" in /*|[A-Za-z]:*) ;; *) r="${_PROJECT_ROOT}/$r" ;; esac
+  [ -f "$r" ] || echo "MISSING: $r"
+  _REFS+=("$r")
+done
 ```
 
-- If `--out` specified, use that path / `--out` 지정 시 해당 경로 사용
-- If `--filename` specified, that stem is used as-is / `--filename` 지정 시 해당 stem 그대로 사용
-- Single image (default stem): `codex-image-<timestamp>.png`
-- Single image (`--filename foo`): `foo.png`
-- Multiple (`-n > 1`): `<stem>-1.png`, `<stem>-2.png`, ...
-- Never overwrite existing files / 기존 파일 덮어쓰기 금지 (named outputs included — 같은 `--filename`을 다시 쓰려면 기존 파일을 먼저 지우거나 `--out`을 바꿔야 함)
+- Single image: `<stem>.png`. Multiple (`-n > 1`): `<stem>-1.png`, `<stem>-2.png`, ...
+- Without `--filename` the stem carries a timestamp. With `--filename`, the stem is used as given, so callers that need a fixed name (a slot name, a numbered candidate) pass it here.
+- Never overwrite an existing file. If the `ls` check prints a path, stop and report it; the caller picks a new `--filename` or `--out`, or removes the old file first.
+- Keep `--out` inside the project root. Codex runs with `-s workspace-write` rooted at `-C`, so it cannot write outside that tree.
+- If any `--ref` path is missing, stop before calling Codex and report the path.
 
-## Step 4 — Generate Image / 이미지 생성
+## Step 5 — Generate
+
+Build the task text, then pipe it to `codex exec -`. Passing the task on stdin keeps quotes in the prompt from breaking shell quoting, and the pipe closes stdin when the task ends. From a non-TTY shell such as the Bash tool, `codex exec` otherwise waits on "Reading additional input from stdin..." until the timeout.
 
 ```bash
-codex exec "Perform the following tasks:
-1. Use the built-in image_gen tool to generate an image.
-2. Prompt: '${_PROMPT}'
-3. Background rule (MUST follow): the image must have a clean, single solid flat background. NEVER paint a transparency/alpha checkerboard — i.e. no alternating gray-and-white squares anywhere. If the prompt implies a 'transparent' or 'no' background, render a clean solid background of the nearest plain color instead (use the backdrop color named in the prompt if any, otherwise plain white).
-4. Size: ${_SIZE}
-5. Quality: ${_QUALITY}
-6. Count: ${_N}
-7. Copy the generated image to '${_OUT_DIR}/${_FILENAME}.png'. For multiple images use -1.png, -2.png suffix.
-8. Print the saved file path and size." \
-  -C "${_PROJECT_ROOT}" \
-  -s workspace-write \
-  -c 'model_reasoning_effort="medium"' \
-  --skip-git-repo-check \
-  2>&1
+_REF_LINE="No reference images are attached."
+if [ "${#_REFS[@]}" -gt 0 ]; then
+  _REF_LINE="Treat the attached reference images as controls, not inspiration: follow each one for the role the prompt gives it. If the prompt text and a reference disagree, follow the reference. Attached, in order: $(printf "'%s' " "${_REFS[@]}")"
+fi
+
+_TASK=$(cat <<EOF
+Perform the following tasks:
+1. Use the built-in image_gen tool to generate ${_N:-1} image(s).
+2. Image prompt (everything between the markers, verbatim):
+---PROMPT---
+${_PROMPT}
+---END PROMPT---
+3. ${_REF_LINE}
+4. Background: render on a clean, single, solid flat background. Do not paint a transparency checkerboard (alternating gray and white squares); gpt-image-2 has no real alpha, so a transparent request comes out as painted squares. If the prompt implies a transparent or missing background, use the backdrop color it names, otherwise plain white.
+5. Size: ${_SIZE:-1024x1024}
+6. Quality: ${_QUALITY:-auto}
+7. Copy the generated image to '${_OUT_DIR}/${_FILENAME}.png'. For multiple images use '${_OUT_DIR}/${_FILENAME}-1.png', '-2.png', and so on. Do not overwrite existing files.
+8. Print the absolute saved file path(s) and file size in bytes.
+EOF
+)
+
+_ARGS=(exec - -C "${_PROJECT_ROOT}" -s workspace-write -c 'model_reasoning_effort="medium"' --skip-git-repo-check)
+for r in "${_REFS[@]}"; do _ARGS+=(-i "$r"); done
+
+printf '%s\n' "${_TASK}" | codex "${_ARGS[@]}" 2>&1
 ```
 
-timeout: 120000ms (2 min)
+Bash tool timeout: 600000 ms (10 min). A medium 1536x1024 image takes 1–2 minutes; `--quality high` and `--ref` runs take longer.
 
-### Required flags / 필수 플래그
+Flag notes:
 
-- `-s workspace-write` — file write permission / 파일 쓰기 권한
-- `--skip-git-repo-check` — works outside git repos / git 레포 외부에서도 실행 가능
+- `exec -` reads the task from stdin. If you pass the task as an argument instead, add `< /dev/null` to close stdin.
+- `-i <file>` takes several values, so the `-i` flags go last. Placed before the other arguments, it can swallow the next one as a file name. One `-i` per reference.
+- `-s workspace-write` lets Codex copy the file into the project. `--skip-git-repo-check` lets it run outside a git repo.
+- With `--ref`, the prompt should say what each reference controls (for example: line art = silhouette, depth map = camera, material map = material zones).
 
-### Internal flow (Codex side) / 내부 동작 흐름
+## Step 6 — Verify and Display
 
-1. Codex calls built-in `image_gen` tool (gpt-image-2)
-2. Image saved to `~/.codex/generated_images/<session-id>/ig_*.png`
-3. Codex copies file to specified project path
-4. Reports file path and size
+Confirm the expected files exist and are not empty:
 
-## Step 5 — Display Result / 결과 출력
+```bash
+ls -l "${_OUT_DIR}/${_FILENAME}.png" "${_OUT_DIR}/${_FILENAME}"-[0-9]*.png 2>/dev/null
+```
+
+If Codex printed a path but no file is on disk, report the failure; do not say an image was produced.
+
+Then open each saved image with the Read tool. The user sees the result, and you can check it against the prompt. If it shows a painted checkerboard or clearly misses the prompt, say so and offer a rerun with an explicit solid background color.
 
 ```
 ═══════════════════════════════════════════════
@@ -161,34 +174,29 @@ Prompt: <prompt used>
 Size: <size>
 Quality: <quality>
 Count: <n>
+References: <ref paths, or none>
 Auth: OAuth (ChatGPT)
 ───────────────────────────────────────────────
 <saved file path(s)>
 ═══════════════════════════════════════════════
 ```
 
-**Always display the generated image using the Read tool.**
-**생성된 이미지를 반드시 Read 도구로 표시한다.**
+Follow-up for standalone use: run `/codex-image` again for another image; in a Next.js project, suggest moving the file under `public/images/` if needed.
 
-## Step 6 — Follow-up / 후속 안내
+## Error Handling
 
-- "Run `/codex-image` again to generate another image."
-- For Next.js projects: suggest moving to `public/images/` if needed.
-- Used by `/slide` Step 5 (slide-svg) as the default image-generation backend — slide pipeline calls this skill with `--out <project>/images --filename <slot>` so generated PNGs land directly under the Image Resource List filename. / slide-svg `/slide` Step 5의 기본 이미지 생성 백엔드 — slide 파이프라인이 `--out <project>/images --filename <slot>`로 호출해 Image Resource List 파일명 그대로 저장.
-
-## Error Handling / 에러 처리
-
-| Error | Message |
+| Error | Message / action |
 |-------|---------|
 | Auth expired | "Codex OAuth expired. Run `codex login` again." / "OAuth 인증 만료. `codex login` 다시 실행." |
 | Model access denied | "No access to gpt-image-2. Check your OpenAI plan." / "gpt-image-2 접근 권한 없음. OpenAI 플랜 확인." |
-| Timeout (>2min) | "Generation timed out. Try `--quality low`." / "생성 시간 초과. `--quality low`로 재시도." |
+| Model requires a newer Codex | The model in `~/.codex/config.toml` is newer than the installed CLI. Suggest `npm install -g @openai/codex@latest`, or pass `-m <model>` for this run. Do not edit the user's config. |
+| Timeout (>10 min) | Retry once with a lower `--quality`, then report. / "생성 시간 초과. 낮은 `--quality`로 한 번 재시도." |
 | Rate limit | "API rate limited. Wait and retry." / "API 호출 제한. 잠시 후 재시도." |
-| Trust error | Check `--skip-git-repo-check` flag or add project to `~/.codex/config.toml` |
+| Trust error | Check the `--skip-git-repo-check` flag or add the project to `~/.codex/config.toml`. |
+| Missing `--ref` file | Stop before calling Codex and report the missing path. / Codex 호출 전에 중단하고 누락 경로 보고. |
+| Output file exists | Stop and report the path; do not overwrite. / 기존 파일이 있으면 덮어쓰지 않고 경로 보고. |
 
-## Rules / 규칙
+## Notes
 
-- Always use the Read tool to display generated images / 생성된 이미지는 반드시 Read로 표시
-- Never overwrite existing files — always use timestamped filenames / 기존 파일 덮어쓰기 금지
-- OAuth only — do not attempt direct REST API calls with OAuth token (returns 401) / OAuth 토큰으로 REST API 직접 호출 금지
-- Verify prompt intent before generating / 생성 전 프롬프트 의도 확인
+- Inside a Codex session, call the built-in `image_gen` tool directly. A nested `codex exec` started from inside Codex gets 401.
+- Do not call the OpenAI REST API with the OAuth token; it returns 401.

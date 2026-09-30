@@ -264,3 +264,185 @@ Use the active theme font chain (rendered from `theme-active.json`):
 The chain ends in a generic fallback, so the in-browser preview degrades gracefully
 when the primary font isn't installed/loaded. Do not add ad-hoc Google Fonts links or
 language-specific font overrides — the chain already carries the fallbacks.
+
+---
+
+## HTML Preview Discipline
+
+These rules apply only to the HTML preview (Reveal.js / Chart.js). SVG→PPTX slides carry no CSS, JavaScript, or Reveal.js, so `anti-slop-core.md` keeps the structural rules and lists Rules 8, 9, 14 as pointers here.
+
+### Rule 8: Avoid Inline Styles
+
+**Forbidden:**
+```html
+<div style="background: #6366f1; padding: 16px; border-radius: 8px; color: white;">
+  Content
+</div>
+
+<h2 style="font-size: 2.5rem; font-weight: 700; color: #1e293b;">
+  Title
+</h2>
+```
+
+**Correct alternative:**
+```html
+<!-- Use CSS variables + utility classes -->
+<div class="card card-accent">
+  Content
+</div>
+
+<h2 class="slide-title">
+  Title
+</h2>
+```
+
+**Why:** Arbitrary inline styles bypass the design system, making global updates impossible and producing inconsistent output.
+
+**Allowed inline styles (exhaustive list):**
+- Chart canvas container height: `<div style="height: 320px;">` (Chart.js requires fixed pixel height on parent)
+- SVG attributes: `width`, `height`, `viewBox`, `stroke`, `fill`, `stroke-width` on `<svg>` / `<path>` elements
+- Position callouts: `position: absolute; top: Xpx; left: Xpx;` on annotated image overlays (canonical pattern in `patterns.md`)
+- Token-driven emphasis: `color: var(--accent);` or `color: var(--positive);` on individual `<span>` when no utility class exists
+- `max-width` on text blocks: `style="max-width: 680px;"` when controlling line length for readability
+- Grid column ratio overrides: `style="grid-template-columns: 2fr 1fr;"` for non-standard splits not covered by `.grid-2`
+
+**Everything else is forbidden.** If you find yourself writing `style="background: ...; padding: ...;"`, create a CSS class instead.
+
+**Self-check before saving:** Scan the entire HTML for `style="` attributes. Remove every instance that is not in the allowed list above. Use utility classes (`.text-left`, `.italic`, `.fs-display-sm`, `.trend-positive`, `.trend-negative`, `.agenda-item`, etc.) or CSS variables instead.
+
+---
+
+### Rule 9: No Hardcoded HEX Values in CSS
+
+**Forbidden:**
+```css
+.heading {
+  color: #1e293b;
+}
+
+.card {
+  background: #f8fafc;
+  border-color: #e2e8f0;
+}
+
+.accent-text {
+  color: #6366f1;
+}
+```
+
+**Correct alternative:**
+```css
+.heading {
+  color: var(--text);
+}
+
+.card {
+  background: var(--surface);
+  border-color: var(--border);
+}
+
+.accent-text {
+  color: var(--accent);
+}
+```
+
+**Why:** Hardcoded values break theme switching and make design-system maintenance impossible.
+
+
+### Rule 14: No `position: relative` on Slide Sections
+
+**Forbidden:**
+```css
+.reveal .slides section {
+  position: relative;
+}
+```
+
+**Correct alternative:**
+```css
+/* Do NOT set position on .reveal .slides section — Reveal.js manages it internally */
+.reveal .slides section {
+  /* position is controlled by Reveal.js (absolute) — never override */
+}
+```
+
+**Why:** Reveal.js requires `position: absolute` on `<section>` elements to overlay slides and apply transforms for navigation. Setting `position: relative` causes all slides to stack vertically in normal document flow, making only the first (title) slide visible in the viewport while all other slides are pushed below.
+
+
+### Production Principles
+
+These rules apply to all JavaScript in slide files. They are theme-agnostic; palette-specific guidance lives in `anti-slop-theme.md`.
+
+#### Variable Declarations
+
+Use `var` for top-level JS variables to prevent Temporal Dead Zone (TDZ) errors in slides:
+
+```js
+// Correct — var hoists to function scope, safe for slide execution order
+var chartData = { ... };
+var ctx = document.getElementById('myChart');
+
+// Forbidden — let/const TDZ can cause ReferenceError if script order shifts
+let chartData = { ... };
+const ctx = document.getElementById('myChart');
+```
+
+#### Disable Chart Animations
+
+Set `Chart.defaults.animation = false` before any chart instantiation:
+
+```js
+// Correct
+Chart.defaults.animation = false;
+
+var ctx = document.getElementById('chart').getContext('2d');
+var myChart = new Chart(ctx, { ... });
+
+// Forbidden — animation plays during presentation, distracts audience
+var myChart = new Chart(ctx, { ... }); // animation not disabled
+```
+
+#### Chart Colors Must Be Literal rgba()
+
+Use `rgba()` for chart dataset colors. Never use CSS variables in Chart.js config — Chart.js cannot resolve CSS variables at paint time:
+
+```js
+// Correct shape — use rgba literals
+data: {
+  datasets: [{
+    backgroundColor: 'rgba(<r>, <g>, <b>, 0.8)',
+    borderColor: 'rgba(<r>, <g>, <b>, 1)',
+  }]
+}
+
+// Forbidden
+data: {
+  datasets: [{
+    backgroundColor: 'var(--accent)',
+    borderColor: 'var(--border)',
+  }]
+}
+```
+
+**The exact rgba values for the active theme's accent** (including the opacity ladder for multi-series charts) are specified in `anti-slop-theme.md`.
+
+#### Spacing
+
+Use CSS Grid `gap` for all multi-element layouts. Never use margin hacks:
+
+```css
+/* Correct */
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: var(--gap);
+}
+
+/* Forbidden */
+.grid > * + * {
+  margin-left: 16px;
+}
+.grid > *:nth-child(2) {
+  margin-top: 0;
+}
+```

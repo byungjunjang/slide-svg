@@ -12,10 +12,10 @@
 Under the `slide` skill, **every AI-generated image MUST follow the {{TOKEN:name|cap}} illustration recipe**, which is the default and the only recommended style:
 
 **Style directive** (prepend to every prompt):
-> `minimal flat illustration, line-art style, restrained clean tones, transparent background, no gradients, no glow, no 3D rendering, no photorealism, harmonized with a {{TOKEN:colors.bg}} backdrop and a single {{TOKEN:colors.accent}} accent`
+> `minimal flat illustration, line-art style, restrained clean tones, clean solid {{TOKEN:colors.bg}} background, no gradients, no glow, no 3D rendering, no photorealism, harmonized with a single {{TOKEN:colors.accent}} accent`
 
 **Deck Style Anchor** (shared prefix for all images in a deck):
-> `{{TOKEN:name|cap}} lecture deck illustration — minimal flat line-art, restrained clean tones aligned with the single {{TOKEN:colors.accent}} accent and {{TOKEN:colors.bg}} background, transparent background`
+> `{{TOKEN:name|cap}} lecture deck illustration — minimal flat line-art, restrained clean tones aligned with the single {{TOKEN:colors.accent}} accent, clean solid {{TOKEN:colors.bg}} background`
 
 **Negative prompt** (always include):
 > `text, watermark, logo, photograph, photorealistic, 3D render, gradient, glow, neon, vibrant colors, rainbow, dashboard UI, stock photo, shutterstock, low quality, blurry`
@@ -112,7 +112,7 @@ Every image must be output in the following format:
 
 | Design Style | Image Style | Core Keywords |
 |-------------|-------------|---------------|
-| **{{TOKEN:name|cap}} (locked default)** | Minimal flat line-art, restrained clean tones | `minimal flat illustration`, `line-art style`, `restrained clean tones`, `transparent background`, `no gradients`, `no glow`, `harmonized with the single {{TOKEN:colors.accent}} accent` |
+| **{{TOKEN:name|cap}} (locked default)** | Minimal flat line-art, restrained clean tones | `minimal flat illustration`, `line-art style`, `restrained clean tones`, `clean solid {{TOKEN:colors.bg}} background`, `no gradients`, `no glow`, `harmonized with the single {{TOKEN:colors.accent}} accent` |
 
 <details>
 <summary>Legacy style presets (DO NOT USE — kept for historical reference)</summary>
@@ -226,7 +226,7 @@ Image 3 prompt: [Deck Style Anchor], growth chart with upward trending line...
 | Specify style | `flat design`, `isometric`, `vector style`, `hand-drawn` |
 | Simplify details | `simplified`, `clean lines`, `minimal details` |
 | Unified palette | Strictly use design spec colors |
-| Background choice | `white background` or `transparent background` |
+| Background choice | `clean solid {{TOKEN:colors.bg}} background` (matches the slide; gpt-image-2 cannot emit true alpha) |
 
 **Template**: `{subject description}, {illustration style} illustration style, {detail level} with clean lines, color palette: {color list}, {background type} background, professional {purpose} illustration`
 
@@ -255,7 +255,7 @@ Image 3 prompt: [Deck Style Anchor], growth chart with upward trending line...
 |-----------|-------------|
 | Repeatability | `seamless`, `tileable`, `repeatable` (if needed) |
 | Understated support | `subtle`, `understated`, `supporting element` |
-| Transparency-friendly | `transparent background` or `isolated element` |
+| Background-matched | `clean solid {{TOKEN:colors.bg}} background` or `isolated element` |
 | Small-size readability | Consider legibility at small dimensions |
 
 **Template**: `{pattern type} decorative pattern, {style} style, {color scheme}, {background type} background, subtle and elegant, suitable for {purpose}`
@@ -300,7 +300,7 @@ Host mapping:
 
 Prompt body for either host:
 ```text
-{{TOKEN:name|cap}} lecture deck illustration — minimal flat line-art, restrained clean tones aligned with the single {{TOKEN:colors.accent}} accent and {{TOKEN:colors.bg}} background, transparent background, <subject>, color palette: {{TOKEN:colors.bg}} background, restrained clean midtones harmonized with the single {{TOKEN:colors.accent}} accent, neutral grays ({{TOKEN:colors.text}} text, {{TOKEN:colors.text-secondary}} secondary). Avoid: text, watermark, logo, photograph, photorealistic, 3D render, gradient, glow, neon, vibrant colors, rainbow, dashboard UI, stock photo, shutterstock, low quality, blurry
+{{TOKEN:name|cap}} lecture deck illustration — minimal flat line-art, restrained clean tones aligned with the single {{TOKEN:colors.accent}} accent, clean solid {{TOKEN:colors.bg}} background, <subject>, color palette: {{TOKEN:colors.bg}} background, restrained clean midtones harmonized with the single {{TOKEN:colors.accent}} accent, neutral grays ({{TOKEN:colors.text}} text, {{TOKEN:colors.text-secondary}} secondary). Avoid: text, watermark, logo, photograph, photorealistic, 3D render, gradient, glow, neon, vibrant colors, rainbow, dashboard UI, stock photo, shutterstock, low quality, blurry
 ```
 
 **Size / aspect guidance**:
@@ -315,7 +315,7 @@ Prompt body for either host:
 
 **Filename**: final project-bound assets MUST be saved at `<project_path>/images/<slot_name>.png`, matching the Image Resource List filename.
 
-**Claude Code path**: call `/codex-image` one image at a time and write directly to the slot filename.
+**Claude Code path**: call `/codex-image` one image at a time and write directly to the slot filename. Open each saved PNG with Read and check it against the prompt before the next slot (`/codex-image` Step 6). To rerun a rejected slot, delete its PNG first; `/codex-image` stops rather than overwrite.
 
 **Codex path**: trigger the default `imagegen` skill, call built-in `image_gen` once per slot, inspect/select the generated asset, then move/copy it from Codex's default generated-images location into `<project_path>/images/<slot_name>.png`. Do not rely on `/codex-image` CLI arguments such as `--size`, `--quality`, `--out`, or `--filename`.
 

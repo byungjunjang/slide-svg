@@ -2,8 +2,8 @@
 
 > Theme-agnostic bridge between the vendored `diagram-design` reference library
 > (`.codex/skills/diagram-design/`) and the `/slide` native-DrawingML pipeline.
-> When a slide's job is a **system / relationship / process** visual (not a Chart.js
-> chart), pick a type here, obey its complexity budget + the single-accent focal rule,
+> When a slide's job is a **system / relationship / process** visual (not a data
+> chart — those go to the chart-design renderer), pick a type here, obey its complexity budget + the single-accent focal rule,
 > and emit native SVG per `references/shared-standards.md`. Colors and fonts resolve from
 > the **active theme** (`references/design-system.md` / `theme-active.json`) — this file
 > hardcodes none, so it survives `/theme-init` swaps untouched.

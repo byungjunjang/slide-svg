@@ -2,20 +2,7 @@
 
 > 24 patterns organized by category. Each pattern includes complete `<section>` HTML.
 > PPTX consideration: prefer simple Grid/Flexbox layouts. Avoid `position: absolute`.
->
-> ## PPTX Fidelity Notes
-> These elements have known PPTX conversion constraints:
-> - **accent-badge on title slides**: Rendered as fixed-width pill in PPTX, not full-width bar. Accept as cosmetic difference.
-> - **Chart.js scales.y.min/max**: Pass `beginAtZero: false` and explicit `min`/`max` in Chart.js config so `convertChart()` preserves axis range. Without this, PPTX charts default to 0-based Y-axis.
-> - **bento-grid layout**: The 3-column asymmetric grid (span-2 + row-2) requires careful coordinate math in PPTX. Each card's column/row position must be manually calculated. Common mistake: the 5th card (row 3) should be single-column `col3W`, not span-2 `col2W`.
-> - **bare icons**: Icons use `<svg class="icon-lg">` without circle backgrounds. No `icon-circle` wrappers or semantic-soft backgrounds.
-> - **number-badge text wrapping**: `addBadgeNumber()` now uses `wrap: false` to prevent "01" from splitting into "0\n1". Always pass the number as a string. Use `opts.fill` to set color (default: accent). For gray badges, use `{ fill: 'E5E7EB', color: '6B7280' }`.
-> - **Card body text sizing**: In per-deck scripts, card body text MUST use `fontSize: TYPE_SCALE.body.size` (not caption). Caption is reserved for labels and annotations only. If card text appears too small in PPTX, the fontSize is likely wrong.
-> - **Text alignment in cards**: Default to `align: 'left'` for card body text. Only use `align: 'center'` for stat-numbers, icon-text, and badges. Process-flow step descriptions should be left-aligned.
-> - **Bento-grid 5th card**: Must be positioned at row 3, column 3 (single column width). Calculate: `x = col3X, y = row3Y, w = col1W, h = rowH`. Never use span-2 width for this card.
-> - **Card internal vertical stacking**: Stack elements with 0.04-0.06" gaps (not 0.15"+). Icon+label → stat number → trend → context. Never leave >0.3" gap inside a card. If the PPTX card looks "empty in the bottom half", the internal gaps are too large.
-> - **Font size minimum**: All text inside cards must use at least `TYPE_SCALE.caption.size` (10.2pt). Trend text, context lines, and metric captions must be readable at slide size. Never use hardcoded values smaller than caption.
-> - **Text overflow prevention**: ALL card body text MUST include `fit: 'shrink'` in addText options. This auto-shrinks text that exceeds the box. Without it, long Korean text gets clipped at the card boundary. For Korean decks with >80 char body text, also reduce fontSize by 0.5pt and increase text box height by 20%.
+> Patterns below are HTML composition references; realize them as native SVG per `executor.md`.
 
 ## Diversity Rules
 - No consecutive identical patterns (except `section`)

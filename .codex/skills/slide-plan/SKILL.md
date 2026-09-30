@@ -14,8 +14,8 @@ description: >
 # /slide-plan — Optional Planning Layer for /slide
 
 > **Position in pipeline:** OPTIONAL prerequisite to `/slide`.
-> Quick decks: `/slide` alone (existing flow, unchanged).
-> Systematic decks: `/slide-plan` → user confirm → `/slide` consumes `slide_plan.json`.
+> Quick decks: `/slide` alone (Standalone mode).
+> Systematic decks: `/slide-plan` → plan summary (auto-proceed unless the user stops it) → `/slide` consumes `slide_plan.json`.
 
 ```
 사용자: 체계적으로 슬라이드 만들어줘
@@ -26,7 +26,7 @@ description: >
   → 슬라이드별 plan 작성
   → slide_plan.json 출력 + markdown 요약
         ↓
-사용자 검토 (BLOCKING)
+사용자 검토 (기본 auto-proceed — stop 키워드로 중단)
         ↓
 /slide  ←  output/<project>/slide_plan.json 소비
         ↓
@@ -39,19 +39,14 @@ If `slide_plan.json` exists at `output/<project>/slide_plan.json` when `/slide` 
 
 ## When to invoke this skill
 
-**Use `/slide-plan` when:**
-- The deck has > 8 slides and a story arc matters (not just an info dump)
-- The user provides multiple source files and needs evidence mapping
-- The deck targets a specific audience (executives, students, prospects) where role-aware structure helps
-- The user asks for "narrative", "기획", "체계적", "스토리", "흐름"
+`/slide` Step 4.0 (`.codex/skills/slide/references/executor-steps-4-6.md`) runs this skill first when **any** of these holds:
 
-**Skip `/slide-plan` (use `/slide` directly) when:**
-- The deck is < 6 slides
-- Content is a single source document being summarized
-- The user wants a quick draft, no planning overhead
-- The user explicitly says "간단하게", "빠르게", "그냥 슬라이드만"
+- The deck is **≥ 10 slides**
+- The user provided source files (xlsx / md / pdf / docx / pptx)
+- The brief carries a quality keyword (`계획` / `철저` / `상세` / `꼼꼼` / `체계` / `완성도` / `thorough` / `detailed` / …)
+- The deck is a lecture, executive report, or sales deck
 
-When in doubt, ask the user once. Do NOT silently force `/slide-plan` for every request.
+Only the bypass keywords (`간단히`, `빠르게`, `quick`, `simple로`, `plan 없이`) skip it; `/slide` then runs Standalone. When the user invokes `/slide-plan` directly, run it as asked.
 
 ---
 
@@ -231,7 +226,7 @@ Verify HIGH/MEDIUM only. Cap at 3 claims per slide to limit overhead.
 **Execution:**
 
 1. Load tools: `ToolSearch("select:WebSearch,WebFetch")`
-2. For each claim: `WebSearch("<claim text> source authoritative 2025 2026")`
+2. For each claim: `WebSearch("<claim text> <current year> official source")`
 3. Pick 1–2 trustworthy sources (gov sites, official announcements, major outlets, Wikipedia). Use `WebFetch` for deep-check when ambiguous.
 4. Classify: `verified` / `corrected` / `unverified`
 
@@ -270,14 +265,9 @@ corrected:
 
 > Design intent: Non-blocking. If a failed claim is critical, the user uses a Step 8 stop keyword to request plan edits. Internal / unpublished data legitimately can't be verified, so we never block on fact-check.
 
-### Step 6: Self-validate against Layer 1 (R1–R5)
+### Step 6: Layer 1 (R1–R5)
 
-Run mental pass:
-- R1: every slide has all 4 fields ✓
-- R2: every chart slide has `chart_takeaway`; every table slide has `table_takeaway` ✓
-- R3: 8–12 default; if > 20, `ordering_notes` filled ✓
-- R4: no 3+ consecutive same family without justification ✓
-- R5: every slide's `evidence_sources` non-empty ✓
+The Step 7 validator enforces R1–R5; no separate self-check pass.
 
 ### Step 7: Write `slide_plan.json` + run validator
 
@@ -392,7 +382,7 @@ Present a markdown summary (one line per slide):
 }
 ```
 
-> The schema is intentionally NOT shared across slide-html / slide-pencil / slide-svg presets. `recommended_layout_family` and `chart_strategy` enum values are preset-specific (drawn from each preset's `DESIGN.md`). The shape above is slide-svg's contract.
+> The schema is intentionally NOT shared across presets. `recommended_layout_family` and `chart_strategy` enum values are preset-specific (drawn from each preset's `DESIGN.md`). The shape above is slide-svg's contract.
 
 ---
 

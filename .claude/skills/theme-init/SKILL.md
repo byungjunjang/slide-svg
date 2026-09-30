@@ -223,8 +223,11 @@ After the render completes:
 1. **Token check.** `git diff` should show the expected token values in
    `design-system.md` (color table) and `strategist.md` §e (Color
    Scheme).
-2. **Gallery check.**
+2. **Gallery check.** Extract the archived gallery, serve it, and delete the
+   extracted `*.html` / `_slide.css` afterward (untracked; the skill folder must
+   stay under the claude.ai 200-file upload limit):
    ```bash
+   tar -xzf .claude/skills/slide/references/jangpm-patterns.tar.gz -C .claude/skills/slide/references/
    python3 -m http.server -d .claude/skills/slide/references/jangpm-patterns 8000
    ```
    Open `http://localhost:8000/` — every page should reflect the new
@@ -533,30 +536,19 @@ output is **strengthening this SKILL.md's extraction rules**, not the
 Python.
 
 **Canvas 1280×720 is a cross-theme lock.** Layout coordinates in
-`_source/*.tpl.svg` and the executor's text-overflow remediation math
-(`char_count × font_size × 0.55` and friends) are calibrated to this
-canvas. A v2 token contract may extend tokens but must not change
+`_source/*.tpl.svg` and the safe-area / overlap bounds in
+`svg_quality_checker.py` are calibrated to this canvas. A v2 token contract may extend tokens but must not change
 canvas — anything else is a slide-svg fork, not a theme.
 
-**`theme-active.json` is overwritten in place.** No backup is taken on
-init_theme; rollback is `git log -- .claude/skills/slide/references/theme-active.json`
-followed by `git show <sha>:<path>`. A future
-`themes/<name>.json` registry would solve this structurally, but until
-that lands, treat each `/theme-init` run as destructive.
+**`theme-active.json` is overwritten in place;** every successful bake
+snapshots it to the preset catalog, so `--activate <preset>` restores a
+previous theme.
 
 **The render chain is idempotent.** Running `init_theme.py` twice on
 the same theme must produce a clean `git diff`. This is the regression
 check — if a same-theme rerun shows changes, a template or script
 drifted. The pytest smoke under `tests/` covers the unit-level pieces;
 idempotence at the orchestration level is asserted by repeat runs.
-
-**No external LLM calls remain in this skill.** The early Phase-1
-`parse_design_guide.py` used the Anthropic API + prompt caching to do
-extraction. That code was removed in commit `0f1908a` when the model
-flipped to agent-driven. If a future need re-introduces an external LLM
-hop, do not revert-reference that commit — write the new path fresh,
-since the old design assumed Opus calling itself, which is
-now-obsolete.
 
 **Out of scope for this skill** (so contributors stop asking):
 - Runtime multi-theme. Structurally impossible — PPTX export bakes

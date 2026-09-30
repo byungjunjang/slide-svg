@@ -1,13 +1,13 @@
 # /slide 파이프라인 — Step 4–6 상세 절차
 
-> 이 파일은 `/slide` 파이프라인의 Step 4 (Strategist) · Step 5 (Image_Generator) · Step 6 (Executor) 상세 절차 본문이다 (SKILL.md에서 verbatim 이동).
+> 이 파일은 `/slide` 파이프라인의 Step 4 (Strategist) · Step 5 (Image_Generator) · Step 6 (Executor) 상세 절차 본문이다.
 > SKILL.md는 해당 스텝 진입 시 이 파일의 해당 섹션을 반드시 먼저 로드한다.
 
 ---
 
 ### Step 4: Strategist Phase — Dual-Mode
 
-🚧 **GATE**: Step 3 complete; user has confirmed template selection.
+🚧 **GATE**: Step 3 complete; active-theme template pack copied.
 
 #### Step 4.0: Mode Detection (run first)
 
@@ -20,17 +20,18 @@ test -f <project_path>/slide_plan.json && echo "PLAN_EXISTS" || echo "NO_PLAN"
 | Result | Mode | Behavior |
 |---|---|---|
 | `PLAN_EXISTS` | **Plan-Consuming** | The plan is the SSOT for content / structure. Strategist's job is to *transcribe* the plan + active-theme tokens into `design_spec.md`. Skip Eight Confirmations except for a one-screen active-theme lock confirmation. |
-| `NO_PLAN` | **Standalone** | Run the existing Eight Confirmations flow as documented below. No change to the legacy behavior. |
+| `NO_PLAN` | **Standalone** | Run the Eight Confirmations flow documented below. |
 
 **Auto-trigger — if `NO_PLAN` BUT any of the following holds, switch to Plan-Consuming by invoking `/slide-plan` first:**
 
 1. User specified slide count and it is **≥ 10**
 2. User provided source files (xlsx / md / pdf / docx / pptx) anywhere in the project's `inputs/` or in conversation
 3. User brief contains an **attitude/expectation keyword** — `계획` / `철저` / `상세` / `꼼꼼` / `체계` / `완벽` / `정성` / `신중` / `제대로` / `완성도` / `퀄리티` / `고품질` / `thorough` / `detailed` / `comprehensive` / `polished` / `careful` / `deep`
+4. The deck is a **lecture, executive report, or sales deck** (`강의` / `수업` / `임원 보고` / `경영진 보고` / `보고서` / `세일즈` / `제품 소개` / `lecture` / `executive` / `sales pitch`)
 
-When auto-triggered, announce in one line and invoke `/slide-plan` before resuming Step 4. Explicit bypass keywords (`simple로`, `plan 없이`, `빠르게`, `간단히`, `quick`) suppress the trigger and force Standalone.
+When auto-triggered, announce in one line and invoke `/slide-plan` before resuming Step 4. Explicit bypass keywords (`simple로`, `plan 없이`, `빠르게`, `간단히`, `quick`) suppress the trigger and force Standalone (record the choice with `<project_path>/.standalone`). This list is the single SSOT for plan auto-entry; `CLAUDE.md`, `AGENTS.md`, `slide/SKILL.md`, and `slide-plan/SKILL.md` restate it.
 
-> **Why dual-mode?** `/slide-plan` is OPTIONAL by design. Quick decks (< 8 slides, single source, no quality demand) work fine with Standalone. Systematic decks (lectures, executive reports, multi-source, or any explicit quality signal) benefit from `/slide-plan` running first. See `.codex/skills/slide-plan/SKILL.md` §"When to invoke this skill" for the boundary.
+> **Why dual-mode?** Quick decks (< 10 slides, no source files, no quality keyword, not a lecture / executive / sales deck) work fine with Standalone. Systematic decks benefit from `/slide-plan` running first. `verify_deck.py` enforces the same 10-slide floor: a deck of ≥ 10 pages without `slide_plan.json` fails unless `.standalone` exists.
 
 #### Step 4.1: Plan-Consuming Mode
 
@@ -49,7 +50,7 @@ If a plan exists:
    Read templates/layouts/<theme>/DESIGN.md (preset's layout-family vocabulary)
    ```
 
-   **MANDATORY plan fingerprint dump** — after reading, print the per-slide fingerprint so the plan is anchored in the prompt context. Skipping this step is the #1 cause of plan-drift regression (verified 2026-05-13 audit):
+   **Plan fingerprint** — after reading the plan, print each slide's fingerprint in the format below; this is the checklist that B-plan-fidelity later checks against:
    ```
    slide #N:
      family   = <recommended_layout_family>
@@ -85,18 +86,18 @@ If a plan exists:
 
 #### Step 4.2: Standalone Mode
 
-If no plan exists, run the legacy Eight Confirmations flow (this is the existing /slide behavior — unchanged):
+If no plan exists, run the Eight Confirmations flow:
 
 First, read the role definition:
 ```
 Read references/strategist.md
 ```
 
-> ⚠️ **Mandatory gate in `strategist.md`**: Before writing `design_spec.md`, Strategist MUST `read_file templates/design_spec_reference.md` and produce the spec following its full I–XI section structure. See `strategist.md` Section 1 for the explicit gate rule.
+> ⚠️ **Mandatory gate in `strategist.md`**: Before writing `design_spec.md`, Strategist MUST Read `templates/design_spec_reference.md` and produce the spec following its full I–XI section structure. See `strategist.md` Section 1 for the explicit gate rule.
 
 **Must complete the Eight Confirmations** (full template structure in `templates/design_spec_reference.md`):
 
-⛔ **BLOCKING**: The Eight Confirmations MUST be presented to the user as a bundled set of recommendations, and you MUST **wait for the user to confirm or modify** before outputting the Design Specification & Content Outline. This is one of only two core confirmation points in the workflow (the other is template selection). Once confirmed, all subsequent script execution and slide generation should proceed fully automatically.
+⛔ **BLOCKING**: The Eight Confirmations MUST be presented to the user as a bundled set of recommendations, and you MUST **wait for the user to confirm or modify** before outputting the Design Specification & Content Outline. This is the only BLOCKING confirmation in Standalone mode. Once confirmed, all subsequent script execution and slide generation should proceed fully automatically.
 
 1. Canvas format
 2. Page count range
@@ -107,12 +108,12 @@ Read references/strategist.md
 7. Typography plan
 8. Image usage approach
 
-If the user has provided images, run the analysis script **before outputting the design spec** (do NOT directly read/open image files — use the script output only):
+If the user has provided images, run the analysis script **before outputting the design spec**; it writes `<project_path>/image_analysis.csv`:
 ```bash
 ${SKILL_DIR}/scripts/_py.sh ${SKILL_DIR}/scripts/analyze_images.py <project_path>/images
 ```
 
-> ⚠️ **Image handling rule**: The AI must NEVER directly read, open, or view image files (`.jpg`, `.png`, etc.). All image information must come from the `analyze_images.py` script output or the Design Specification's Image Resource List.
+> **Image handling rule**: Layout facts (pixel size, aspect ratio, placement math) come from `image_analysis.csv` or the Design Specification's Image Resource List — not from eyeballing the files. Open an image with Read to check its **content**: when what it shows decides the layout, when verifying each generated image in Step 5 (as `/codex-image` Step 6 does), and when reviewing rendered output in Step 7.
 
 **Output**: `<project_path>/design_spec.md`
 
@@ -125,7 +126,7 @@ Before leaving Step 4, perform a self-check against Layer 1 quality rules. This 
 | **R2** (chart/table needs takeaway) | Every chart slide in design_spec.md §IX has a takeaway sentence next to the chart spec. Every table slide has a verdict / takeaway row. |
 | **R3** (length pressure) | If slide count > 20, document split / merge / defer candidates in §IX or in `slide_plan.json` `ordering_notes`. |
 | **R4** (no lazy repetition) | No 3+ consecutive slides use the same layout family without a written justification. Min 3 distinct layout families in the deck. |
-| **R6 density** (SVG line count floor) | Every content slide SVG (post Step 6) ≥ 80 lines; chart / matrix / dense table ≥ 120 lines; cover / section-divider / closing ≥ 40 lines. Plan-Consuming mode uses plan's `min_lines_estimate` when present, else default thresholds. |
+| **R6 density** | Every content slide in §IX carries a dominant visual as evidence plus its supporting context and takeaway (`anti-slop-core.md` Rule 21 — density means a dominant visual, not dense text or stacked cards). The B-density script below checks a floor after Step 6. |
 
 If any check fails, fix `design_spec.md` (Standalone) or roll back to `/slide-plan` (Plan-Consuming) and re-validate. **Plan-Consuming mode users:** `validate_plan.py` already enforced this — re-running it after any post-plan hand edit is recommended:
 ```bash
@@ -134,7 +135,7 @@ If any check fails, fix `design_spec.md` (Standalone) or roll back to `/slide-pl
 
 **B-density verification (both modes; run after Step 6 SVGs exist):**
 ```bash
-python3 - <<'PY'
+${SKILL_DIR}/scripts/_py.sh - "<project_path>" <<'PY'
 import re,glob,json,sys
 from pathlib import Path
 project = Path(sys.argv[1] if len(sys.argv)>1 else '.').resolve()
@@ -161,9 +162,11 @@ print('B-density FAIL:', fails) if fails else print('B-density: PASS')
 PY
 ```
 
+The line count is a floor that flags a thin page, not a target. A FAIL means the page is missing its dominant visual or supporting context — add that block; do not split elements or pad markup to raise the count.
+
 **B-r2-simple + B-gm-simple + B-family-diversity-simple (Standalone mode hardening — plan 부재 시에도 활성):**
 ```bash
-python3 - <<'PY'
+${SKILL_DIR}/scripts/_py.sh - "<project_path>" <<'PY'
 import re,glob,json,sys
 from pathlib import Path
 project = Path(sys.argv[1] if len(sys.argv)>1 else '.').resolve()
@@ -211,7 +214,7 @@ PY
 
 **B-plan-count + B-plan-fidelity (plan-consuming mode only; auto-SKIPs in Standalone):**
 ```bash
-python3 - <<'PY'
+${SKILL_DIR}/scripts/_py.sh - "<project_path>" <<'PY'
 import re,glob,json,sys
 from pathlib import Path
 project = Path(sys.argv[1] if len(sys.argv)>1 else '.').resolve()
@@ -250,15 +253,7 @@ else:
 PY
 ```
 
-**✅ Checkpoint — Phase deliverables complete, auto-proceed to next step**:
-```markdown
-## ✅ Strategist Phase Complete
-- [x] Mode: <Plan-Consuming | Standalone>
-- [x] Eight Confirmations completed (Standalone) OR active-theme lock confirmed (Plan-Consuming)
-- [x] Design Specification & Content Outline generated
-- [x] Layer 1 R2/R3/R4 quality floor verified
-- [ ] **Next**: Auto-proceed to [Image_Generator / Executor] phase
-```
+**✅ Checkpoint** — confirmation done, `design_spec.md` written, quality floor verified → auto-proceed to Image_Generator (if AI images are pending) or Executor.
 
 ---
 
@@ -273,10 +268,10 @@ Read `references/image-generator.md`
 > 🔒 **Host backend lock**: AI images are generated only through the sanctioned backend for the current host. Claude Code uses the vendored `/codex-image` skill. Codex uses its built-in `imagegen` skill / built-in `image_gen` tool. Never use nanobanana2, Gemini, DALL·E, Midjourney, Stable Diffusion, FLUX, Imagen, Qwen, Zhipu, or any unrelated MCP image tool. If the sanctioned backend is unavailable, halt — do NOT substitute another generator.
 
 1. Extract all images with status "pending generation" from the design spec
-2. Generate prompt document → `<project_path>/images/image_prompts.md`. Every prompt MUST embed the Jangpm Deck Style Anchor (§🔒 of `image-generator.md`) as prefix, and the negative list as `Avoid: ...` suffix in the prompt body.
-3. Generate images one slot at a time — serial, confirm the file exists before the next:
+2. Generate prompt document → `<project_path>/images/image_prompts.md`. Every prompt MUST embed the active theme's Deck Style Anchor (§🔒 of `image-generator.md`) as prefix, and the negative list as `Avoid: ...` suffix in the prompt body.
+3. Generate images one slot at a time — serial; before the next slot, confirm the file exists and open it with Read to check it against the prompt. To rerun a slot that shows a painted checkerboard or misses the prompt, delete the rejected PNG first — `/codex-image` never overwrites an existing file:
 
-   - **Claude Code host**: invoke `/codex-image` with the slot prompt and write directly to `<project_path>/images/<slot_name>.png`.
+   - **Claude Code host**: invoke `/codex-image --out <project_path>/images --filename <slot_name>` with the slot prompt, so it writes `<project_path>/images/<slot_name>.png`.
    - **Codex host**: use the default `imagegen` skill, call the built-in `image_gen` tool for the slot prompt, then move/copy the selected generated file from Codex's default generated-images location into `<project_path>/images/<slot_name>.png`. Do not assume `/codex-image` CLI flags such as `--size`, `--quality`, `--out`, or `--filename` exist in Codex.
 
    Size guidance:
@@ -286,12 +281,7 @@ Read `references/image-generator.md`
 
    See `references/image-generator.md` for the full host-specific recipe. If the sanctioned backend fails or is unavailable, keep `images/image_prompts.md`, halt, and report the exact blocker. Do not silently skip slots.
 
-**✅ Checkpoint — Confirm all images are ready, proceed to Step 6**:
-```markdown
-## ✅ Image_Generator Phase Complete
-- [x] Prompt document created
-- [x] All images saved to images/
-```
+**✅ Checkpoint** — `images/image_prompts.md` exists and every pending slot has its `images/<slot_name>.png` → proceed to Step 6.
 
 ---
 
@@ -304,9 +294,9 @@ Read the single executor role definition:
 Read references/executor.md
 ```
 
-> Jangpm is a single visual language — there is only one executor. The legacy multi-style split (general / consultant / consultant-top) is removed.
+> The active theme is a single visual language — there is only one executor.
 
-**Plan-Consuming mode reminder** — if `slide_plan.json` exists at `<project_path>/slide_plan.json`, Executor MUST treat it as the per-slide source of truth: each slide's `recommended_layout_family`, `chart_strategy`, `content_blocks[]`, and `evidence_to_use` drive page construction. `design_spec.md` §IX is the formatted transcription; `slide_plan.json` is the SSOT. If the two disagree (e.g., user hand-edited only one), trust `slide_plan.json` and surface the inconsistency to the user before continuing. In Standalone mode (no plan), `design_spec.md` §IX is itself the SSOT — proceed with the existing flow.
+**Plan-Consuming mode reminder** — if `slide_plan.json` exists at `<project_path>/slide_plan.json`, Executor MUST treat it as the per-slide source of truth: each slide's `recommended_layout_family`, `chart_strategy`, `content_blocks[]`, and `evidence_to_use` drive page construction. `design_spec.md` §IX is the formatted transcription; `slide_plan.json` is the SSOT. If the two disagree (e.g., user hand-edited only one), trust `slide_plan.json` and surface the inconsistency to the user before continuing. In Standalone mode (no plan), `design_spec.md` §IX is itself the SSOT.
 
 **Design Parameter Confirmation (Mandatory)**: Before generating the first SVG, the Executor MUST review and output key design parameters from the Design Specification (canvas 1280×720 — permanently locked — plus the active theme's accent, font chain, and body baseline; the rendered values live in `executor.md` §2 / `design-system.md`) to ensure active-theme lock adherence. See `executor.md` §2 for the exact confirmation block.
 
@@ -319,10 +309,5 @@ Read references/executor.md
 **Logic Construction Phase**:
 - Generate speaker notes → `<project_path>/notes/total.md`
 
-**✅ Checkpoint — Confirm all SVGs and notes are fully generated. Proceed directly to Step 7 post-processing**:
-```markdown
-## ✅ Executor Phase Complete
-- [x] All SVGs generated to svg_output/
-- [x] Speaker notes generated at notes/total.md
-```
+**✅ Checkpoint** — all SVGs are in `svg_output/` and `notes/total.md` is written → proceed directly to Step 7 post-processing.
 
