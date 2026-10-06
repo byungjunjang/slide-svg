@@ -260,15 +260,44 @@ def officecli_checks(project: Path) -> tuple[list[str], list[str]]:
     if not failures:
         out = project / "_pptx_render" / f"{pptx.stem}-grid.png"
         out.parent.mkdir(parents=True, exist_ok=True)
-        rs = _run_officecli([binary, "view", str(pptx), "screenshot", "--grid",
-                             "--out", str(out), "--json"], timeout=180)
-        if rs is not None and rs.returncode == 0 and out.exists():
-            print(f"[verify_deck] pptx render: {out} — Read it to eyeball "
+        base = [binary, "view", str(pptx), "screenshot", "--grid",
+                "--out", str(out), "--json"]
+        # On Windows the default render path drives PowerPoint over COM, which
+        # can throw on a cold start. Retry it once, then fall back to the
+        # PowerPoint-free HTML renderer so the contact sheet still lands.
+        attempts = [("native", base), ("native retry", base),
+                    ("html", base + ["--render", "html"])]
+        errors: list[str] = []
+        rendered = None
+        for label, args in attempts:
+            out.unlink(missing_ok=True)  # a stale sheet must not pass as fresh
+            rs = _run_officecli(args, timeout=180)
+            if rs is not None and rs.returncode == 0 and out.exists():
+                rendered = label
+                break
+            errors.append(f"{label}: {_officecli_error(rs)}")
+        if rendered:
+            note = ""
+            if rendered == "html":
+                note = (" (HTML renderer fallback — PowerPoint render failed: "
+                        f"{errors[0]})")
+            print(f"[verify_deck] pptx render: {out}{note} — Read it to eyeball "
                   f"overflow/collision issues in the exported deck")
         else:
-            detail = "" if rs is None else (rs.stderr or rs.stdout)[-300:]
-            warnings.append(f"officecli screenshot failed (non-blocking): {detail}")
+            warnings.append("officecli screenshot failed (non-blocking): "
+                            + " | ".join(errors))
     return failures, warnings
+
+
+def _officecli_error(rs: subprocess.CompletedProcess | None) -> str:
+    """The cause line of a failed officecli call. A .NET stack trace follows the
+    message, so keep the head of the output and drop the `at ...` frames."""
+    if rs is None:
+        return "timeout or launch error"
+    text = (rs.stderr or rs.stdout or "").strip()
+    lines = [ln.strip() for ln in text.splitlines()
+             if ln.strip() and not ln.strip().startswith("at ")]
+    return (" ".join(lines) or f"exit {rs.returncode}, no output")[:300]
 
 
 # ---- orchestrator -------------------------------------------------------
