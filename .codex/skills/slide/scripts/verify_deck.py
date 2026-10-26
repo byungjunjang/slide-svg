@@ -331,18 +331,10 @@ def run_checks(project: Path) -> list[str]:
     elif not native_pptx_files:
         failures.append("no native .pptx export — *_svg.pptx reference decks are not enough")
     else:
-        pptx_errors = []
-        for pptx in native_pptx_files:
-            errs = validate_native_pptx(pptx)
-            if not errs:
-                break
-            try:
-                label = str(pptx.relative_to(project))
-            except ValueError:
-                label = str(pptx)
-            pptx_errors.append(f"{label}: {', '.join(errs)}")
-        else:
-            failures.append("native .pptx validation failed — " + "; ".join(pptx_errors))
+        pptx = max(native_pptx_files, key=lambda p: p.stat().st_mtime_ns)
+        errs = validate_native_pptx(pptx)
+        if errs:
+            failures.append(f"native .pptx validation failed — {pptx.name}: " + "; ".join(errs))
     if _run_quality_checker(out) != 0:
         failures.append(
             "svg_quality_checker (--strict-theme) reported errors on svg_output — "
