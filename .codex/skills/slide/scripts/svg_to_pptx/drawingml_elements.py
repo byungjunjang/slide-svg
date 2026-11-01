@@ -637,11 +637,13 @@ TEXT_WIDTH_HEADROOM_METRIC = 1.10
 TEXT_WIDTH_HEADROOM_HEURISTIC = 1.25
 
 
-def _normalize_text(text: str) -> str:
-    """Collapse internal whitespace/newlines into a single space, strip ends."""
-    if not text:
-        return ''
-    return re.sub(r'\s+', ' ', text).strip()
+def _append_run(runs: list[dict[str, Any]], attrs: dict[str, Any], text: str) -> None:
+    """Append text as a run, collapsing SVG whitespace across run boundaries."""
+    t = re.sub(r'[ \t\r\n]+', ' ', text)
+    if not runs or runs[-1]['text'].endswith(' '):
+        t = t.lstrip(' ')
+    if t:
+        runs.append({**attrs, 'text': t})
 
 
 def _build_text_runs(
@@ -656,39 +658,40 @@ def _build_text_runs(
     runs: list[dict[str, Any]] = []
 
     if elem.text:
-        t = _normalize_text(elem.text)
-        if t:
-            runs.append({**parent_attrs, 'text': t})
+        _append_run(runs, parent_attrs, elem.text)
 
     for child in elem:
         child_tag = child.tag.replace(f'{{{SVG_NS}}}', '')
         if child_tag == 'tspan':
-            t = _normalize_text(''.join(child.itertext()))
-            if t:
-                run_attrs = dict(parent_attrs)
-                if child.get('font-weight'):
-                    run_attrs['font_weight'] = child.get('font-weight')
-                if child.get('fill'):
-                    child_fill = child.get('fill')
-                    run_attrs['fill_raw'] = child_fill
-                    c = parse_hex_color(child_fill)
-                    if c:
-                        run_attrs['fill'] = c
-                if child.get('font-size'):
-                    run_attrs['font_size'] = _f(child.get('font-size'), run_attrs['font_size'])
-                if child.get('font-family'):
-                    run_attrs['font_family'] = child.get('font-family')
-                if child.get('font-style'):
-                    run_attrs['font_style'] = child.get('font-style')
-                if child.get('text-decoration'):
-                    run_attrs['text_decoration'] = child.get('text-decoration')
-                runs.append({**run_attrs, 'text': t})
+            run_attrs = dict(parent_attrs)
+            if child.get('font-weight'):
+                run_attrs['font_weight'] = child.get('font-weight')
+            if child.get('fill'):
+                child_fill = child.get('fill')
+                run_attrs['fill_raw'] = child_fill
+                c = parse_hex_color(child_fill)
+                if c:
+                    run_attrs['fill'] = c
+            if child.get('font-size'):
+                run_attrs['font_size'] = _f(child.get('font-size'), run_attrs['font_size'])
+            if child.get('font-family'):
+                run_attrs['font_family'] = child.get('font-family')
+            if child.get('font-style'):
+                run_attrs['font_style'] = child.get('font-style')
+            if child.get('text-decoration'):
+                run_attrs['text_decoration'] = child.get('text-decoration')
+            _append_run(runs, run_attrs, ''.join(child.itertext()))
 
             # Tail text after </tspan> belongs to parent
             if child.tail:
-                t = _normalize_text(child.tail)
-                if t:
-                    runs.append({**parent_attrs, 'text': t})
+                _append_run(runs, parent_attrs, child.tail)
+
+    # Only the end of the whole <text> is trimmed, as in SVG.
+    while runs:
+        runs[-1]['text'] = runs[-1]['text'].rstrip(' ')
+        if runs[-1]['text']:
+            break
+        runs.pop()
 
     return runs
 
