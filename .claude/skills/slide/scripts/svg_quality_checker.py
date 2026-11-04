@@ -162,6 +162,20 @@ def texts_over_images(content: str) -> int:
                if any(_point_in_box(px, py, b) for b in images))
 
 
+def curved_marker_paths(content: str) -> int:
+    """Count curved `<path>`s (A/C/Q/S/T) that carry marker-start/end. The native
+    PPTX keeps the head, but Google Slides drops line ends on curved freeforms
+    (shared-standards §1.1) — draw the head as a standalone polygon instead."""
+    n = 0
+    for attrs in _tag_attr_strings(content, "path"):
+        if not re.search(r"\bmarker-(?:start|end)\s*=", attrs):
+            continue
+        m = re.search(r'\bd\s*=\s*"([^"]+)"', attrs)
+        if m and re.search(r"[AaCcQqSsTt]", m.group(1)):
+            n += 1
+    return n
+
+
 def quiet_zone_hits(content: str) -> int:
     """Count primary-content marks intruding the top-right quiet zone (Rule 22):
     foreground rect/image bboxes, plus text anchors and polyline/path points (a
@@ -608,6 +622,7 @@ class SVGQualityChecker:
             self._check_visual_primary(content, result)
             self._check_text_overlap(content, result)
             self._check_safe_area(content, result)
+            self._check_curved_markers(content, result)
 
             # Determine pass/fail (these signals are warnings, never block)
             result['passed'] = len(result['errors']) == 0
@@ -904,6 +919,15 @@ class SVGQualityChecker:
             result['warnings'].append(
                 f"{n} text element(s) overlaid on an <image> — photos must stand "
                 f"alone, caption outside the image (anti-slop Rule 23)")
+
+    def _check_curved_markers(self, content: str, result: Dict):
+        """WARN: arrow marker on a curved path — lost in the Google Slides copy."""
+        n = curved_marker_paths(content)
+        if n:
+            result['warnings'].append(
+                f"{n} curved <path>(s) carry marker-start/end — Google Slides drops "
+                f"these arrow heads; draw each head as a standalone tangent-rotated "
+                f"<polygon> (shared-standards §1.1)")
 
     def _check_quiet_zone(self, content: str, result: Dict):
         """WARN: content intruding the top-right quiet zone (anti-slop Rule 22)."""

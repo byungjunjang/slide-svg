@@ -45,6 +45,7 @@ The following features are **absolutely forbidden** when generating SVGs — PPT
 - Use `marker-start` / `marker-end` only for connector arrows where the line is primary.
 - Do **not** use `marker` for block / chunky / wide solid arrows where the arrow body is the main visual object.
 - For those solid arrows, draw a standalone closed `<path>` / `<polygon>` and reference `templates/charts/chevron_process.svg` or `templates/charts/process_flow.svg`.
+- Keep markers on **straight** connectors (`<line>`, or a `<path>` of `M`/`L`/`H`/`V` only). On a **curved** `<path>` (`A`/`C`/`Q`/`S`/`T`) the native PPTX keeps the head, but Google Slides drops line ends on curved freeforms when it imports the PPTX. Draw that head as a standalone `<polygon>` rotated to the path's end tangent (§7 method, with the end tangent as the direction vector) and leave the marker off. `svg_quality_checker.py` warns on a curved path that carries a marker.
 
 **Supported DrawingML mapping**:
 
@@ -353,7 +354,7 @@ Large-arc flag: 1 (270° > 180°)
 
 ### Polygon Arrows on Diagonal Lines
 
-> For connector lines, prefer `marker-end` / `marker-start` (see §1.1). For chunky / wide solid / non-connector arrows, use standalone polygon or path geometry instead of `marker`.
+> For straight connector lines, prefer `marker-end` / `marker-start` (see §1.1); curved connectors need a polygon head (§1.1). For chunky / wide solid / non-connector arrows, use standalone polygon or path geometry instead of `marker`.
 
 When using `<polygon>` triangles as arrowheads, arrows on **horizontal or vertical lines** can use simple point offsets. But arrows on **diagonal lines** must have their triangle vertices rotated to match the line direction.
 
