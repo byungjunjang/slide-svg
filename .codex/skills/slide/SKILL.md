@@ -244,6 +244,8 @@ ${SKILL_DIR}/scripts/_py.sh ${SKILL_DIR}/scripts/svg_to_pptx.py <project_path> -
 # Output: exports/<project_name>_<timestamp>.pptx + exports/<project_name>_<timestamp>_svg.pptx
 # Use --only native  to skip SVG reference version
 # Use --only legacy  to only generate SVG image version
+# The native PPTX embeds the installed Pretendard TrueType faces (references/export.md);
+# --no-embed-fonts only when the user asks for a deck without embedded fonts
 ```
 
 **Step 7.4** — Verify the deck (hard-fail quality gate):
@@ -257,7 +259,7 @@ ${SKILL_DIR}/scripts/_py.sh ${SKILL_DIR}/scripts/verify_deck.py <project_path>
 
 > ❌ **NEVER** use `cp` as a substitute for `finalize_svg.py` — it performs multiple critical processing steps
 > ❌ **NEVER** export directly from `svg_output/` — MUST use `-s final` to export from `svg_final/`
-> ❌ **NEVER** add undocumented flags — only the documented `--only native` / `--only legacy` (shown above) are permitted
+> ❌ **NEVER** add undocumented flags — only the documented `--only native` / `--only legacy` and, on the user's request, `--no-embed-fonts` (shown above) are permitted
 > ❌ **NEVER** declare the deck complete while Step 7.4 fails — fix the reported issues, don't skip the gate
 
 ---
@@ -298,6 +300,6 @@ Before acting in a role, read its reference file (`references/strategist.md` / `
 
 ## Notes
 
-- Do NOT add undocumented flags to the post-processing commands — run them as-is, except for the documented `--only native` / `--only legacy` on the export step
+- Do NOT add undocumented flags to the post-processing commands — run them as-is, except for the documented `--only native` / `--only legacy` (and `--no-embed-fonts` when the user asks) on the export step
 - Local preview: `python3 -m http.server -d <project_path>/svg_final 8000`
 - **Troubleshooting**: If the user encounters issues during generation (layout overflow, export errors, blank images, etc.), recommend checking the project's known-issues tracker (GitHub Issues) — it collects fixes from real user reports

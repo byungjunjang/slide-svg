@@ -63,6 +63,7 @@ Speaker notes from `notes/*.md` are embedded in each slide's notes pane automati
 - `-s final` (required) — read from `svg_final/`, not `svg_output/`. Exporting from `svg_output/` skips post-processing.
 - `--only native` — skip the SVG-embedded fallback (produces only the native PPTX)
 - `--only legacy` — produce only the SVG-embedded fallback (rarely needed)
+- `--no-embed-fonts` — skip font embedding (see Font Embedding below); use it only when the user asks for a deck without embedded fonts
 
 **Do not** add other flags.
 
@@ -82,9 +83,10 @@ The exporter reads the active theme's CSS tokens from the Design Spec and writes
 
 Pretendard is the active theme's default typeface (see `references/theme-active.json` → `typography`). For PPTX:
 
-1. The SVG Executor writes `font-family="Pretendard"` on all `<text>` elements.
+1. The SVG Executor writes `font-family="Pretendard"` on all `<text>` elements. The exporter writes Pretendard into both the Latin and the East Asian typeface slot of every run, so PowerPoint draws Hangul with Pretendard instead of a fallback.
 2. `finalize_svg.py` flattens text where fallback would be ambiguous, so the glyph geometry is preserved regardless of what the viewer's system has installed.
-3. For recipients who will re-open and edit the PPTX, distribute the font alongside the deck (OTFs are at `assets/fonts/`), or rely on PowerPoint's font substitution (nearest match: Malgun Gothic on Windows / Apple SD Gothic Neo on macOS).
+3. **The native PPTX embeds the font by default.** The exporter wraps the installed static Pretendard TrueType faces the deck uses (Regular, plus Bold when a run is bold) as EOT parts — full fonts, so a PowerPoint re-save keeps every glyph. Each embedded face adds about 1.2 MB. `--no-embed-fonts` turns it off. Only TrueType outlines can be embedded: the OTF (CFF) and variable files in `assets/fonts/` cannot, so a machine without an installed static `Pretendard*.ttf` (e.g. claude.ai) exports without embedding and prints one `[warn]` line.
+4. Known limit: on a Windows PC without Pretendard installed, PowerPoint draws the embedded glyphs but spaces Hangul about 1em apart (Pretendard's own advance is 0.864em), so a line can wrap differently. Install Pretendard on the PCs that edit or present the deck.
 
 ---
 

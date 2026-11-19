@@ -33,6 +33,7 @@ python3 scripts/svg_to_pptx.py <project_path> -s final
 python3 scripts/svg_to_pptx.py <project_path> -s final --only native
 python3 scripts/svg_to_pptx.py <project_path> -s final --only legacy
 python3 scripts/svg_to_pptx.py <project_path> -s final --no-notes
+python3 scripts/svg_to_pptx.py <project_path> -s final --no-embed-fonts
 python3 scripts/svg_to_pptx.py <project_path> -t none
 python3 scripts/svg_to_pptx.py <project_path> -s final --auto-advance 3
 ```
@@ -41,6 +42,7 @@ Behavior:
 - Default output: timestamped pair in `exports/` — `<project_name>_<timestamp>.pptx` (native editable) + `<project_name>_<timestamp>_svg.pptx` (SVG snapshot)
 - Recommended source directory: `svg_final/`
 - Speaker notes are embedded automatically unless `--no-notes` is used
+- The installed Pretendard TrueType faces the deck uses are embedded (EOT, full fonts) unless `--no-embed-fonts` is used; without an installed static `Pretendard*.ttf` the export skips embedding and prints a `[warn]` line
 
 Dependency:
 

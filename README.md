@@ -310,7 +310,7 @@ A. 네. 한국어로 요청하면서 "영문으로 만들어줘"라고 하거나
 A. 네, 일반 `.pptx` 파일이라 PowerPoint/Keynote/Google Slides에서 자유롭게 편집·발표 가능합니다. 사내 발표 직전 슬라이드 한두 장만 직접 손보는 워크플로우가 가장 흔합니다.
 
 **Q. 폰트가 깨질 수도 있나요?**
-A. Pretendard가 설치되어 있지 않은 환경에서는 폰트 체인에 따라 Apple SD Gothic Neo → Malgun Gothic → Arial 순으로 폴백됩니다. 어디서 열어도 깨지진 않지만, 정확히 동일한 모양을 보장하려면 `assets/fonts/` 디렉터리의 Pretendard OTF를 PPTX와 함께 배포하세요.
+A. 내보낸 PPTX에는 만든 PC에 설치된 Pretendard(정적 TTF)가 기본으로 내장됩니다. 그래서 Pretendard가 없는 PC에서도 글자 모양은 그대로입니다. 다만 Windows PowerPoint는 설치되지 않은 내장 한글 글꼴의 글자 간격을 조금 넓혀서 줄바꿈이 달라질 수 있습니다. 덱을 고치거나 발표할 PC에는 Pretendard를 설치하세요(`assets/fonts/`). 만든 PC에 정적 TTF가 없으면 내장을 건너뛰고, 이때는 폰트 체인에 따라 Apple SD Gothic Neo → Malgun Gothic → Arial 순으로 폴백됩니다.
 
 **Q. 기밀 데이터인데 안전한가요?**
 A. 파일은 모두 로컬에서 처리됩니다. 단, Claude와의 대화 내용은 AI 응답을 받기 위해 Anthropic 서버로 전달됩니다. 회사 보안 정책에 따라 판단하세요. AI 이미지 생성은 호스트별 승인 경로만 사용합니다: Claude Code는 `/codex-image`, Codex는 기본 `imagegen` / `image_gen`. 다른 백엔드(Gemini/DALL·E/Midjourney 등)는 사용하지 않습니다.

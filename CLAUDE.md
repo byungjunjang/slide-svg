@@ -90,7 +90,7 @@
 1. **`cp` 금지** — `finalize_svg.py` 대신 파일 복사로 끝내지 말 것. 아이콘 임베드 / 이미지 크롭 / 텍스트 플래튼 / 둥근사각형 변환을 건너뛴다.
 2. **단일 블록 금지** — `total_md_split.py`, `finalize_svg.py`, `svg_to_pptx.py` 세 스크립트는 **각각 별도의 bash 호출**로 순차 실행. 한 블록에 묶지 말 것.
 3. **`-s final` 필수** — `svg_to_pptx.py <project> -s final`. `svg_output/`에서 직접 export 하면 후처리를 건너뛴다.
-4. **추가 플래그 금지** — 문서에 없는 `--only` 등 추가 플래그는 쓰지 말 것 (예외: 명시된 `--only native` / `--only legacy`).
+4. **추가 플래그 금지** — 문서에 없는 `--only` 등 추가 플래그는 쓰지 말 것 (예외: 명시된 `--only native` / `--only legacy`, 사용자가 글꼴 내장을 끄라고 할 때 `--no-embed-fonts`).
 
 ## 자주 쓰는 명령
 
@@ -140,5 +140,5 @@ python3 .claude/skills/theme-init/scripts/init_theme.py --register-current    # 
 
 - **officecli (선택)**: 설치 시 `verify_deck.py`(Step 7.4)가 최신 네이티브 PPTX에 OpenXML validate(열 수 없는 corrupt 파일 → 하드 페일, 스키마 warning → WARN)와 export된 PPTX 실물 컨택트 시트(`output/<project>/_pptx_render/<stem>-grid.png`, 눈검수용)를 추가 수행한다 — 미설치 시 자동 skip, `OFFICECLI_BIN`으로 지정/비활성 가능
 - **시각 기준 텍스트**: `.claude/skills/slide/references/reference-2-text.txt` — Jangpm 소스 타깃 데크에서 추출한 텍스트
-- **Pretendard 폰트**: `assets/fonts/` — PPTX 배포 시 함께 배포하면 수정자 환경에서도 그대로 렌더
+- **Pretendard 폰트**: `assets/fonts/`(OTF·가변 TTF). native PPTX 는 이 PC 에 설치된 Pretendard 정적 TTF 를 기본으로 내장한다(`--no-embed-fonts` 로 끔, 설치된 TTF 가 없으면 건너뜀). 내장 글꼴은 글자 모양을 지키지만, Pretendard 가 없는 Windows PowerPoint 는 한글 간격을 넓힌다 → 편집·발표 PC 에는 Pretendard 를 설치
 - **업스트림 출처**: `LICENSE-ppt-master` — 본 프로젝트가 포크한 `ppt-master` MIT 고지

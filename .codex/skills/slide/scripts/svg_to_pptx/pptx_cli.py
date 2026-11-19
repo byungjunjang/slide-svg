@@ -85,6 +85,9 @@ Speaker notes (enabled by default):
 
     parser.add_argument('--no-notes', action='store_true',
                         help='Disable speaker notes embedding (enabled by default)')
+    parser.add_argument('--no-embed-fonts', action='store_true',
+                        help='Do not embed the installed Pretendard TrueType faces '
+                             'the deck uses (default: embed full fonts)')
 
     args = parser.parse_args()
 
@@ -154,6 +157,7 @@ Speaker notes (enabled by default):
         use_compat_mode=not args.no_compat,
         notes=notes,
         enable_notes=enable_notes,
+        embed_fonts=not args.no_embed_fonts,
     )
 
     success = True
