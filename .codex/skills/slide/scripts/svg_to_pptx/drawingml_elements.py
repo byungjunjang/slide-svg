@@ -15,7 +15,7 @@ from .drawingml_utils import (
     px_to_emu, _f, _get_attr,
     ctx_x, ctx_y, ctx_w, ctx_h,
     parse_hex_color, resolve_url_id, get_effective_filter_id,
-    parse_font_family, estimate_text_width,
+    parse_font_family, estimate_text_width, detect_text_lang,
     _xml_escape,
 )
 from .drawingml_styles import (
@@ -732,7 +732,7 @@ def _build_run_xml(
         fill_xml = f'<a:solidFill><a:srgbClr val="{fill}">{alpha_xml}</a:srgbClr></a:solidFill>'
 
     return f'''<a:r>
-<a:rPr lang="zh-CN" sz="{sz}"{b_attr}{i_attr}{u_attr}{strike_attr} dirty="0">
+<a:rPr lang="{detect_text_lang(text)}" sz="{sz}"{b_attr}{i_attr}{u_attr}{strike_attr} dirty="0">
 {fill_xml}
 <a:latin typeface="{_xml_escape(fonts['latin'])}"/>
 <a:ea typeface="{_xml_escape(fonts['ea'])}"/>

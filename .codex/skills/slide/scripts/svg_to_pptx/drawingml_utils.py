@@ -40,8 +40,20 @@ EA_FONTS = {
     'WenQuanYi Micro Hei', 'WenQuanYi Zen Hei',
     'YouYuan', 'LiSu', 'HuaWenKaiTi',
     'Songti SC', 'Songti TC',
+    # Korean
+    'Malgun Gothic', 'Gulim', 'Dotum', 'Batang',
+    'Noto Sans KR', 'Noto Serif KR',
 }
 SYSTEM_FONTS = {'system-ui', '-apple-system', 'BlinkMacSystemFont'}
+
+# Fonts that cover both Latin and Hangul: they fill the latin AND ea slots.
+# PowerPoint draws Hangul from ea, so leaving ea to a Chinese default makes
+# Korean text fall back to Malgun Gothic.
+DUAL_SCRIPT_FONTS = {
+    'Pretendard', 'Pretendard Thin', 'Pretendard ExtraLight', 'Pretendard Light',
+    'Pretendard Medium', 'Pretendard SemiBold', 'Pretendard ExtraBold',
+    'Pretendard Black', 'Pretendard JP', 'Pretendard GOV',
+}
 
 # macOS/Linux-only fonts -> Windows equivalents
 FONT_FALLBACK_WIN = {
@@ -255,7 +267,10 @@ def parse_font_family(font_family_str: str) -> dict[str, str]:
             continue
 
         win_font = FONT_FALLBACK_WIN.get(font, font)
-        if font in EA_FONTS:
+        if font in DUAL_SCRIPT_FONTS:
+            latin_font = latin_font or win_font
+            ea_font = ea_font or win_font
+        elif font in EA_FONTS:
             ea_font = ea_font or win_font
         else:
             latin_font = latin_font or win_font
@@ -289,6 +304,21 @@ def is_cjk_char(ch: str) -> bool:
             # Hiragana & Katakana (for safety — same CJK width class)
             0x3040 <= cp <= 0x309F or  # Hiragana
             0x30A0 <= cp <= 0x30FF)    # Katakana
+
+
+def is_hangul_char(ch: str) -> bool:
+    """Check if a character is Korean Hangul (syllable or jamo)."""
+    cp = ord(ch)
+    return (0xAC00 <= cp <= 0xD7AF or 0x1100 <= cp <= 0x11FF or
+            0x3130 <= cp <= 0x318F or 0xA960 <= cp <= 0xA97F or
+            0xD7B0 <= cp <= 0xD7FF)
+
+
+def detect_text_lang(text: str) -> str:
+    """Return the DrawingML language tag for a text run."""
+    if any(is_hangul_char(ch) for ch in text):
+        return 'ko-KR'
+    return 'zh-CN' if any(is_cjk_char(ch) for ch in text) else 'en-US'
 
 
 def estimate_text_width(text: str, font_size: float, font_weight: str = '400') -> float:
