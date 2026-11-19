@@ -8,7 +8,6 @@
     Single accent: upside = accent, downside = accent at fill-opacity 0.45
     Native marker: none. A native bar chart starts every bar at zero, so bars around a base value stay SVG geometry
     -->
-    <rect width="1280" height="720" fill="#FFFFFF"/>
 
     <g id="header">
         <text x="60" y="58" font-family="Pretendard, 'Apple SD Gothic Neo', 'Malgun Gothic', Arial, sans-serif"

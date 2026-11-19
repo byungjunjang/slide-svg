@@ -33,8 +33,9 @@
     /* === CSS CUSTOM PROPERTIES === */
     :root {
       /* Colors — active theme tokens (rendered from theme-active.json) */
-      --bg: #FAFAF9;
+      --bg: #FFFFFF;
       --surface: #FFFFFF;
+      --surface-alt: #F5F5F4;
       --text: #1A1A1A;
       --text-secondary: #6B7280;
       --accent: #4633E3;
@@ -344,7 +345,7 @@
     /* === COMPARISON TABLE ENHANCEMENTS === */
     .col-recommended { background: var(--accent-soft); }
     .comparison-table thead th { padding: var(--space-4) var(--space-4); vertical-align: bottom; }
-    .comparison-table tbody tr:nth-child(even) { background: var(--bg); }
+    .comparison-table tbody tr:nth-child(even) { background: var(--surface-alt); }
     .comparison-verdict td { border-bottom: none; padding-top: var(--space-4); padding-bottom: var(--space-4); }
 
     /* === REPORT PRIMITIVES === */

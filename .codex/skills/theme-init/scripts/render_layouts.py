@@ -21,6 +21,11 @@ Content placeholders (e.g., `{{TITLE}}`, `{{PAGE_TITLE}}`) — any `{{...}}` tha
 does NOT start with `TOKEN:` — are left untouched so the Executor can fill them
 per slide.
 
+Conditional blocks (`{{IF:…}}` / `{{IFNOT:…}}`, the `_token_render` grammar) are
+resolved first, against the theme with the shell-token fallback below applied —
+so `{{IFNOT:colors.shell-bg=#FFFFFF}}` keeps a band or a non-white page and drops
+the full-slide rect on a white page (it would be a click-swallowing box in PPTX).
+
 Shell-token fallback: optional narrative-band tokens (`colors.shell-*`) resolve
 to their base sibling when null or absent — `shell-text`→`text`,
 `shell-text-secondary`→`text-secondary`, `shell-accent`→`accent`,
@@ -42,6 +47,8 @@ import json
 import re
 import sys
 from pathlib import Path
+
+from _token_render import _render_conditionals
 
 
 SKILL_ROOT = Path(__file__).resolve().parents[2] / "slide"
@@ -113,9 +120,21 @@ def format_value(val) -> str:
     return str(val)
 
 
+def _with_shell_fallbacks(theme: dict) -> dict:
+    """Theme copy whose null / absent shell-* colors hold their base sibling."""
+    colors = dict(theme.get("colors") or {})
+    for dotted in SHELL_FALLBACKS:
+        try:
+            colors[dotted.split(".", 1)[1]] = resolve_token(theme, dotted)
+        except KeyError:
+            pass
+    return {**theme, "colors": colors}
+
+
 def render_template(tpl: str, theme: dict) -> tuple[str, list[str]]:
     """Return (rendered_svg, unresolved_paths_for_debug)."""
     missing: list[str] = []
+    tpl = _render_conditionals(tpl, _with_shell_fallbacks(theme))
 
     def sub(match: re.Match) -> str:
         path = match.group(1)

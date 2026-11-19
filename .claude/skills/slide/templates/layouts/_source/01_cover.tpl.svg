@@ -3,9 +3,9 @@
   <!-- Lecture Deck — 01 Cover (theme-parametric) -->
   <!-- Theme tokens resolved at render time from references/theme-active.json -->
 
-  <!-- Page background -->
-  <rect width="1280" height="720" fill="{{TOKEN:colors.shell-bg}}"/>
-
+  <!-- Full-slide rect only for a narrative band or a non-white page — none on white -->
+{{IFNOT:colors.shell-bg=#FFFFFF}}  <rect width="1280" height="720" fill="{{TOKEN:colors.shell-bg}}"/>
+{{/IF}}
   <!-- Accent rule (single editorial cue) -->
   <rect x="56" y="140" width="80" height="3" fill="{{TOKEN:colors.shell-accent}}"/>
 

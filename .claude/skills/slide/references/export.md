@@ -34,6 +34,7 @@ ${SKILL_DIR}/scripts/_py.sh ${SKILL_DIR}/scripts/finalize_svg.py <project_path>
 
 Runs all SVG post-processing in one pass:
 
+- Drops a plain white full-slide background `<rect>` (the slide is already white; in PowerPoint it would be a full-slide box that swallows clicks)
 - Embeds icons referenced by `<use data-icon="...">` placeholders from `templates/icons/`
 - Crops and embeds `<image href="../images/...">` references
 - Flattens text to paths where PowerPoint font substitution would otherwise break layout (Pretendard stays, but any `<text>` with custom kerning or pattern-fill gets flattened)

@@ -4,7 +4,7 @@
   "display_name": "Jangpm",
   "description": "Editorial, minimal, Korean lecture / report visual language. Notion/Linear/Vercel sensibility adapted to instructional content.",
   "colors": {
-    "bg": "#FAFAF9",
+    "bg": "#FFFFFF",
     "surface": "#FFFFFF",
     "surface-alt": "#F5F5F4",
     "text": "#1A1A1A",

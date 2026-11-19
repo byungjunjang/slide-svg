@@ -40,13 +40,11 @@ This runs:
    on the content shell, no banned SVG features, content shell stays
    light). Aborts the chain before any downstream file references a
    broken shell.
-7. **`preview_shells.py`** (non-fatal) — rasterizes the shells with
-   sample content into `templates/layouts/<name>/_preview/` for the
-   Step 5 review checkpoint. If neither `cairosvg` nor `svglib` is
-   installed it can only write filled SVGs (no PNG thumbnails) — the
-   Step 5c BLOCKING review then has nothing to show. Install a rasterizer
-   first (`pip install cairosvg`, the crispest path) so the PNG review
-   works; see the Step 5 header note.
+7. **`preview_shells.py`** (non-fatal) — writes one self-contained page,
+   `templates/layouts/<name>/_preview/index.html`: palette, the four
+   shells with sample content, and sample body layouts, all inlined as
+   SVG. The browser renders the real font chain, so no rasterizer is
+   needed; this page is the Step 5c / Step 6.5 review.
 
 > The first `/theme-init` run for a brand-new theme has no `_shell_src/`
 > yet, so Step 3 renders the **baseline** (global `_source/`) shells —

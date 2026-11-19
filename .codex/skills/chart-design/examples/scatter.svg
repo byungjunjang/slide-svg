@@ -1,5 +1,5 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 500" width="800" height="500">
-  <rect width="800" height="500" fill="#FAFAF9"/>
+  <rect width="800" height="500" fill="#FFFFFF"/>
   <g transform="translate(40,40)">
 <g id="chart_scatter" data-chart-type="scatter">
 <text x="25.54" y="400.03" font-family="Pretendard, 'Apple SD Gothic Neo', 'Malgun Gothic', Arial, sans-serif" font-size="12.8" font-weight="500" fill="#6B7280" text-anchor="end">0</text>

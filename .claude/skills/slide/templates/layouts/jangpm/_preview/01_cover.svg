@@ -3,8 +3,7 @@
   <!-- Lecture Deck — 01 Cover (theme-parametric) -->
   <!-- Theme tokens resolved at render time from references/theme-active.json -->
 
-  <!-- Page background -->
-  <rect width="1280" height="720" fill="#FAFAF9"/>
+  <!-- Full-slide rect only for a narrative band or a non-white page — none on white -->
 
   <!-- Accent rule (single editorial cue) -->
   <rect x="56" y="140" width="80" height="3" fill="#4633E3"/>

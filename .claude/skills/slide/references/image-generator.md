@@ -12,10 +12,10 @@
 Under the `slide` skill, **every AI-generated image MUST follow the Jangpm illustration recipe**, which is the default and the only recommended style:
 
 **Style directive** (prepend to every prompt):
-> `minimal flat illustration, line-art style, restrained clean tones, clean solid #FAFAF9 background, no gradients, no glow, no 3D rendering, no photorealism, harmonized with a single #4633E3 accent`
+> `minimal flat illustration, line-art style, restrained clean tones, clean solid #FFFFFF background, no gradients, no glow, no 3D rendering, no photorealism, harmonized with a single #4633E3 accent`
 
 **Deck Style Anchor** (shared prefix for all images in a deck):
-> `Jangpm lecture deck illustration — minimal flat line-art, restrained clean tones aligned with the single #4633E3 accent, clean solid #FAFAF9 background`
+> `Jangpm lecture deck illustration — minimal flat line-art, restrained clean tones aligned with the single #4633E3 accent, clean solid #FFFFFF background`
 
 **Negative prompt** (always include):
 > `text, watermark, logo, photograph, photorealistic, 3D render, gradient, glow, neon, vibrant colors, rainbow, dashboard UI, stock photo, shutterstock, low quality, blurry`
@@ -112,7 +112,7 @@ Every image must be output in the following format:
 
 | Design Style | Image Style | Core Keywords |
 |-------------|-------------|---------------|
-| **Jangpm (locked default)** | Minimal flat line-art, restrained clean tones | `minimal flat illustration`, `line-art style`, `restrained clean tones`, `clean solid #FAFAF9 background`, `no gradients`, `no glow`, `harmonized with the single #4633E3 accent` |
+| **Jangpm (locked default)** | Minimal flat line-art, restrained clean tones | `minimal flat illustration`, `line-art style`, `restrained clean tones`, `clean solid #FFFFFF background`, `no gradients`, `no glow`, `harmonized with the single #4633E3 accent` |
 
 <details>
 <summary>Legacy style presets (DO NOT USE — kept for historical reference)</summary>
@@ -138,7 +138,7 @@ These legacy presets conflict with Jangpm's anti-slop rules (gradients, vibrant 
 Under the `slide` skill, the color directive for every prompt is fixed:
 
 ```
-color palette: #FAFAF9 background, restrained clean midtones harmonized with the single #4633E3 accent, neutral grays (#1A1A1A text, #6B7280 secondary)
+color palette: #FFFFFF background, restrained clean midtones harmonized with the single #4633E3 accent, neutral grays (#1A1A1A text, #6B7280 secondary)
 ```
 
 Do NOT extract a bespoke palette from the Design Spec (the Design Spec is already locked to the Jangpm palette — extraction is redundant). Do NOT introduce a second hue.
@@ -226,7 +226,7 @@ Image 3 prompt: [Deck Style Anchor], growth chart with upward trending line...
 | Specify style | `flat design`, `isometric`, `vector style`, `hand-drawn` |
 | Simplify details | `simplified`, `clean lines`, `minimal details` |
 | Unified palette | Strictly use design spec colors |
-| Background choice | `clean solid #FAFAF9 background` (matches the slide; gpt-image-2 cannot emit true alpha) |
+| Background choice | `clean solid #FFFFFF background` (matches the slide; gpt-image-2 cannot emit true alpha) |
 
 **Template**: `{subject description}, {illustration style} illustration style, {detail level} with clean lines, color palette: {color list}, {background type} background, professional {purpose} illustration`
 
@@ -255,7 +255,7 @@ Image 3 prompt: [Deck Style Anchor], growth chart with upward trending line...
 |-----------|-------------|
 | Repeatability | `seamless`, `tileable`, `repeatable` (if needed) |
 | Understated support | `subtle`, `understated`, `supporting element` |
-| Background-matched | `clean solid #FAFAF9 background` or `isolated element` |
+| Background-matched | `clean solid #FFFFFF background` or `isolated element` |
 | Small-size readability | Consider legibility at small dimensions |
 
 **Template**: `{pattern type} decorative pattern, {style} style, {color scheme}, {background type} background, subtle and elegant, suitable for {purpose}`
@@ -300,7 +300,7 @@ Host mapping:
 
 Prompt body for either host:
 ```text
-Jangpm lecture deck illustration — minimal flat line-art, restrained clean tones aligned with the single #4633E3 accent, clean solid #FAFAF9 background, <subject>, color palette: #FAFAF9 background, restrained clean midtones harmonized with the single #4633E3 accent, neutral grays (#1A1A1A text, #6B7280 secondary). Avoid: text, watermark, logo, photograph, photorealistic, 3D render, gradient, glow, neon, vibrant colors, rainbow, dashboard UI, stock photo, shutterstock, low quality, blurry
+Jangpm lecture deck illustration — minimal flat line-art, restrained clean tones aligned with the single #4633E3 accent, clean solid #FFFFFF background, <subject>, color palette: #FFFFFF background, restrained clean midtones harmonized with the single #4633E3 accent, neutral grays (#1A1A1A text, #6B7280 secondary). Avoid: text, watermark, logo, photograph, photorealistic, 3D render, gradient, glow, neon, vibrant colors, rainbow, dashboard UI, stock photo, shutterstock, low quality, blurry
 ```
 
 **Size / aspect guidance**:

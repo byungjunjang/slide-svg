@@ -257,7 +257,7 @@ cp templates/layouts/government_red/* projects/<project>/templates/
 #### Required
 
 - viewBox: `0 0 1280 720`
-- Backgrounds use `<rect>` elements
+- A non-white page background or narrative band uses a `<rect>`; a white page gets no full-slide `<rect>` (it would be a click-swallowing box in PowerPoint)
 - Text wrapping uses `<tspan>`
 - Transparency uses `fill-opacity` / `stroke-opacity`
 - Gradients use `<defs>` with `<linearGradient>`

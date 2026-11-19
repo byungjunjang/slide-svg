@@ -87,7 +87,7 @@
 
 `SKILL.md §Step 7`에 상세. 핵심 규칙:
 
-1. **`cp` 금지** — `finalize_svg.py` 대신 파일 복사로 끝내지 말 것. 아이콘 임베드 / 이미지 크롭 / 텍스트 플래튼 / 둥근사각형 변환을 건너뛴다.
+1. **`cp` 금지** — `finalize_svg.py` 대신 파일 복사로 끝내지 말 것. 흰 전체 바탕 rect 제거 / 아이콘 임베드 / 이미지 크롭 / 텍스트 플래튼 / 둥근사각형 변환을 건너뛴다.
 2. **단일 블록 금지** — `total_md_split.py`, `finalize_svg.py`, `svg_to_pptx.py` 세 스크립트는 **각각 별도의 bash 호출**로 순차 실행. 한 블록에 묶지 말 것.
 3. **`-s final` 필수** — `svg_to_pptx.py <project> -s final`. `svg_output/`에서 직접 export 하면 후처리를 건너뛴다.
 4. **추가 플래그 금지** — 문서에 없는 `--only` 등 추가 플래그는 쓰지 말 것 (예외: 명시된 `--only native` / `--only legacy`, 사용자가 글꼴 내장을 끄라고 할 때 `--no-embed-fonts`).

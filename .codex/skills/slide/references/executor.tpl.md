@@ -551,8 +551,9 @@ Each command runs in its own bash call — never bundled into one block. See `re
 
 Final pre-save verification (items covered by §2 Per-Page Self-Audit are omitted here):
 
-- [ ] Background is `{{TOKEN:colors.bg}}` (not white, not pure black)
-- [ ] Text primary is `{{TOKEN:colors.text}}`, not `#000000`
+{{IF:colors.bg=#FFFFFF}}- [ ] No full-slide background `<rect>` — the page is already white; place elements directly on the canvas
+{{/IF}}{{IFNOT:colors.bg=#FFFFFF}}- [ ] Background is `{{TOKEN:colors.bg}}` (not pure black)
+{{/IF}}- [ ] Text primary is `{{TOKEN:colors.text}}`, not `#000000`
 - [ ] No gradients, no glow, no filter-shadow with color, no multi-hue
 - [ ] Every `<text>` has the full active-theme font-family chain (`{{TOKEN:typography.font-chain}}`)
 - [ ] Icons are from `tabler-outline/` (bare line art, no wrapper), 2px stroke

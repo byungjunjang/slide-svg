@@ -26,7 +26,7 @@
       "required": ["bg", "surface", "surface-alt", "text", "text-secondary", "text-tertiary", "border", "border-strong", "accent", "accent-soft", "accent-ink", "positive", "positive-soft", "negative", "negative-soft", "warning", "warning-soft"],
       "additionalProperties": false,
       "properties": {
-        "bg":              { "$ref": "#/$defs/hex", "description": "Page background (warm off-white typical)." },
+        "bg":              { "$ref": "#/$defs/hex", "description": "Page background (white #FFFFFF by default — a white page gets no full-slide rect)." },
         "surface":         { "$ref": "#/$defs/hex", "description": "Card / container background." },
         "surface-alt":     { "$ref": "#/$defs/hex", "description": "Subtle grouped background." },
         "text":            { "$ref": "#/$defs/hex", "description": "Primary text (never pure black)." },

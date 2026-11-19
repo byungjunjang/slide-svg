@@ -2,8 +2,9 @@
 <svg xmlns="http://www.w3.org/2000/svg" width="1280" height="720" viewBox="0 0 1280 720">
   <!-- Lecture Deck — 03 Content (theme-parametric; header/footer shell only; body composed by Executor) -->
 
-  <rect width="1280" height="720" fill="{{TOKEN:colors.bg}}"/>
-
+  <!-- Full-slide rect only for a non-white page — none on white -->
+{{IFNOT:colors.bg=#FFFFFF}}  <rect width="1280" height="720" fill="{{TOKEN:colors.bg}}"/>
+{{/IF}}
   <!-- Headline bar: title at top (Headline) -->
   <text x="56" y="96"
         font-family="{{TOKEN:typography.font-chain}}"

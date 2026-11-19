@@ -1,5 +1,5 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 500" width="800" height="500">
-  <rect width="800" height="500" fill="#FAFAF9"/>
+  <rect width="800" height="500" fill="#FFFFFF"/>
   <g transform="translate(40,40)">
 <g id="chart_line" data-chart-type="line">
 <line x1="46.48" y1="395.68" x2="712" y2="395.68" stroke="#E5E7EB" stroke-width="1"/>

@@ -15,7 +15,6 @@
         
     </defs>
     
-    <rect width="1280" height="720" fill="{{TOKEN:colors.surface}}"/>
     
     <text x="640" y="50" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC', 'Microsoft YaHei', sans-serif" 
           font-size="32" font-weight="bold" fill="{{TOKEN:colors.text}}" text-anchor="middle">

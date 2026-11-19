@@ -20,7 +20,7 @@ Theme-specific anti-patterns for the **Jangpm** theme (`jangpm`). Structural rul
 | `text` | `#1A1A1A` |
 | `text-secondary` | `#6B7280` |
 | `text-tertiary` | `#9CA3AF` |
-| `bg` | `#FAFAF9` |
+| `bg` | `#FFFFFF` |
 | `surface` | `#FFFFFF` |
 | `surface-alt` | `#F5F5F4` |
 | `border` | `#E5E7EB` |

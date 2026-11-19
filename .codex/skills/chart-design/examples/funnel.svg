@@ -1,5 +1,5 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 500" width="800" height="500">
-  <rect width="800" height="500" fill="#FAFAF9"/>
+  <rect width="800" height="500" fill="#FFFFFF"/>
   <g transform="translate(40,40)">
 <g id="chart_funnel" data-chart-type="funnel">
 <polygon points="25.20,0.00 478.80,0.00 342.72,100.50 161.28,100.50" fill="#4633E3" stroke-linejoin="round" fill-opacity="0.85"/>

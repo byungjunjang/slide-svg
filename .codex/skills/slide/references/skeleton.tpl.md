@@ -35,6 +35,7 @@
       /* Colors — active theme tokens (rendered from theme-active.json) */
       --bg: {{TOKEN:colors.bg}};
       --surface: {{TOKEN:colors.surface}};
+      --surface-alt: {{TOKEN:colors.surface-alt}};
       --text: {{TOKEN:colors.text}};
       --text-secondary: {{TOKEN:colors.text-secondary}};
       --accent: {{TOKEN:colors.accent}};
@@ -344,7 +345,7 @@
     /* === COMPARISON TABLE ENHANCEMENTS === */
     .col-recommended { background: var(--accent-soft); }
     .comparison-table thead th { padding: var(--space-4) var(--space-4); vertical-align: bottom; }
-    .comparison-table tbody tr:nth-child(even) { background: var(--bg); }
+    .comparison-table tbody tr:nth-child(even) { background: var(--surface-alt); }
     .comparison-verdict td { border-bottom: none; padding-top: var(--space-4); padding-bottom: var(--space-4); }
 
     /* === REPORT PRIMITIVES === */

@@ -234,7 +234,7 @@ cp ${SKILL_DIR}/templates/layouts/$THEME/design_spec.md <project_path>/templates
 ${SKILL_DIR}/scripts/_py.sh ${SKILL_DIR}/scripts/total_md_split.py <project_path>
 ```
 
-**Step 7.2** — SVG post-processing (icon embedding / image crop & embed / text flattening / rounded rect to path):
+**Step 7.2** — SVG post-processing (white full-slide background rect removal / icon embedding / image crop & embed / text flattening / rounded rect to path):
 ```bash
 ${SKILL_DIR}/scripts/_py.sh ${SKILL_DIR}/scripts/finalize_svg.py <project_path>
 ```

@@ -1,5 +1,5 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 980 300" width="980" height="300">
-  <rect width="980" height="300" fill="#FAFAF9"/>
+  <rect width="980" height="300" fill="#FFFFFF"/>
   <g transform="translate(40,40)">
 <g id="chart_kpi_cards" data-chart-type="kpi_cards">
 <rect x="0" y="0" width="213" height="220" fill="#FFFFFF" rx="12" stroke="#E5E7EB" stroke-width="1"/>

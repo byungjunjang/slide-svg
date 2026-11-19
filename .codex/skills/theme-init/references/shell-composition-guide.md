@@ -16,14 +16,10 @@ with jangpm geometry — the baseline shells already work. Run it whenever
 the design guide implies a distinct page architecture (a navy hero, a
 spectrum dot row, tag-chip headers, band cards, etc.).
 
-> **Rasterizer preflight (do this before 5b/5c).** The Step 5c review is a
-> render-first BLOCKING checkpoint that shows the user PNG thumbnails of the
-> composed shells. `preview_shells.py` needs `cairosvg` (crispest) or
-> `svglib`+`reportlab` to emit PNGs; without one it can only drop filled
-> SVGs and the visual review silently degrades. Install up front:
-> `pip install cairosvg` (or `pip install -r .codex/skills/slide/requirements.txt`).
-> The dual-mode "no browser binary" purity rule still holds — do **not** add
-> Playwright; the cairosvg/svglib path is the supported rasterizer.
+> **Preview (5b/5c).** `preview_shells.py` builds one self-contained page,
+> `templates/layouts/<name>/_preview/index.html`, with the rendered shells
+> inlined as SVG. The browser renders the real font chain, so no rasterizer
+> (`cairosvg` / `svglib`) and no browser binary are needed.
 
 **Inputs** (read all four before composing):
 1. `theme-active.json` — tokens, including any `colors.shell-*` band tokens.
@@ -54,6 +50,10 @@ Rules for the templates:
 - **Narrative shells** (`01_cover` / `02_chapter` / `04_ending`) may go
   full-bleed on `shell-bg`, place the spectrum row, and use a CTA button
   in `shell-accent`.
+- **No full-slide box on a white page.** Gate every full-canvas `<rect>`
+  the way the `_source` shells do — `{{IFNOT:colors.shell-bg=#FFFFFF}}…{{/IF}}`
+  (narrative) or `{{IFNOT:colors.bg=#FFFFFF}}…{{/IF}}` (content). A white
+  full-slide rect becomes a click-swallowing box in PowerPoint.
 - **The content shell (`03_content`) stays light** — `bg`/`surface`
   background, `text`/`text-secondary` ink, single `accent`. It MUST keep
   the `{{GOVERNING_MESSAGE}}` GM line. Never paint the band fill or a

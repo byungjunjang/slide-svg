@@ -30,7 +30,7 @@
 
 | Token | Value | Usage |
 |-------|-------|-------|
-| `--bg` | `#FAFAF9` | Body background |
+| `--bg` | `#FFFFFF` | Body background |
 | `--surface` | `#FFFFFF` | Card/container background |
 | `--surface-alt` | `#F5F5F4` | Subtle grouped background |
 | `--text` | `#1A1A1A` | Main text (never pure `#000`) |

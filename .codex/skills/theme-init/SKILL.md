@@ -202,7 +202,7 @@ decks inherit it.
 좌표·정렬·장식·내러티브 밴드까지 재작곡해
 `templates/layouts/<name>/_shell_src/*.tpl.svg`(4개 파라메트릭 템플릿)로
 작성한다. **이 스텝은 선택적** — jangpm 지오메트리로 충분한 모노크롬
-리브랜드는 건너뛴다. 5b/5c 전 래스터라이저 preflight(`pip install cairosvg`) 필수.
+리브랜드는 건너뛴다. 프리뷰는 브라우저로 여는 `_preview/index.html`이라 래스터라이저가 필요 없다.
 
 ```bash
 .codex/skills/slide/scripts/_py.sh .codex/skills/theme-init/scripts/render_layouts.py     # now picks up _shell_src/

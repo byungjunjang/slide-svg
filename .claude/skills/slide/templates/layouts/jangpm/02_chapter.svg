@@ -2,7 +2,7 @@
 <svg xmlns="http://www.w3.org/2000/svg" width="1280" height="720" viewBox="0 0 1280 720">
   <!-- Lecture Deck — 02 Chapter / Section Divider (theme-parametric) -->
 
-  <rect width="1280" height="720" fill="#FAFAF9"/>
+  <!-- Full-slide rect only for a narrative band or a non-white page — none on white -->
 
   <!-- Chapter number (large, accent) -->
   <text x="56" y="260"

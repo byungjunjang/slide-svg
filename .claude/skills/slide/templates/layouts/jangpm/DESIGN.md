@@ -28,7 +28,7 @@ Jangpm is a **monochrome + single accent** system. The ONLY hex values that may 
 
 | Token | Hex | Role |
 |---|---|---|
-| `--bg` | `#FAFAF9` | page background |
+| `--bg` | `#FFFFFF` | page background |
 | `--surface` | `#FFFFFF` | card / container |
 | `--surface-alt` | `#F5F5F4` | grouped row / nested card |
 | `--text` | `#1A1A1A` | primary text (never pure `#000`) |
@@ -262,7 +262,7 @@ ROW 2 LABEL    BODY TEXT
 #### `definition-with-side-data`
 
 - **Inverted layout** — flip to data-on-left + definition-on-right. Useful when the chart / mapping diagram is the more familiar element and the definition is the surprise.
-- **Definition as pull-quote** — wrap the definition in `<rect fill="#FAFAF9" stroke="#E5E7EB" stroke-width="1"/>` + a 24px accent left-rule, body inside is 18.4. Side data unchanged.
+- **Definition as pull-quote** — wrap the definition in `<rect fill="#FFFFFF" stroke="#E5E7EB" stroke-width="1"/>` + a 24px accent left-rule, body inside is 18.4. Side data unchanged.
 - **Stacked side data** — right column splits into 2 stacked mini-blocks (mini-chart + mini-stat) instead of one supporting visual. Definition stays solid.
 - **Numbered definition** — definition prefaced with `01 / 02 / 03` accent eyebrow when the slide is one of a series (e.g., "First principle", "Second principle"); side data unchanged.
 - **Side data as caption strip** — instead of a chart, side becomes a stacked caption strip (3 small label:body rows) — turns the slide into "definition + 3 supporting facts".

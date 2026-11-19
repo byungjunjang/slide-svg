@@ -7,7 +7,6 @@
     Single accent: valuation methods = accent at fill-opacity 0.85, market reference (52-week range) = accent at 0.35
     Native marker: none. A native bar chart starts every bar at zero, so floating ranges stay SVG geometry
     -->
-    <rect width="1280" height="720" fill="#FFFFFF"/>
 
     <g id="header">
         <text x="60" y="58" font-family="Pretendard, 'Apple SD Gothic Neo', 'Malgun Gothic', Arial, sans-serif"

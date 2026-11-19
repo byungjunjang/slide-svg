@@ -41,7 +41,7 @@ DEFAULT_OUT = SKILL_ROOT / "references" / "theme-active.json"
 SAFE_DEFAULTS: dict[str, Any] = {
     "version": "1.0",
     "colors": {
-        "bg":             "#FAFAF9",
+        "bg":             "#FFFFFF",
         "surface":        "#FFFFFF",
         "surface-alt":    "#F5F5F4",
         "text":           "#1A1A1A",

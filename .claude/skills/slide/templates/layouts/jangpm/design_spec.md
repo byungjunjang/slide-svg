@@ -36,7 +36,7 @@ The Jangpm lock forbids deviation. Executor does not recolor.
 
 | Role | HEX | Token | Purpose |
 | ---- | --- | ----- | ------- |
-| **Background** | `#FAFAF9` | `--bg` | Page background (warm off-white) |
+| **Background** | `#FFFFFF` | `--bg` | Page background (white) |
 | **Surface** | `#FFFFFF` | `--surface` | Card / container |
 | **Surface alt** | `#F5F5F4` | `--surface-alt` | Subtle grouped background |
 | **Text primary** | `#1A1A1A` | `--text` | Main text (never pure black) |
@@ -125,7 +125,7 @@ Executor MUST write this full chain in `font-family` on every `<text>` element.
 
 ## VIII. Image Resource List
 
-[Filled by Strategist. For AI-generated images, use the Jangpm visual-assets prompt recipe: `minimal flat illustration, muted / pastel tones, clean solid #FAFAF9 background, line-art style, no gradients, no glow`.]
+[Filled by Strategist. For AI-generated images, use the Jangpm visual-assets prompt recipe: `minimal flat illustration, muted / pastel tones, clean solid #FFFFFF background, line-art style, no gradients, no glow`.]
 
 ---
 
@@ -162,7 +162,7 @@ Title, chapter, and ending slides do NOT require `.gm`.
 
 - Canvas: 1280×720 only (see `references/canvas-formats.md`)
 - SVG constraints: per `references/shared-standards.md` (banned: `<style>`, `class`, `<foreignObject>`, `mask`, `textPath`, animations)
-- Post-processing: `finalize_svg.py` handles icon embedding, image cropping, text flattening, rounded-rect conversion. Do NOT substitute `cp`.
+- Post-processing: `finalize_svg.py` handles white full-slide background rect removal, icon embedding, image cropping, text flattening, rounded-rect conversion. Do NOT substitute `cp`.
 - Export: `svg_to_pptx.py <project> -s final` produces native DrawingML PPTX. Use `_svg.pptx` fallback only if native fails.
 
 ---

@@ -153,7 +153,7 @@ slide-svg is 1280×720 only (CLAUDE.md core constraint) — no other canvas form
 ## 4. Basic SVG Rules
 
 - **viewBox** must match the canvas dimensions (`width`/`height` must match `viewBox`)
-- **Background**: Use `<rect>` to define the page background color
+- **Background**: Do NOT draw a full-slide background `<rect>` on a white page — the slide is already white, and the rect becomes a full-slide box that swallows clicks in PowerPoint. Place elements directly on the canvas. Only a non-white theme `bg` or a narrative band gets a full-canvas `<rect>` (the shells already carry it when needed)
 - **Line breaks**: Use `<tspan>` for manual line breaks; `<foreignObject>` is FORBIDDEN
 - **Fonts**: Use system fonts only (Microsoft YaHei, Arial, Calibri, etc.); `@font-face` is FORBIDDEN
 - **Styles**: Use inline styles only (`fill="..."` `font-size="..."`); `<style>` / `class` are FORBIDDEN (`id` inside `<defs>` is legitimate)
@@ -203,7 +203,7 @@ Must be executed in order — skipping or adding extra flags is FORBIDDEN:
 # 1. Split speaker notes into per-page note files
 ./scripts/_py.sh scripts/total_md_split.py <project_path>
 
-# 2. SVG post-processing (icon embedding, image crop/embed, text flattening, rounded rect to path)
+# 2. SVG post-processing (white full-slide background rect removal, icon embedding, image crop/embed, text flattening, rounded rect to path)
 ./scripts/_py.sh scripts/finalize_svg.py <project_path>
 
 # 3. Export PPTX (from svg_final/, embeds speaker notes by default)

@@ -23,7 +23,7 @@
 <h1>Jangpm — theme preview</h1>
 <p class="sub">활성 액센트 #4633E3 · 아래 셸과 샘플을 확인하고 승인/피드백을 주세요.</p>
 <div class="spec">
-  <div><strong>Palette</strong><div class="swatches"><div class="swatch"><span class="chip" style="background:#FAFAF9"></span><code>bg  #FAFAF9</code></div>
+  <div><strong>Palette</strong><div class="swatches"><div class="swatch"><span class="chip" style="background:#FFFFFF"></span><code>bg  #FFFFFF</code></div>
 <div class="swatch"><span class="chip" style="background:#FFFFFF"></span><code>surface  #FFFFFF</code></div>
 <div class="swatch"><span class="chip" style="background:#F5F5F4"></span><code>surface-alt  #F5F5F4</code></div>
 <div class="swatch"><span class="chip" style="background:#1A1A1A"></span><code>text  #1A1A1A</code></div>
@@ -48,8 +48,7 @@
   <!-- Lecture Deck — 01 Cover (theme-parametric) -->
   <!-- Theme tokens resolved at render time from references/theme-active.json -->
 
-  <!-- Page background -->
-  <rect width="1280" height="720" fill="#FAFAF9"/>
+  <!-- Full-slide rect only for a narrative band or a non-white page — none on white -->
 
   <!-- Accent rule (single editorial cue) -->
   <rect x="56" y="140" width="80" height="3" fill="#4633E3"/>
@@ -104,7 +103,7 @@
 <svg xmlns="http://www.w3.org/2000/svg" width="1280" height="720" viewBox="0 0 1280 720">
   <!-- Lecture Deck — 02 Chapter / Section Divider (theme-parametric) -->
 
-  <rect width="1280" height="720" fill="#FAFAF9"/>
+  <!-- Full-slide rect only for a narrative band or a non-white page — none on white -->
 
   <!-- Chapter number (large, accent) -->
   <text x="56" y="260"
@@ -157,7 +156,7 @@
 <svg xmlns="http://www.w3.org/2000/svg" width="1280" height="720" viewBox="0 0 1280 720">
   <!-- Lecture Deck — 03 Content (theme-parametric; header/footer shell only; body composed by Executor) -->
 
-  <rect width="1280" height="720" fill="#FAFAF9"/>
+  <!-- Full-slide rect only for a non-white page — none on white -->
 
   <!-- Headline bar: title at top (Headline) -->
   <text x="56" y="96"
@@ -205,7 +204,7 @@
 <svg xmlns="http://www.w3.org/2000/svg" width="1280" height="720" viewBox="0 0 1280 720">
   <!-- Lecture Deck — 04 Ending (theme-parametric) -->
 
-  <rect width="1280" height="720" fill="#FAFAF9"/>
+  <!-- Full-slide rect only for a narrative band or a non-white page — none on white -->
 
   <!-- Accent rule -->
   <rect x="56" y="140" width="80" height="3" fill="#4633E3"/>
@@ -259,42 +258,40 @@
 </div></figure></div>
 <h2>Sample content layouts</h2>
 <div class="grid"><figure class="page"><figcaption>stat row.tpl (sample content)</figcaption><div class="frame"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1280 720" width="1280" height="720">
-  <rect x="0" y="0" width="1280" height="720" fill="#FAFAF9"/>
-  <text x="56" y="92" font-family='Pretendard, 'Apple SD Gothic Neo', 'Malgun Gothic', Arial, sans-serif' font-size="20" font-weight="500" fill="#6B7280" letter-spacing="2">CONTENT · 샘플 레이아웃</text>
-  <text x="56" y="150" font-family='Pretendard, 'Apple SD Gothic Neo', 'Malgun Gothic', Arial, sans-serif' font-size="44" font-weight="700" fill="#1A1A1A">핵심 지표 세 가지</text>
-  <rect x="56" y="226" width="360" height="280" rx="16" fill="#FFFFFF"/>
-  <text x="92" y="338" font-family='Pretendard, 'Apple SD Gothic Neo', 'Malgun Gothic', Arial, sans-serif' font-size="76" font-weight="800" fill="#4633E3">87%</text>
-  <text x="92" y="392" font-family='Pretendard, 'Apple SD Gothic Neo', 'Malgun Gothic', Arial, sans-serif' font-size="24" font-weight="600" fill="#1A1A1A">도입 후 만족도</text>
-  <text x="92" y="430" font-family='Pretendard, 'Apple SD Gothic Neo', 'Malgun Gothic', Arial, sans-serif' font-size="18" font-weight="400" fill="#6B7280">전년 대비 +12%p</text>
-  <rect x="460" y="226" width="360" height="280" rx="16" fill="#FFFFFF"/>
-  <text x="496" y="338" font-family='Pretendard, 'Apple SD Gothic Neo', 'Malgun Gothic', Arial, sans-serif' font-size="76" font-weight="800" fill="#4633E3">3.2x</text>
-  <text x="496" y="392" font-family='Pretendard, 'Apple SD Gothic Neo', 'Malgun Gothic', Arial, sans-serif' font-size="24" font-weight="600" fill="#1A1A1A">처리 속도 향상</text>
-  <text x="496" y="430" font-family='Pretendard, 'Apple SD Gothic Neo', 'Malgun Gothic', Arial, sans-serif' font-size="18" font-weight="400" fill="#6B7280">수작업 대비</text>
-  <rect x="864" y="226" width="360" height="280" rx="16" fill="#FFFFFF"/>
-  <text x="900" y="338" font-family='Pretendard, 'Apple SD Gothic Neo', 'Malgun Gothic', Arial, sans-serif' font-size="76" font-weight="800" fill="#4633E3">42h</text>
-  <text x="900" y="392" font-family='Pretendard, 'Apple SD Gothic Neo', 'Malgun Gothic', Arial, sans-serif' font-size="24" font-weight="600" fill="#1A1A1A">주당 절감 시간</text>
-  <text x="900" y="430" font-family='Pretendard, 'Apple SD Gothic Neo', 'Malgun Gothic', Arial, sans-serif' font-size="18" font-weight="400" fill="#6B7280">팀 8인 기준</text>
+  <text x="56" y="92" font-family="Pretendard, 'Apple SD Gothic Neo', 'Malgun Gothic', Arial, sans-serif" font-size="20" font-weight="500" fill="#6B7280" letter-spacing="2">CONTENT · 샘플 레이아웃</text>
+  <text x="56" y="150" font-family="Pretendard, 'Apple SD Gothic Neo', 'Malgun Gothic', Arial, sans-serif" font-size="44" font-weight="700" fill="#1A1A1A">핵심 지표 세 가지</text>
+  <rect x="56" y="226" width="360" height="280" rx="16" fill="#FFFFFF" stroke="#E5E7EB" stroke-width="1"/>
+  <text x="92" y="338" font-family="Pretendard, 'Apple SD Gothic Neo', 'Malgun Gothic', Arial, sans-serif" font-size="76" font-weight="800" fill="#4633E3">87%</text>
+  <text x="92" y="392" font-family="Pretendard, 'Apple SD Gothic Neo', 'Malgun Gothic', Arial, sans-serif" font-size="24" font-weight="600" fill="#1A1A1A">도입 후 만족도</text>
+  <text x="92" y="430" font-family="Pretendard, 'Apple SD Gothic Neo', 'Malgun Gothic', Arial, sans-serif" font-size="18" font-weight="400" fill="#6B7280">전년 대비 +12%p</text>
+  <rect x="460" y="226" width="360" height="280" rx="16" fill="#FFFFFF" stroke="#E5E7EB" stroke-width="1"/>
+  <text x="496" y="338" font-family="Pretendard, 'Apple SD Gothic Neo', 'Malgun Gothic', Arial, sans-serif" font-size="76" font-weight="800" fill="#4633E3">3.2x</text>
+  <text x="496" y="392" font-family="Pretendard, 'Apple SD Gothic Neo', 'Malgun Gothic', Arial, sans-serif" font-size="24" font-weight="600" fill="#1A1A1A">처리 속도 향상</text>
+  <text x="496" y="430" font-family="Pretendard, 'Apple SD Gothic Neo', 'Malgun Gothic', Arial, sans-serif" font-size="18" font-weight="400" fill="#6B7280">수작업 대비</text>
+  <rect x="864" y="226" width="360" height="280" rx="16" fill="#FFFFFF" stroke="#E5E7EB" stroke-width="1"/>
+  <text x="900" y="338" font-family="Pretendard, 'Apple SD Gothic Neo', 'Malgun Gothic', Arial, sans-serif" font-size="76" font-weight="800" fill="#4633E3">42h</text>
+  <text x="900" y="392" font-family="Pretendard, 'Apple SD Gothic Neo', 'Malgun Gothic', Arial, sans-serif" font-size="24" font-weight="600" fill="#1A1A1A">주당 절감 시간</text>
+  <text x="900" y="430" font-family="Pretendard, 'Apple SD Gothic Neo', 'Malgun Gothic', Arial, sans-serif" font-size="18" font-weight="400" fill="#6B7280">팀 8인 기준</text>
   <line x1="56" y1="636" x2="1224" y2="636" stroke="#6B7280" stroke-opacity="0.2" stroke-width="1"/>
-  <text x="56" y="678" font-family='Pretendard, 'Apple SD Gothic Neo', 'Malgun Gothic', Arial, sans-serif' font-size="18" font-weight="500" fill="#6B7280">거버닝 메시지는 모든 콘텐츠 슬라이드 하단에 한 줄</text>
+  <text x="56" y="678" font-family="Pretendard, 'Apple SD Gothic Neo', 'Malgun Gothic', Arial, sans-serif" font-size="18" font-weight="500" fill="#6B7280">거버닝 메시지는 모든 콘텐츠 슬라이드 하단에 한 줄</text>
 </svg>
 </div></figure><figure class="page"><figcaption>two column.tpl (sample content)</figcaption><div class="frame"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1280 720" width="1280" height="720">
-  <rect x="0" y="0" width="1280" height="720" fill="#FAFAF9"/>
-  <text x="56" y="92" font-family='Pretendard, 'Apple SD Gothic Neo', 'Malgun Gothic', Arial, sans-serif' font-size="20" font-weight="500" fill="#6B7280" letter-spacing="2">CONTENT · 샘플 레이아웃</text>
-  <text x="56" y="150" font-family='Pretendard, 'Apple SD Gothic Neo', 'Malgun Gothic', Arial, sans-serif' font-size="44" font-weight="700" fill="#1A1A1A">좌우 2단 구성</text>
-  <text x="56" y="244" font-family='Pretendard, 'Apple SD Gothic Neo', 'Malgun Gothic', Arial, sans-serif' font-size="26" font-weight="600" fill="#1A1A1A">왜 지금인가</text>
-  <text x="56" y="296" font-family='Pretendard, 'Apple SD Gothic Neo', 'Malgun Gothic', Arial, sans-serif' font-size="20" font-weight="400" fill="#6B7280">시장 전환이 가속되며 의사결정 창이</text>
-  <text x="56" y="326" font-family='Pretendard, 'Apple SD Gothic Neo', 'Malgun Gothic', Arial, sans-serif' font-size="20" font-weight="400" fill="#6B7280">좁아지고 있다. 지금이 진입 적기다.</text>
-  <rect x="660" y="226" width="564" height="300" rx="16" fill="#FFFFFF"/>
+  <text x="56" y="92" font-family="Pretendard, 'Apple SD Gothic Neo', 'Malgun Gothic', Arial, sans-serif" font-size="20" font-weight="500" fill="#6B7280" letter-spacing="2">CONTENT · 샘플 레이아웃</text>
+  <text x="56" y="150" font-family="Pretendard, 'Apple SD Gothic Neo', 'Malgun Gothic', Arial, sans-serif" font-size="44" font-weight="700" fill="#1A1A1A">좌우 2단 구성</text>
+  <text x="56" y="244" font-family="Pretendard, 'Apple SD Gothic Neo', 'Malgun Gothic', Arial, sans-serif" font-size="26" font-weight="600" fill="#1A1A1A">왜 지금인가</text>
+  <text x="56" y="296" font-family="Pretendard, 'Apple SD Gothic Neo', 'Malgun Gothic', Arial, sans-serif" font-size="20" font-weight="400" fill="#6B7280">시장 전환이 가속되며 의사결정 창이</text>
+  <text x="56" y="326" font-family="Pretendard, 'Apple SD Gothic Neo', 'Malgun Gothic', Arial, sans-serif" font-size="20" font-weight="400" fill="#6B7280">좁아지고 있다. 지금이 진입 적기다.</text>
+  <rect x="660" y="226" width="564" height="300" rx="16" fill="#FFFFFF" stroke="#E5E7EB" stroke-width="1"/>
   <circle cx="700" cy="280" r="5" fill="#4633E3"/>
-  <text x="724" y="288" font-family='Pretendard, 'Apple SD Gothic Neo', 'Malgun Gothic', Arial, sans-serif' font-size="22" font-weight="500" fill="#1A1A1A">경쟁사 대비 6개월 선행</text>
+  <text x="724" y="288" font-family="Pretendard, 'Apple SD Gothic Neo', 'Malgun Gothic', Arial, sans-serif" font-size="22" font-weight="500" fill="#1A1A1A">경쟁사 대비 6개월 선행</text>
   <circle cx="700" cy="338" r="5" fill="#4633E3"/>
-  <text x="724" y="346" font-family='Pretendard, 'Apple SD Gothic Neo', 'Malgun Gothic', Arial, sans-serif' font-size="22" font-weight="500" fill="#1A1A1A">초기 도입 비용 회수 9개월</text>
+  <text x="724" y="346" font-family="Pretendard, 'Apple SD Gothic Neo', 'Malgun Gothic', Arial, sans-serif" font-size="22" font-weight="500" fill="#1A1A1A">초기 도입 비용 회수 9개월</text>
   <circle cx="700" cy="396" r="5" fill="#4633E3"/>
-  <text x="724" y="404" font-family='Pretendard, 'Apple SD Gothic Neo', 'Malgun Gothic', Arial, sans-serif' font-size="22" font-weight="500" fill="#1A1A1A">기존 워크플로우와 호환</text>
+  <text x="724" y="404" font-family="Pretendard, 'Apple SD Gothic Neo', 'Malgun Gothic', Arial, sans-serif" font-size="22" font-weight="500" fill="#1A1A1A">기존 워크플로우와 호환</text>
   <circle cx="700" cy="454" r="5" fill="#4633E3"/>
-  <text x="724" y="462" font-family='Pretendard, 'Apple SD Gothic Neo', 'Malgun Gothic', Arial, sans-serif' font-size="22" font-weight="500" fill="#1A1A1A">단계적 롤아웃 가능</text>
+  <text x="724" y="462" font-family="Pretendard, 'Apple SD Gothic Neo', 'Malgun Gothic', Arial, sans-serif" font-size="22" font-weight="500" fill="#1A1A1A">단계적 롤아웃 가능</text>
   <line x1="56" y1="636" x2="1224" y2="636" stroke="#6B7280" stroke-opacity="0.2" stroke-width="1"/>
-  <text x="56" y="678" font-family='Pretendard, 'Apple SD Gothic Neo', 'Malgun Gothic', Arial, sans-serif' font-size="18" font-weight="500" fill="#6B7280">거버닝 메시지는 모든 콘텐츠 슬라이드 하단에 한 줄</text>
+  <text x="56" y="678" font-family="Pretendard, 'Apple SD Gothic Neo', 'Malgun Gothic', Arial, sans-serif" font-size="18" font-weight="500" fill="#6B7280">거버닝 메시지는 모든 콘텐츠 슬라이드 하단에 한 줄</text>
 </svg>
 </div></figure></div>
 

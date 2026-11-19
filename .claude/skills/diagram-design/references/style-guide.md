@@ -14,7 +14,7 @@ Every token is referred to by **semantic role**, not by its hex value. Type refe
 
 | Role | Purpose | Value (active theme: Jangpm) | theme-active.json token |
 |---|---|---|---|
-| `paper` | Page / slide background | `#FAFAF9` | `bg` |
+| `paper` | Page / slide background | `#FFFFFF` | `bg` |
 | `paper-2` | Container / secondary fill | `#F5F5F4` | `surface-alt` |
 | `ink` | Primary text, primary stroke | `#1A1A1A` | `text` |
 | `muted` | Secondary text, default arrow stroke | `#6B7280` | `text-secondary` |

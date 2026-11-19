@@ -1,5 +1,5 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 540" width="640" height="540">
-  <rect width="640" height="540" fill="#FAFAF9"/>
+  <rect width="640" height="540" fill="#FFFFFF"/>
   <g transform="translate(40,40)">
 <g id="chart_radar" data-chart-type="radar">
 <polygon points="280.00,186.58 322.04,210.85 322.04,259.39 280.00,283.66 237.96,259.39 237.96,210.85" fill="none" stroke="#E5E7EB" stroke-width="1" stroke-linejoin="round"/>

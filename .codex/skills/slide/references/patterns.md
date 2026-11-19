@@ -793,7 +793,7 @@
 - Column headers include a subtitle line (stat, price, or descriptor) for density
 - Use inline check (✓) / cross (✗) SVG icons for binary feature rows to improve scannability
 - Add a summary/verdict row at the bottom with accent styling
-- Zebra-stripe rows with subtle `var(--bg)` alternation for readability
+- Zebra-stripe rows with subtle `var(--surface-alt)` alternation for readability
 - Right-align numeric cells when present
 
 ```html
@@ -864,7 +864,7 @@ CSS additions for comparison (add to skeleton `<style>`):
 ```css
 .col-recommended { background: var(--accent-soft); }
 .comparison-table thead th { padding: var(--space-4) var(--space-4); vertical-align: bottom; }
-.comparison-table tbody tr:nth-child(even) { background: var(--bg); }
+.comparison-table tbody tr:nth-child(even) { background: var(--surface-alt); }
 .comparison-verdict td { border-bottom: none; padding-top: var(--space-4); padding-bottom: var(--space-4); }
 ```
 

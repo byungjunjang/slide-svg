@@ -24,7 +24,7 @@
       "label": "Jangpm Lecture Deck",
       "summary": "Korean-first lecture/report deck with monochrome + single #4633E3 indigo accent. Pretendard typography, 8px grid, Lucide line-art icons. Every content slide ends with a `.gm` governing message line.",
       "tone": "Editorial, minimal, report-style, restrained. Notion/Linear/Vercel sensibility adapted to Korean instructional content.",
-      "themeMode": "Light only — warm off-white `#FAFAF9` background, `#1A1A1A` text, `#4633E3` single accent.",
+      "themeMode": "Light only — white `#FFFFFF` background, `#1A1A1A` text, `#4633E3` single accent.",
       "assets": [],
       "keywords": ["Korean", "lecture", "monochrome", "indigo accent", "Pretendard", "report-style", "Jangpm", "1280x720"]
     }

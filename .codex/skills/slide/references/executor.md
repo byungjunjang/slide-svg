@@ -434,8 +434,8 @@ Placeholder:
 ### Jangpm Illustration Style
 
 When AI-generated illustrations are used (via Image_Generator), they MUST match the Jangpm visual-assets recipe:
-- **minimal flat illustration**, **muted / pastel tones**, **clean solid #FAFAF9 background**, **line-art style**, **no gradients, no glow, no 3D renders**
-- Match the page background `#FAFAF9`; tones that harmonize with the active palette (see `image-generator.md` §🔒 for the full active-theme style lock)
+- **minimal flat illustration**, **muted / pastel tones**, **clean solid #FFFFFF background**, **line-art style**, **no gradients, no glow, no 3D renders**
+- Match the page background `#FFFFFF`; tones that harmonize with the active palette (see `image-generator.md` §🔒 for the full active-theme style lock)
 - Brand character: `.codex/skills/slide/templates/layouts/jangpm/assets/brand/jangpm-character.png`. When provided, it can be used on slides that benefit from an instructor persona; when not provided, omit persona slides entirely.
 
 ---
@@ -549,7 +549,7 @@ Each command runs in its own bash call — never bundled into one block. See `re
 
 Final pre-save verification (items covered by §2 Per-Page Self-Audit are omitted here):
 
-- [ ] Background is `#FAFAF9` (not white, not pure black)
+- [ ] No full-slide background `<rect>` — the page is already white; place elements directly on the canvas
 - [ ] Text primary is `#1A1A1A`, not `#000000`
 - [ ] No gradients, no glow, no filter-shadow with color, no multi-hue
 - [ ] Every `<text>` has the full active-theme font-family chain (`Pretendard, 'Apple SD Gothic Neo', 'Malgun Gothic', Arial, sans-serif`)

@@ -60,7 +60,7 @@ Present this as a locked value. Do NOT offer alternative style objectives — th
 
 | Role | HEX | Token |
 |------|-----|-------|
-| Background | `#FAFAF9` | `--bg` |
+| Background | `#FFFFFF` | `--bg` |
 | Surface | `#FFFFFF` | `--surface` |
 | Text primary | `#1A1A1A` | `--text` |
 | Text secondary | `#6B7280` | `--text-secondary` |
@@ -123,7 +123,7 @@ Font OTFs are at `assets/fonts/`. Distribute with the PPTX for recipients who wi
 |--------|----------|-------------------|
 | **A** | No images | Data reports, process documentation (active-theme default — prefer text blocks + charts over decorative imagery) |
 | **B** | User-provided | Has existing image assets |
-| **C** | AI-generated (active-theme style) | Concept explanations, hero illustrations — minimal flat, muted/pastel, clean solid #FAFAF9 bg |
+| **C** | AI-generated (active-theme style) | Concept explanations, hero illustrations — minimal flat, muted/pastel, clean solid #FFFFFF bg |
 | **D** | Placeholders | Images to be added later |
 
 Anti-slop Rule 13 bans decorative-only images; every image must explain the content. Brand character: `.claude/skills/slide/templates/layouts/jangpm/assets/brand/jangpm-character.png`. When provided, it is available for instructor-persona slides; when not, do not invent a stand-in.

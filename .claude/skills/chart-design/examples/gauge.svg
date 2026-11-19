@@ -1,5 +1,5 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 560 380" width="560" height="380">
-  <rect width="560" height="380" fill="#FAFAF9"/>
+  <rect width="560" height="380" fill="#FFFFFF"/>
   <g transform="translate(40,40)">
 <g id="chart_gauge" data-chart-type="gauge">
 <path d="M80.88,276.00 L6.00,276.00 A234.00,234.00 0 0 1 474.00,276.00 L399.12,276.00 A159.12,159.12 0 0 0 80.88,276.00 Z" fill="#F5F5F4"/>
