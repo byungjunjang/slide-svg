@@ -226,7 +226,8 @@ def officecli_checks(project: Path) -> tuple[list[str], list[str]]:
     Verdict policy (probed against officecli 1.0.135):
       - `error` object -> file cannot be opened (corrupt): FAILURE
       - success:false with only `warnings` -> schema strictness: WARNING
-      - unparseable output / timeout -> tool problem, not deck evidence: WARNING
+      - unparseable output / timeout, twice in a row -> tool problem, not deck
+        evidence: WARNING
     """
     binary = _officecli_bin()
     if binary is None:
@@ -238,16 +239,20 @@ def officecli_checks(project: Path) -> tuple[list[str], list[str]]:
     failures: list[str] = []
     warnings: list[str] = []
 
-    rc = _run_officecli([binary, "validate", str(pptx), "--json"], timeout=120)
+    # The first call right after an OfficeCLI auto-update can crash, so retry
+    # once; two crashes are a tool problem, not evidence about the deck.
     verdict = None
-    if rc is not None:
+    for _ in range(2):
+        rc = _run_officecli([binary, "validate", str(pptx), "--json"], timeout=120)
         try:
-            verdict = json.loads(rc.stdout)
-        except Exception:
+            verdict = json.loads(rc.stdout) if rc is not None else None
+        except ValueError:
             verdict = None
+        if verdict is not None:
+            break
     if verdict is None:
-        warnings.append("officecli validate produced no parseable verdict "
-                        "(timeout or bad output) — non-blocking")
+        warnings.append("officecli validate: tool error, not a deck defect — no "
+                        f"verdict after 2 attempts ({_officecli_error(rc)}) — non-blocking")
     elif verdict.get("error"):
         failures.append(f"officecli validate: {pptx.name} unopenable — "
                         f"{verdict['error']}")
