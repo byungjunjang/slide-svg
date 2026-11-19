@@ -74,6 +74,7 @@ python3 scripts/svg_quality_checker.py examples/project
 python3 scripts/svg_quality_checker.py examples/project --format ppt169
 python3 scripts/svg_quality_checker.py --all examples
 python3 scripts/svg_quality_checker.py examples/project --export
+python3 scripts/svg_quality_checker.py examples/project --all-warnings
 ```
 
 Checks include:
@@ -81,6 +82,9 @@ Checks include:
 - banned elements
 - width/height consistency
 - line-break structure
+- text geometry (warnings): text-box overlap, safe area, and a visible straight stroke running through a text line. Text is measured per run (an inline `<tspan>` at its own font-size) and per line (a `<tspan>` with its own x / y / dy starts a new line)
+
+Each file prints its first 2 warnings; `--all-warnings` lists them all.
 
 ## `svg_position_calculator.py`
 

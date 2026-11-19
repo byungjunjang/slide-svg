@@ -10,6 +10,7 @@ Usage:
     python3 scripts/svg_quality_checker.py --all examples
 """
 
+import math
 import sys
 import re
 from pathlib import Path
@@ -219,11 +220,34 @@ except ImportError:
 
 
 _TEXT_ELEM_RE = re.compile(r"<text\b([^>]*)>(.*?)</text>", re.DOTALL)
+_TSPAN_RE = re.compile(r"<tspan\b([^>]*)>(.*?)</tspan>", re.DOTALL)
+
+
+def _font_attrs(attrs: str, size: float, weight: str) -> tuple:
+    """`(font_size, font_weight)` set on `attrs`, else the inherited values."""
+    fs_m = re.search(r'font-size\s*=\s*"([\d.]+)', attrs)
+    fw_m = re.search(r'font-weight\s*=\s*"([^"]+)"', attrs)
+    return (float(fs_m.group(1)) if fs_m else size,
+            fw_m.group(1) if fw_m else weight)
+
+
+def _add_run(runs: list, raw: str, size: float, weight: str) -> None:
+    """Append raw markup as a run, collapsing whitespace across run boundaries."""
+    seg = re.sub(r"\s+", " ", re.sub(r"<[^>]+>", "", raw))
+    if not runs or runs[-1][0].endswith(" "):
+        seg = seg.lstrip(" ")
+    if seg:
+        runs.append((seg, size, weight))
 
 
 def parse_text_elements(content: str) -> list:
-    """`(x, y, font_size, font_weight, anchor, text)` per `<text>` element.
+    """`(x, y, font_size, font_weight, anchor, text, runs, pos)` per text line.
 
+    A `<text>` splits into lines where a tspan carries its own x, y or a
+    non-zero dy — svg_finalize/flatten_tspan splits it the same way before
+    export. `runs` keeps each run's own `(text, font_size, font_weight)` so an
+    inline tspan is measured at its real size; `font_size` is the line's
+    largest run and `pos` the element's offset in `content` (paint order).
     Elements without x/y or carrying a transform (coords not resolvable by a
     regex parser) are skipped.
     """
@@ -235,34 +259,52 @@ def parse_text_elements(content: str) -> list:
         x, y = _attr_num(attrs, "x"), _attr_num(attrs, "y")
         if x is None or y is None:
             continue
-        fs_m = re.search(r'font-size\s*=\s*"([\d.]+)', attrs)
-        fw_m = re.search(r'font-weight\s*=\s*"([^"]+)"', attrs)
+        fs, fw = _font_attrs(attrs, 16.0, "400")
         anchor_m = re.search(r'text-anchor\s*=\s*"([^"]+)"', attrs)
-        text = re.sub(r"\s+", " ", re.sub(r"<[^>]+>", " ", inner)).strip()
-        if not text:
-            continue
-        out.append((x, y, float(fs_m.group(1)) if fs_m else 16.0,
-                    fw_m.group(1) if fw_m else "400",
-                    anchor_m.group(1) if anchor_m else "start", text))
+        anchor = anchor_m.group(1) if anchor_m else "start"
+        lines = [(x, y, [])]
+        last = 0
+        for t in _TSPAN_RE.finditer(inner):
+            _add_run(lines[-1][2], inner[last:t.start()], fs, fw)
+            t_attrs = t.group(1)
+            tx, ty = _attr_num(t_attrs, "x"), _attr_num(t_attrs, "y")
+            tdy = _attr_num(t_attrs, "dy") or 0.0
+            if tx is not None or ty is not None or tdy:
+                cur_x, cur_y = lines[-1][0], lines[-1][1]
+                lines.append((cur_x if tx is None else tx,
+                              cur_y + tdy if ty is None else ty, []))
+            _add_run(lines[-1][2], t.group(2), *_font_attrs(t_attrs, fs, fw))
+            last = t.end()
+        _add_run(lines[-1][2], inner[last:], fs, fw)
+        for lx, ly, runs in lines:
+            while runs and not runs[-1][0].rstrip(" "):
+                runs.pop()
+            if not runs:
+                continue
+            runs[-1] = (runs[-1][0].rstrip(" "),) + runs[-1][1:]
+            text = "".join(r[0] for r in runs)
+            out.append((lx, ly, max(r[1] for r in runs), fw, anchor, text,
+                        runs, m.start()))
     return out
 
 
 def _text_boxes_with_meta(content: str) -> list:
-    """`(box, anchor_y, anchor, font_size, text)` per text element — box is the
-    estimated visual extent (no export headroom). Mirrors convert_text's anchor
-    math; height spans ascent (0.85em above the baseline) plus descent (0.25em)."""
+    """`(box, anchor_y, anchor, font_size, text, pos)` per text line — box is
+    the estimated visual extent (no export headroom). Mirrors convert_text:
+    each run is measured at its own size and weight; height spans ascent
+    (0.85em above the baseline) plus descent (0.25em)."""
     if _measure_text_width is None:
         return []
     out = []
-    for (x, y, fs, fw, anchor, text) in parse_text_elements(content):
-        w = _measure_text_width(text, fs, fw)
+    for (x, y, fs, _fw, anchor, text, runs, pos) in parse_text_elements(content):
+        w = sum(_measure_text_width(t, size, weight) for t, size, weight in runs)
         if anchor == "middle":
             bx = x - w / 2
         elif anchor == "end":
             bx = x - w
         else:
             bx = x
-        out.append(((bx, y - fs * 0.85, w, fs * 1.1), y, anchor, fs, text))
+        out.append(((bx, y - fs * 0.85, w, fs * 1.1), y, anchor, fs, text, pos))
     return out
 
 
@@ -283,7 +325,7 @@ def text_box_overlaps(content: str) -> list:
     and decorative single-glyph texts (a giant pull-quote mark's em box is
     mostly empty space).
     """
-    items = [(box, fs, text) for (box, _, _, fs, text)
+    items = [(box, fs, text) for (box, _, _, fs, text, _pos)
              in _text_boxes_with_meta(content)
              if not (len(text) == 1 and not text.isalnum())]
     hits = []
@@ -311,7 +353,7 @@ def safe_area_violations(content: str) -> list:
     x_min, y_min, x_max, y_max = SAFE_AREA
     hits = []
 
-    for ((bx, by, w, h), anchor_y, anchor, _fs, text) in _text_boxes_with_meta(content):
+    for ((bx, by, w, h), anchor_y, anchor, _fs, text, _pos) in _text_boxes_with_meta(content):
         if anchor_y >= _GM_Y_RANGE[0]:
             # Footer band: the GM line plus page numbers / footer captions
             # legitimately sit below the content area — x-only judgement.
@@ -349,6 +391,207 @@ def safe_area_violations(content: str) -> list:
         if cx - rr < x_min or cx + rr > x_max or cy - rr < y_min or cy + rr > y_max:
             hits.append(f"circle (cx={cx:.0f},cy={cy:.0f},r={rr:.0f})")
 
+    return hits
+
+
+# ============================================================
+# Text × stroke crossings (WARN-level)
+# A visible straight stroke through a text line's glyph core — an axis line
+# under a label, a connector through a caption — reads as a strike-through.
+# ============================================================
+
+GLYPH_CAP = 0.7          # ink top above the baseline, × font-size
+STROKE_TOUCH = 1.0       # px; a stroke this close to a glyph edge touches it
+STROKE_MIN_CROSS = 2.0   # px of stroke inside the glyph core before warning
+FAINT_DIFF = 0.2         # mean |RGB − page background| / 255; closer = faint
+FAINT_WIDTH = 1.5        # px; only hairlines this thin can be faint
+OPAQUE_MIN = 0.9         # fill opacity at which a shape hides what is under it
+
+_SHAPE_RE = re.compile(r"<(line|polyline|path|rect|circle)\b([^>]*)>")
+_PATH_TOKEN_RE = re.compile(r"[A-Za-z]|-?(?:\d+\.?\d*|\.\d+)(?:[eE][-+]?\d+)?")
+
+
+def _attr_str(attrs: str, name: str):
+    m = re.search(rf'(?<![\w-]){name}\s*=\s*"([^"]*)"', attrs)
+    return m.group(1).strip() if m else None
+
+
+def _opacity(attrs: str, own: str) -> float:
+    """`opacity` × the paint's own opacity attribute (a missing one counts 1)."""
+    value = 1.0
+    for name in ("opacity", own):
+        m = re.search(rf'(?<![\w-]){name}\s*=\s*"([\d.]+)"', attrs)
+        if m:
+            value *= float(m.group(1))
+    return value
+
+
+def _hex_rgb(value):
+    m = re.fullmatch(r"#([0-9a-fA-F]{3}|[0-9a-fA-F]{6})", (value or "").strip())
+    if not m:
+        return None
+    rgb = m.group(1)
+    if len(rgb) == 3:
+        rgb = "".join(ch * 2 for ch in rgb)
+    return tuple(int(rgb[i:i + 2], 16) for i in (0, 2, 4))
+
+
+def _straight_path_points(d: str):
+    """Polylines of a path drawn only with M/L/H/V/Z; None when it curves."""
+    polys, cur = [], []
+    x = y = sx = sy = 0.0
+    cmd, tokens, i = None, _PATH_TOKEN_RE.findall(d), 0
+    try:
+        while i < len(tokens):
+            tok = tokens[i]
+            if tok.isalpha():
+                cmd, i = tok, i + 1
+                if cmd in "Zz":
+                    if cur:
+                        cur.append((sx, sy))
+                        polys.append(cur)
+                        cur = []
+                    x, y = sx, sy
+                elif cmd not in "MmLlHhVv":
+                    return None
+                continue
+            if cmd in "Mm":
+                nx, ny = float(tokens[i]), float(tokens[i + 1])
+                i += 2
+                if cmd == "m":
+                    nx, ny = x + nx, y + ny
+                if cur:
+                    polys.append(cur)
+                cur = [(nx, ny)]
+                x, y = sx, sy = nx, ny
+                cmd = "L" if cmd == "M" else "l"  # implicit lineto
+            elif cmd in "Ll":
+                nx, ny = float(tokens[i]), float(tokens[i + 1])
+                i += 2
+                x, y = (x + nx, y + ny) if cmd == "l" else (nx, ny)
+                cur.append((x, y))
+            elif cmd in "Hh":
+                x = x + float(tokens[i]) if cmd == "h" else float(tokens[i])
+                i += 1
+                cur.append((x, y))
+            elif cmd in "Vv":
+                y = y + float(tokens[i]) if cmd == "v" else float(tokens[i])
+                i += 1
+                cur.append((x, y))
+            else:
+                return None
+    except (IndexError, ValueError):
+        return None
+    if cur:
+        polys.append(cur)
+    return polys
+
+
+def _clip_segment(seg, x0, y0, x1, y1):
+    """The part of segment `seg` inside the rectangle (Liang–Barsky), or None."""
+    ax, ay, bx, by = seg
+    dx, dy = bx - ax, by - ay
+    t0, t1 = 0.0, 1.0
+    for p, q in ((-dx, ax - x0), (dx, x1 - ax), (-dy, ay - y0), (dy, y1 - ay)):
+        if p == 0:
+            if q < 0:
+                return None
+            continue
+        t = q / p
+        if p < 0:
+            t0 = max(t0, t)
+        else:
+            t1 = min(t1, t)
+        if t0 > t1:
+            return None
+    return (ax + t0 * dx, ay + t0 * dy, ax + t1 * dx, ay + t1 * dy)
+
+
+def _strokes_and_fills(content: str):
+    """Visible straight stroke segments and opaque fill boxes, with paint order.
+
+    Skipped strokes: under 0.5 opacity, and hairlines (≤ FAINT_WIDTH) whose
+    color sits close to the page background — a light gridline leaves text
+    over it legible. Paths count only when unfilled and straight.
+    """
+    background = (255, 255, 255)
+    for attrs in _tag_attr_strings(content, "rect"):
+        w, h = _attr_num(attrs, "width") or 0, _attr_num(attrs, "height") or 0
+        rgb = _hex_rgb(_attr_str(attrs, "fill"))
+        if rgb and _is_background((0, 0, w, h)):
+            background = rgb  # first full-canvas fill = page background
+            break
+    strokes, fills = [], []
+    for m in _SHAPE_RE.finditer(content):
+        tag, attrs = m.group(1), m.group(2)
+        fill = _attr_str(attrs, "fill")
+        if tag in ("rect", "circle"):
+            if not (_hex_rgb(fill) and _opacity(attrs, "fill-opacity") >= OPAQUE_MIN):
+                continue
+            if tag == "rect":
+                x, y = _attr_num(attrs, "x"), _attr_num(attrs, "y")
+                w, h = _attr_num(attrs, "width"), _attr_num(attrs, "height")
+                if None not in (x, y, w, h):
+                    fills.append((m.start(), (x, y, x + w, y + h)))
+            else:
+                cx, cy, r = (_attr_num(attrs, k) for k in ("cx", "cy", "r"))
+                if None not in (cx, cy, r):
+                    fills.append((m.start(), (cx - r, cy - r, cx + r, cy + r)))
+            continue
+        stroke = _attr_str(attrs, "stroke")
+        if not stroke or stroke.lower() == "none":
+            continue
+        if _opacity(attrs, "stroke-opacity") < 0.5:
+            continue
+        rgb = _hex_rgb(stroke)
+        if rgb and (_attr_num(attrs, "stroke-width") or 1.0) <= FAINT_WIDTH:
+            if sum(abs(c - b) for c, b in zip(rgb, background)) / 765 <= FAINT_DIFF:
+                continue
+        if tag == "line":
+            polys = [[(_attr_num(attrs, "x1") or 0.0, _attr_num(attrs, "y1") or 0.0),
+                      (_attr_num(attrs, "x2") or 0.0, _attr_num(attrs, "y2") or 0.0)]]
+        elif tag == "polyline":
+            raw = _attr_str(attrs, "points") or ""
+            polys = [[(float(a), float(b))
+                      for a, b in re.findall(r"(-?[\d.]+)[\s,]+(-?[\d.]+)", raw)]]
+        else:
+            if (fill or "").lower() not in ("none", "transparent"):
+                continue
+            polys = _straight_path_points(_attr_str(attrs, "d") or "") or []
+        for poly in polys:
+            for (ax, ay), (bx, by) in zip(poly, poly[1:]):
+                strokes.append((m.start(), (ax, ay, bx, by)))
+    return strokes, fills
+
+
+def text_stroke_crossings(content: str) -> list:
+    """Text lines crossed by a visible straight stroke, one hit per line.
+
+    The glyph core spans the measured line width (±STROKE_TOUCH) and cap
+    height to baseline, so a rule drawn under the baseline or a leader line
+    ending beside a label stays quiet. A crossing is hidden — and skipped —
+    when an opaque shape painted after the stroke and before the text covers
+    it (a number badge on a rail, a chip on a track).
+    """
+    strokes, fills = _strokes_and_fills(content)
+    hits = []
+    for ((tx, _ty, tw, _th), baseline, _anchor, fs, text, pos) in _text_boxes_with_meta(content):
+        rx0, rx1 = tx - STROKE_TOUCH, tx + tw + STROKE_TOUCH
+        ry0, ry1 = baseline - GLYPH_CAP * fs + 0.5, baseline - 0.5
+        for s_pos, seg in strokes:
+            part = _clip_segment(seg, rx0, ry0, rx1, ry1)
+            if part is None or math.dist(part[:2], part[2:]) < STROKE_MIN_CROSS:
+                continue
+            px0, px1 = sorted((part[0], part[2]))
+            py0, py1 = sorted((part[1], part[3]))
+            if any(s_pos < f_pos < pos
+                   and fx0 - STROKE_TOUCH <= px0 and px1 <= fx1 + STROKE_TOUCH
+                   and fy0 - STROKE_TOUCH <= py0 and py1 <= fy1 + STROKE_TOUCH
+                   for f_pos, (fx0, fy0, fx1, fy1) in fills):
+                continue  # hidden under an opaque shape painted behind the text
+            x1, y1, x2, y2 = seg
+            hits.append(f'"{text[:24]}" × stroke ({x1:.0f},{y1:.0f})→({x2:.0f},{y2:.0f})')
+            break
     return hits
 
 
@@ -536,8 +779,9 @@ def low_primitive_diversity(primitives: list, min_slides: int = 4,
 class SVGQualityChecker:
     """SVG quality checker"""
 
-    def __init__(self, strict_theme: bool = False):
+    def __init__(self, strict_theme: bool = False, all_warnings: bool = False):
         self.strict_theme = strict_theme
+        self.all_warnings = all_warnings
         self.results = []
         self.summary = {
             'total': 0,
@@ -622,6 +866,7 @@ class SVGQualityChecker:
             self._check_visual_primary(content, result)
             self._check_text_overlap(content, result)
             self._check_safe_area(content, result)
+            self._check_text_stroke(content, result)
             self._check_curved_markers(content, result)
 
             # Determine pass/fail (these signals are warnings, never block)
@@ -960,6 +1205,17 @@ class SVGQualityChecker:
                 f"Safe-area violation ({len(hits)}): {shown}{more} "
                 f"— keep content within x 56–1224, y 40–680")
 
+    def _check_text_stroke(self, content: str, result: Dict):
+        """WARN: a visible straight stroke running through a text line's glyph
+        core (axis line under a label, connector through a caption)."""
+        hits = text_stroke_crossings(content)
+        if hits:
+            shown = "; ".join(hits[:3])
+            more = "" if len(hits) <= 3 else f" (+{len(hits) - 3} more)"
+            result['warnings'].append(
+                f"Text crossed by a stroke ({len(hits)}): {shown}{more} "
+                f"— move the text or the stroke apart")
+
     def _check_visual_primary(self, content: str, result: Dict):
         """WARN: a *text-led* body slide with no dominant evidence visual
         (anti-slop Rule 21 — one message + a visual carrying ≥ ~55%; Rule 19 — no
@@ -1069,10 +1325,12 @@ class SVGQualityChecker:
 
         # Display warnings
         if result['warnings']:
-            for warning in result['warnings'][:2]:  # Only show first 2 warnings
+            limit = None if self.all_warnings else 2  # --all-warnings lifts the cut
+            for warning in result['warnings'][:limit]:
                 print(f"   [WARN] {warning}")
-            if len(result['warnings']) > 2:
-                print(f"   ... and {len(result['warnings']) - 2} more warning(s)")
+            if limit and len(result['warnings']) > limit:
+                print(f"   ... and {len(result['warnings']) - limit} more warning(s)"
+                      f" (--all-warnings lists them)")
 
         print()
 
@@ -1157,6 +1415,7 @@ def main() -> None:
         print("\nOptions:")
         print("  --strict-theme   promote off-theme hex colors to errors (deck gate);")
         print(f"                   whitelist exceptions in <project>/{COLOR_ALLOW_FILENAME}")
+        print("  --all-warnings   list every warning per file (default shows the first 2)")
         print("\nExamples:")
         print("  python3 scripts/svg_quality_checker.py examples/project/svg_output/slide_01.svg")
         print("  python3 scripts/svg_quality_checker.py examples/project/svg_output")
@@ -1166,8 +1425,11 @@ def main() -> None:
     strict_theme = '--strict-theme' in sys.argv
     if strict_theme:
         sys.argv.remove('--strict-theme')
+    all_warnings = '--all-warnings' in sys.argv
+    if all_warnings:
+        sys.argv.remove('--all-warnings')
 
-    checker = SVGQualityChecker(strict_theme=strict_theme)
+    checker = SVGQualityChecker(strict_theme=strict_theme, all_warnings=all_warnings)
 
     # Parse arguments
     target = sys.argv[1]
