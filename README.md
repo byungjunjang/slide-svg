@@ -174,16 +174,27 @@ PPTX는 export 시점에 토큰을 DrawingML로 굽기 때문에 런타임 멀�
 
 ## claude.ai에 단독 업로드하기
 
-이 프로젝트는 외부 MCP 서버나 브라우저 바이너리에 의존하지 않아 스킬 폴더만 zip으로 묶어 claude.ai에 업로드할 수 있습니다. **번들 빌드는 헬퍼 스크립트로 한 줄**:
+이 프로젝트는 외부 MCP 서버나 브라우저 바이너리에 의존하지 않아 스킬 폴더만 묶어 claude.ai의 `slide-svg` 스킬로 올릴 수 있습니다. **번들 빌드는 헬퍼 스크립트로 한 줄**:
 
 ```bash
 .claude/skills/slide/scripts/_py.sh .claude/skills/slide/scripts/package_for_claude_ai.py
-# → output/slide-skill-claude-ai.zip 생성 (약 196 파일, 2 MB)
+# → output/slide-svg.skill 생성 (약 180 파일, 2.2 MB)
 ```
 
-이 zip을 claude.ai 스킬 업로더에 그대로 드래그하면 됩니다. 검증 사항(자동):
-- 스킬 폴더 안에 중첩 `.zip`이 없을 것 (claude.ai의 새 검증 — "Zip cannot contain nested zip files" 차단)
+올리는 곳: claude.ai **설정 → 플러그인 → Skills**에서 `output/slide-svg.skill`을 올립니다. 이미 `slide-svg` 스킬이 있으면 그 스킬의 **⋯ → 새 버전 업로드**를 씁니다.
+
+묶는 원본: 작업 트리를 묶습니다. `/theme-init`으로 바꾼 테마도 그대로 들어갑니다. 출력 첫 줄 `[SRC]`에 원본이 나옵니다. 다른 커밋을 묶으려면 `--ref <git-ref>`를 줍니다 (예: `--ref HEAD`).
+
+묶으면서 바꾸는 것 (자동):
+- 스킬 이름: `SKILL.md`의 `name`·제목·호출 이름을 `slide-svg`로 바꿉니다.
+- 경로: 텍스트 파일(`.md` `.py` `.sh` `.json` `.txt`)의 `skills/slide/`를 `skills/slide-svg/`로 바꾸고 줄바꿈을 LF로 맞춥니다. `skills/slide-plan/`은 그대로 둡니다.
+- 개발용 파일: 덱 생성에 쓰지 않는 파일(`templates/charts/_source/`, `templates/layouts/_source/`, `templates/layouts/<테마>/_preview/`, `references/*.tpl.md`, `scripts/dev/`)을 `assets/theme-dev-pack.tar.gz` 하나로 묶고 옆에 README를 둡니다. 200개 한도 때문입니다. 필요하면 스킬 폴더에서 `tar xzf assets/theme-dev-pack.tar.gz`로 풉니다.
+
+검증 사항 (자동, 하나라도 어기면 파일을 만들지 않음):
+- `SKILL.md` frontmatter: 키는 name·description(·license·allowed-tools·metadata·compatibility)만, name은 kebab-case 64자 이하, description은 1024자 이하에 `<` `>` 없음 (skill-creator `quick_validate.py`와 같은 규칙)
+- 중첩 `.zip`이 없을 것 (claude.ai의 새 검증 — "Zip cannot contain nested zip files" 차단)
 - 파일 수 ≤ 200 (claude.ai 업로드 한도)
+- zip 안 경로는 모두 `slide-svg/…` (skill-creator `package_skill.py`와 같은 구조), `__pycache__`·`.pyc` 제외
 
 **듀얼 모드로 동작합니다 (자동 분기):**
 - **Claude Code 로컬**: `embed_icons.py`가 외부 `assets/icons/` (Tabler 6000+ 풀 라이브러리)를 먼저 시도 → 모든 아이콘 정상 인라인. 성능 100%.
