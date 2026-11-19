@@ -39,7 +39,7 @@ Repository update:
 |------|-----------------|---------------|
 | Conversion | `source_to_md/pdf_to_md.py`, `source_to_md/doc_to_md.py`, `source_to_md/ppt_to_md.py`, `source_to_md/web_to_md.py`, `source_to_md/web_to_md.cjs` | [docs/conversion.md](./docs/conversion.md) |
 | Project management | `project_manager.py`, `error_helper.py`, `pptx_template_import.py` | [docs/project.md](./docs/project.md) |
-| SVG pipeline | `finalize_svg.py`, `svg_to_pptx.py`, `total_md_split.py`, `svg_quality_checker.py`, `svg_copy.py` | [docs/svg-pipeline.md](./docs/svg-pipeline.md) |
+| SVG pipeline | `finalize_svg.py`, `svg_to_pptx.py`, `total_md_split.py`, `svg_quality_checker.py`, `svg_copy.py`, `render_page.py` | [docs/svg-pipeline.md](./docs/svg-pipeline.md) |
 | Image tools | `analyze_images.py` (size/aspect inspection only — generation is host-specific: Claude Code `/codex-image`, Codex `imagegen`) | — |
 | Dev / maintenance utilities | `dev/update_repo.py`, `dev/batch_validate.py`, `dev/generate_examples_index.py`, `dev/svg_position_calculator.py`, `dev/rotate_images.py`, `dev/pptx_animations.py` | [dev/README.md](./dev/README.md) |
 | Troubleshooting | validation, preview, export, dependency issues | [docs/troubleshooting.md](./docs/troubleshooting.md) |

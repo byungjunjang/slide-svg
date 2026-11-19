@@ -139,6 +139,7 @@ python3 .claude/skills/theme-init/scripts/init_theme.py --register-current    # 
 ## 참고
 
 - **officecli (선택)**: 설치 시 `verify_deck.py`(Step 7.4)가 최신 네이티브 PPTX에 OpenXML validate(열 수 없는 corrupt 파일 → 하드 페일, 스키마 warning → WARN)와 export된 PPTX 실물 컨택트 시트(`output/<project>/_pptx_render/<stem>-grid.png`, 눈검수용)를 추가 수행한다 — 미설치 시 자동 skip, `OFFICECLI_BIN`으로 지정/비활성 가능
+- **쪽 렌더 자가 검수 (선택)**: Step 6 에서 `render_page.py` 가 쪽마다 Chrome·Chromium·Edge headless 로 PNG 1장을 그리고 Executor 가 눈으로 결함을 고친다. 브라우저가 없으면(claude.ai 등) `[skip]` 한 줄로 건너뛴다. PPTX 빌드는 그대로 순수 Python 이다
 - **시각 기준 텍스트**: `.claude/skills/slide/references/reference-2-text.txt` — Jangpm 소스 타깃 데크에서 추출한 텍스트
 - **Pretendard 폰트**: `assets/fonts/`(OTF·가변 TTF). native PPTX 는 이 PC 에 설치된 Pretendard 정적 TTF 를 기본으로 내장한다(`--no-embed-fonts` 로 끔, 설치된 TTF 가 없으면 건너뜀). 내장 글꼴은 글자 모양을 지키지만, Pretendard 가 없는 Windows PowerPoint 는 한글 간격을 넓힌다 → 편집·발표 PC 에는 Pretendard 를 설치
 - **업스트림 출처**: `LICENSE-ppt-master` — 본 프로젝트가 포크한 `ppt-master` MIT 고지

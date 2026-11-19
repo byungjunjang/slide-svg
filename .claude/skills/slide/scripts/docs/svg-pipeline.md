@@ -103,6 +103,18 @@ python3 scripts/svg_copy.py apply <project_path> <edits.json>
 - `extract` writes every text line per page (`{"07": {"file": ..., "lines": [...]}}`).
 - `apply` takes `[{"page": "07", "old": "<exact line>", "new": "<line>"}]`. It refuses an edit that changes a number, a number+unit pair or a Latin word, or whose old line is not exactly one text node on the page; files keep their bytes (line endings) apart from the edit. Report: `<project_path>/copy_polish.json`.
 
+## `render_page.py`
+
+Render one `svg_output` page to a PNG for the Executor's visual self-review (Step 6, after the page check).
+
+```bash
+python3 scripts/render_page.py <project_path>/svg_output/<page>.svg
+python3 scripts/render_page.py <project_path>/svg_output/<page>.svg --width 1280 --out page.png
+```
+
+- Draws the page with a headless Chrome / Chromium / Edge (about 1 s per page), so Hangul uses the installed Pretendard; icons are embedded into a copy under `<project_path>/_render/` first. svglib is not used: it draws Hangul as tofu boxes and drops fill opacity.
+- No browser, or a failed render: prints `[skip]` and exits 0 — the review is an aid, never a gate. `CHROME_BIN` picks a binary; an empty value disables rendering.
+
 ## `svg_position_calculator.py`
 
 Analyze or pre-calculate chart coordinates.

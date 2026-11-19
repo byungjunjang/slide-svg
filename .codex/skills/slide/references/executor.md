@@ -122,6 +122,14 @@ Then run the mechanical gate on the page and fix every safe-area / text-overlap 
 ${SKILL_DIR}/scripts/_py.sh ${SKILL_DIR}/scripts/svg_quality_checker.py <project_path>/svg_output/<page>.svg --all-warnings
 ```
 
+Then render the page once and look at it — the checker cannot see a clipped label, a chart drawn over its caption, or an icon on top of text:
+
+```bash
+${SKILL_DIR}/scripts/_py.sh ${SKILL_DIR}/scripts/render_page.py <project_path>/svg_output/<page>.svg
+```
+
+Read the PNG it prints (960 px wide) and fix only visible defects — overflow, overlap, clipped or colliding text, a broken chart — then re-run the page check. If it prints `[skip]` (no browser on this host), continue without it.
+
 The checker measures real glyph advances, so its bounds and overlap numbers are the SSOT — don't hand-compute them. The composition rules it does not count still hold on every page: ≤ 2 accent events (#4633E3/#E8E5FC; a chart opacity ladder counts as 1), ≥ 3 distinct type-scale steps (display 56 / headline 32 / title 18.4 / body 15.2 / caption 12.8), and text left-edges on the §4 column grid.
 
 > **Variation applied — purpose**: Body slides default to the anchor pattern unless the executor consciously selects one of the variation inspirations from `DESIGN.md §5.2`. Recording the chosen variation per slide breaks the "anchor copy" failure mode and forces intentional differentiation across the deck. **Target: ≥ 70% of body slides apply a non-`표준` variation across the full deck.** `표준` is allowed when the content genuinely needs the unembellished anchor (rare).
