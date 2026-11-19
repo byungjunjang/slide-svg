@@ -1,6 +1,6 @@
-# SVG Visualization Template Library (52 Types)
+# SVG Visualization Template Library (54 Types)
 
-This directory provides **52 standardized SVG visualization templates** for use as structured visualization selection references in PPT Master.
+This directory provides **54 standardized SVG visualization templates** for use as structured visualization selection references in PPT Master.
 
 > For backward compatibility, the directory remains `templates/charts/`, but the library scope includes charts, infographics, process diagrams, relationship diagrams, and strategic frameworks.
 
@@ -85,6 +85,8 @@ Before generating chart pages, review the corresponding template file to underst
 | `heatmap_chart.svg` | Matrix heatmap | User activity periods, correlation matrix |
 | `pareto_chart.svg` | 80/20 Pareto analysis | Quality attribution, sales contribution |
 | `box_plot_chart.svg` | Box plot distribution | Salary distribution, quality control |
+| `tornado_chart.svg` | Sensitivity around a base case (4-10 drivers) | IRR / NPV stress test, driver ranking |
+| `football_field_chart.svg` | Valuation ranges per method + reference lines | M&A / investment memo valuation summary |
 
 ### Project Management / Relationships
 

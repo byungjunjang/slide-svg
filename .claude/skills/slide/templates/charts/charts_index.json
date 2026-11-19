@@ -1,6 +1,6 @@
 {
   "meta": {
-    "total": 52,
+    "total": 54,
     "defaultViewBox": "0 0 1280 720",
     "formats": ["ppt169"],
     "filePattern": "{key}.svg",
@@ -26,7 +26,7 @@
     },
     "analysis": {
       "label": "Analysis",
-      "charts": ["radar_chart", "scatter_chart", "funnel_chart", "matrix_2x2", "bubble_chart", "heatmap_chart", "pareto_chart", "box_plot_chart"]
+      "charts": ["radar_chart", "scatter_chart", "funnel_chart", "matrix_2x2", "bubble_chart", "heatmap_chart", "pareto_chart", "box_plot_chart", "tornado_chart", "football_field_chart"]
     },
     "process": {
       "label": "Project Management / Relationships",
@@ -60,7 +60,9 @@
     "cause_effect": ["fishbone_diagram", "process_flow"],
     "journey": ["snake_flow", "timeline", "roadmap_vertical", "chevron_process"],
     "pricing": ["comparison_columns", "comparison_table"],
-    "brainstorm": ["mind_map", "word_cloud", "hub_spoke"]
+    "brainstorm": ["mind_map", "word_cloud", "hub_spoke"],
+    "sensitivity": ["tornado_chart"],
+    "valuation": ["football_field_chart"]
   },
   "charts": {
     "area_chart": {
@@ -322,6 +324,16 @@
       "label": "Vertical List",
       "summary": "Numbered vertical list with detail cards (3-6 key points/advantages)",
       "keywords": ["vertical list", "numbered list", "advantages", "features", "key points", "strengths"]
+    },
+    "tornado_chart": {
+      "label": "Tornado Chart",
+      "summary": "One-at-a-time sensitivity of one output (IRR, NPV, EBIT) to 4-10 drivers: downside / upside bars around a base-case line, widest swing on top. Not for two mirrored datasets without a base case (butterfly_chart)",
+      "keywords": ["tornado", "sensitivity", "stress test", "driver ranking", "base case", "IRR", "NPV"]
+    },
+    "football_field_chart": {
+      "label": "Football Field Chart",
+      "summary": "Valuation ranges per method as floating low-high bars on one value axis, with reference lines (current price, offer price): comps, precedents, DCF, LBO, 4-8 methods. Not for one value per item (horizontal_bar_chart)",
+      "keywords": ["football field", "valuation", "range", "DCF", "LBO", "comparable companies", "offer price"]
     }
   }
 }
