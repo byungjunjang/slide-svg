@@ -80,7 +80,7 @@ If a plan exists:
 
    이 락 아래에서 plan 그대로 진행할까요? (y/N — 'N'이면 /slide-plan으로 돌아가 plan을 수정)
    ```
-   Wait for explicit confirmation. (Eight Confirmations items b, c, h are absorbed by the plan; items a, d, e, f, g are theme-locked and shown as confirmations, not choices.)
+   Wait for explicit confirmation, unless the request carries a skip trigger (**Confirmation skip** below). (Eight Confirmations items b, c, h are absorbed by the plan; items a, d, e, f, g are theme-locked and shown as confirmations, not choices.)
 
 5. After confirmation, output `<project_path>/design_spec.md` and proceed to Step 4.5.
 
@@ -97,7 +97,7 @@ Read references/strategist.md
 
 **Must complete the Eight Confirmations** (full template structure in `templates/design_spec_reference.md`):
 
-⛔ **BLOCKING**: The Eight Confirmations MUST be presented to the user as a bundled set of recommendations, and you MUST **wait for the user to confirm or modify** before outputting the Design Specification & Content Outline. This is the only BLOCKING confirmation in Standalone mode. Once confirmed, all subsequent script execution and slide generation should proceed fully automatically.
+⛔ **BLOCKING**: The Eight Confirmations MUST be presented to the user as a bundled set of recommendations, and you MUST **wait for the user to confirm or modify** before outputting the Design Specification & Content Outline — unless the request carries a skip trigger (**Confirmation skip** below). This is the only BLOCKING confirmation in Standalone mode. Once confirmed, all subsequent script execution and slide generation should proceed fully automatically.
 
 1. Canvas format
 2. Page count range
@@ -116,6 +116,16 @@ ${SKILL_DIR}/scripts/_py.sh ${SKILL_DIR}/scripts/analyze_images.py <project_path
 > **Image handling rule**: Layout facts (pixel size, aspect ratio, placement math) come from `image_analysis.csv` or the Design Specification's Image Resource List — not from eyeballing the files. Open an image with Read to check its **content**: when what it shows decides the layout, when verifying each generated image in Step 5 (as `/codex-image` Step 6 does), and when reviewing rendered output in Step 7.
 
 **Output**: `<project_path>/design_spec.md`
+
+#### Confirmation skip (both modes)
+
+When the user's request hands the confirmation over in words — `알아서`, `확인 없이`, `묻지 말고` — the Step 4 confirmation does not wait:
+
+1. Print the confirmation block (active-theme lock or Eight Confirmations) with the recommended values, as usual.
+2. Treat the recommended values as confirmed and continue.
+3. Record the skip: `"confirmation": "auto (<trigger word>)"` on the Step 4 stage in `pipeline_status.json`, and a `| **Confirmation** | auto — "<trigger word>" |` row in `design_spec.md` §I.
+
+Without a trigger word the confirmation waits as described above. A trigger word changes only this confirmation, not the plan's own review (already auto-proceed) or any choice the user stated.
 
 #### Step 4.5: Quality Floor Verification (both modes)
 

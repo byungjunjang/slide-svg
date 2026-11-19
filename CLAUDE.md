@@ -50,7 +50,7 @@
 체계: /slide-plan → 사용자 검토 → /slide      (10장 이상 · 소스 파일 · 품질 키워드 · 강의/임원 보고서/세일즈 데크)
 ```
 
-`/slide`는 두 패턴 모두 자동 처리. `slide_plan.json`이 `output/<project>/`에 있으면 plan-consuming, 없으면 Standalone. plan이 없어도 **슬라이드 10장 이상, 소스 파일 제공, 품질 키워드(`철저`·`체계`·`완성도`·`thorough` 등), 강의/임원 보고서/세일즈 데크** 중 하나면 `/slide-plan`을 먼저 자동 실행한다. 우회 키워드(`간단히`, `빠르게`, `quick`, `simple로`, `plan 없이`)만 이를 건너뛴다 (SSOT: `executor-steps-4-6.md` Step 4.0). 사용자 검토는 기본 auto-proceed — stop 키워드로 중단.
+`/slide`는 두 패턴 모두 자동 처리. `slide_plan.json`이 `output/<project>/`에 있으면 plan-consuming, 없으면 Standalone. plan이 없어도 **슬라이드 10장 이상, 소스 파일 제공, 품질 키워드(`철저`·`체계`·`완성도`·`thorough` 등), 강의/임원 보고서/세일즈 데크** 중 하나면 `/slide-plan`을 먼저 자동 실행한다. 우회 키워드(`간단히`, `빠르게`, `quick`, `simple로`, `plan 없이`)만 이를 건너뛴다 (SSOT: `executor-steps-4-6.md` Step 4.0). 사용자 검토는 기본 auto-proceed — stop 키워드로 중단. Step 4 확인(테마 락·8개 확인)은 요청에 `알아서`·`확인 없이`·`묻지 말고`가 있으면 추천값으로 넘어가고 `auto (<트리거>)` 기록만 남긴다.
 
 ## 디렉터리
 

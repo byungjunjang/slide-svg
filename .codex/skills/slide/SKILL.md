@@ -25,7 +25,7 @@ description: >
 > This pipeline runs serially; each step's output feeds the next.
 >
 > 1. **Serial execution** — Run the steps in order. Non-BLOCKING adjacent steps proceed continuously once their prerequisites are met; there is no need to wait for the user to say "continue".
-> 2. **BLOCKING steps wait for the user** — At a step marked ⛔ BLOCKING, stop and wait for an explicit user response, and don't make the decision on the user's behalf — those choices belong to the user.
+> 2. **BLOCKING steps wait for the user** — At a step marked ⛔ BLOCKING, stop and wait for an explicit user response, and don't make the decision on the user's behalf — those choices belong to the user. One exception: when the user's request hands the Step 4 confirmation over in words (`알아서`, `확인 없이`, `묻지 말고`), print the confirmation block with the recommended values and continue — the user has made that decision (`executor-steps-4-6.md` Step 4 *Confirmation skip*).
 > 3. **No cross-phase bundling** — Keep each phase's output in its own step. The Step 4 confirmation (Eight Confirmations in Standalone, the active-theme lock in Plan-Consuming) is ⛔ BLOCKING; once the user confirms, design spec output, SVG generation, speaker notes, and post-processing proceed without further confirmation.
 > 4. **Gate before entry** — Check the 🚧 GATE prerequisites listed at the top of each step before starting it.
 > 5. **No speculative execution** — Don't pre-prepare content for later steps (e.g., writing SVG during the Strategist phase); later steps depend on the confirmed output of earlier ones.
@@ -189,7 +189,7 @@ cp ${SKILL_DIR}/templates/layouts/$THEME/design_spec.md <project_path>/templates
 - 🚧 GATE: Step 3 완료 — active-theme 템플릿 팩이 `<project_path>/templates/`에 복사됨.
 - 목적: 소스 콘텐츠를 `design_spec.md`로 변환. Step 4.0 모드 감지로 `slide_plan.json` 존재 시 **Plan-Consuming**, 부재 시 **Standalone** (Eight Confirmations) 자동 분기 — auto-trigger 조건(슬라이드 ≥ 10, 소스 파일, 품질 키워드, 강의/임원 보고서/세일즈 데크) 중 하나라도 충족 시 `/slide-plan`을 먼저 호출 — 우회 키워드(`간단히`·`빠르게`·`quick`·`simple로`·`plan 없이`)만 Standalone으로 보낸다.
 - 입력: 소스 콘텐츠, `references/strategist.md`, (plan 모드) `slide_plan.json` + `templates/layouts/<theme>/DESIGN.md` · 출력: `<project_path>/design_spec.md`.
-- ⛔ **BLOCKING (사용자 확인 필수)**: Plan-Consuming은 active-theme lock 1화면 확인, Standalone은 Eight Confirmations 일괄 제시 — 명시적 사용자 확인 전 진행 금지.
+- ⛔ **BLOCKING (사용자 확인 필수)**: Plan-Consuming은 active-theme lock 1화면 확인, Standalone은 Eight Confirmations 일괄 제시 — 명시적 사용자 확인 전 진행 금지. 예외: 요청에 `알아서`·`확인 없이`·`묻지 말고`가 있으면 확인 블록을 추천값으로 출력하고 바로 진행하며, `pipeline_status.json`과 design_spec §I에 `auto (<트리거>)`를 기록한다.
 - Plan-Consuming 필수 절차: `validate_plan.py` 재검증 → 슬라이드별 plan fingerprint 출력 (B-plan-fidelity 체크리스트).
 - 이미지가 제공된 경우 크기·비율 같은 레이아웃 정보는 `analyze_images.py` 출력(`image_analysis.csv`)에서 가져온다. 이미지를 Read 로 여는 것은 내용 확인용이다(내용이 배치를 정할 때, Step 5 생성 이미지 검수, Step 7 렌더 확인).
 - Step 4.5 Quality Floor (R2/R3/R4/R6 self-check + B-density / B-r2-simple / B-gm-simple / B-family-diversity / B-plan-count / B-plan-fidelity 검증 스크립트) 통과 후에만 다음 스텝 진행.

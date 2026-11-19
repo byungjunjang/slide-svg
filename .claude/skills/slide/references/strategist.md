@@ -30,7 +30,7 @@ Read templates/design_spec_reference.md
 ```
 The design_spec.md output **MUST** follow this template's structure exactly (Sections I through XI). After writing, perform a section-by-section self-check: I Project Information ✓ → II Canvas Spec ✓ → III Visual Theme ✓ → IV Typography ✓ → V Layout Principles ✓ → VI Icon Usage ✓ → VII Visualization Reference List ✓ → VIII Image Resource List ✓ → IX Content Outline ✓ → X Speaker Notes Requirements ✓ → XI Technical Constraints Reminder ✓. Any missing section must be completed before outputting the file.
 
-⛔ **BLOCKING**: After completing the read above, provide professional recommendations for the following eight items, then **present them as a bundled package to the user and wait for explicit confirmation or modifications**.
+⛔ **BLOCKING**: After completing the read above, provide professional recommendations for the following eight items, then **present them as a bundled package to the user and wait for explicit confirmation or modifications** — unless the request says `알아서`, `확인 없이` or `묻지 말고`: then present the package, take the recommendations as confirmed, and record `auto (<trigger word>)` (`executor-steps-4-6.md` Step 4 *Confirmation skip*).
 
 > **Execution discipline**: This is the only BLOCKING checkpoint remaining in the pipeline under this skill (template selection is automatic — the active theme `jangpm` is always used). Once the user confirms these eight, the AI must automatically complete the Design Specification & Content Outline and seamlessly proceed to subsequent image generation (if applicable), SVG generation, and post-processing — no additional questions or pauses in between.
 
