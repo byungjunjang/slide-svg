@@ -164,15 +164,16 @@ _URL_RE = re.compile(r"https?://\S+|www\.\S+")
 _DATE_RE = re.compile(  # 2026-07-15 / 2025.09 / 2월 15일
     r"(?<![\d.,])(?:19|20)\d\d[.\-/](?:0?[1-9]|1[0-2])(?:[.\-/](?:0?[1-9]|[12]\d|3[01]))?(?!\d)"
     r"|(?<!\d)\d{1,2}\s?월\s?\d{1,2}\s?일")
-_COUNTER_RE = re.compile(r"\s?(?:분기|반기|년차|월|위|차|번째|단계|단|세대|종|유형|가지|쪽|페이지|장)")
+_COUNTER_RE = re.compile(r"\s?(?:분기|반기|년차|월|위|차|번째|단계|단|세대|종|유형|가지|쪽|페이지|장)|부(?![가-힣])")  # 1부
 _CHAIN_RE = re.compile(r"\s?[·~∼–\-/]\s?\d+(?:\.\d+)?")  # '4–6장', '1~12월': one counter for all
 _WORD_PREFIX_RE = re.compile(r"(?<![A-Za-z])(?!vs\b)[A-Za-z]{2,}\.?\s$")  # 'Phase 1'
 _LETTER_UNIT_RE = re.compile(r"(?:x|pp|bp)(?![A-Za-z])")                 # 3.4x, 25pp
+_KO_LABEL_RE = re.compile(r"(?:과제|문제|연습|질문|사례|예시|예제|실습|단계|파트)\s?$")  # '과제 1'
 _BARE_RE = re.compile(r"[+\-−]?(\d{1,3}(?:,\d{3})+(?:\.\d+)?|\d+(?:\.\d+)?)\s?(?:%|조|억|만|원|배|x)?")
 _PAGE_NO_RE = re.compile(r"(?:p\.?\s?|page\s)?0*(\d{1,3})(?:\s?/\s?\d{1,3})?", re.IGNORECASE)
 _INTERNAL_RE = re.compile(  # analysis/x.json, sources/a.md, src_01, web_03
     r"(?<![\w.])(?:analysis|sources|svg_output|notes|images|exports)[/\\]"
-    r"|(?<=\w)\.(?:json|md|csv|xlsx|py)(?![A-Za-z0-9])|(?<![\w])(?:src|web)_\d+")
+    r"|(?<![\w])(?:src|web)_\d+")
 FIGURE_TAGS = {"calc": "계산", "forecast": "전망", "assumption": "가정", "web": "보강"}
 
 
@@ -192,7 +193,8 @@ def figure_numbers(text: str) -> list[tuple[str, float]]:
         if (re.search(r"[A-Za-z]$", before)
                 or (re.match(r"[A-Za-z]", after) and not _LETTER_UNIT_RE.match(after))
                 or (plain and len(raw) == 4 and 1900 <= value <= 2100)
-                or (value <= 20 and _WORD_PREFIX_RE.search(before))
+                or (value <= 20 and (_WORD_PREFIX_RE.search(before) or (plain and _KO_LABEL_RE.search(before))))
+                or (plain and len(raw) == 2 and raw[0] == "0")  # 02: a chapter or step number
                 or _COUNTER_RE.match(after)
                 or (chain and _COUNTER_RE.match(after[chain.end():]))):
             continue
@@ -231,10 +233,13 @@ def figure_warnings(project: Path) -> list[str]:
     if not plan_path.exists():
         return []
     try:
-        slides = json.loads(plan_path.read_text(encoding="utf-8")).get("slides") or []
+        plan = json.loads(plan_path.read_text(encoding="utf-8"))
     except (OSError, ValueError):
         return []
-    slides = [s for s in slides if isinstance(s, dict)]
+    slides = [s for s in plan.get("slides") or [] if isinstance(s, dict)]
+    # '보강' marks a web number only against given source files; a brief-only deck's facts all come from the web
+    given = any(isinstance(i, dict) and i.get("source_type") == "file"
+                for i in plan.get("content_inventory") or [])
     if not any("figures" in s for s in slides):
         return []  # a plan written before figures[] existed
     figures = {s.get("slide_number"): s.get("figures") or [] for s in slides}
@@ -262,6 +267,8 @@ def figure_warnings(project: Path) -> list[str]:
                        "in its slide_plan figures — add a figure (kind + basis) or drop the number")
         page_text = " ".join(texts)
         for kind, word in FIGURE_TAGS.items():
+            if kind == "web" and not given:
+                continue
             tagged = [str(f.get("text")) for f in figs if f.get("kind") == kind]
             if tagged and word not in page_text:
                 out.append(f"figures: page {label} shows {kind} figures ({', '.join(tagged)}) "

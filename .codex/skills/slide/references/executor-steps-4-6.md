@@ -323,7 +323,7 @@ Read references/executor.md
 3. **Merge (you)**: when every page exists, run the deck sweep below — its `chrome:` lines flag a page that drifted from the anchors' headline or `.gm` form, its primitive-diversity line flags lazy repetition — plus the Step 4.5 B-* checks, and fix what they report. Finish yourself any page whose fork failed, stopped for a plan change, or left an error. Then write the speaker notes (Logic Construction Phase).
 
 **Logic Construction Phase**:
-- Generate speaker notes → `<project_path>/notes/total.md`
+- Generate speaker notes → `<project_path>/notes/total.md` — after the deck sweep below, so the notes follow the polished page text.
 
 **Deck sweep (before Step 7)** — run the checker once on the whole directory; it adds deck-level checks a single page cannot show:
 ```bash
