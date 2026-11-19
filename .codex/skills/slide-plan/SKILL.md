@@ -211,7 +211,7 @@ For each slide, populate (minimum):
 }
 ```
 
-**`figures[]`** — every number the slide will show, each with its kind and basis. `/slide` shows only these numbers and tags the computed, projected and assumed ones on the page.
+**`figures[]`** — every number the slide will show, each with its kind and basis. `/slide` shows only these numbers and tags the computed, projected, assumed and web-filled ones on the page.
 
 | `kind` | When | `basis` |
 |---|---|---|
@@ -299,7 +299,7 @@ corrected:
 **Execution** (same tools and source rules as Step 5.5):
 1. List the gaps the slides depend on; ignore gaps no slide uses.
 2. Search each one; take 1–2 trustworthy sources (official IR, filings, government statistics, major outlets).
-3. **Filled** → add a `web_NN` source with its `url` to `content_inventory`, a `kind: "web"` figure on each slide that shows it, and a `fact_check_log` row with `"status": "filled"` and the `source` URL.
+3. **Filled** → add a `web_NN` source with its `url` to `content_inventory`, a `kind: "web"` figure on each slide that shows it, and a `fact_check_log` row with `"status": "filled"` and the `source` URL. The slide then marks it `보강` with the publisher (`/slide` Executor, Numbers and Sources).
 4. **Not found** → keep it visibly missing on the slide (`미공개`, `확인 불가`) — never estimate silently. Record a `fact_check_log` row with `"status": "unverified"`.
 
 > Design intent: the site benchmark filled the source's `미수집` rows from the web with a cited source, and the comparison pages became complete. Web-filled numbers always carry a URL, so the deck never presents an unsourced number as fact.

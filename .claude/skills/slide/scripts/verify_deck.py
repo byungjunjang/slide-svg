@@ -173,7 +173,7 @@ _PAGE_NO_RE = re.compile(r"(?:p\.?\s?|page\s)?0*(\d{1,3})(?:\s?/\s?\d{1,3})?", r
 _INTERNAL_RE = re.compile(  # analysis/x.json, sources/a.md, src_01, web_03
     r"(?<![\w.])(?:analysis|sources|svg_output|notes|images|exports)[/\\]"
     r"|(?<=\w)\.(?:json|md|csv|xlsx|py)(?![A-Za-z0-9])|(?<![\w])(?:src|web)_\d+")
-FIGURE_TAGS = {"calc": "계산", "forecast": "전망", "assumption": "가정"}
+FIGURE_TAGS = {"calc": "계산", "forecast": "전망", "assumption": "가정", "web": "보강"}
 
 
 def figure_numbers(text: str) -> list[tuple[str, float]]:
@@ -225,7 +225,7 @@ def _tick_texts(elements: list) -> set[int]:
 
 def figure_warnings(project: Path) -> list[str]:
     """Plan decks only: numbers a page shows that its slide_plan figures do
-    not list; calc / forecast / assumption figures with no tag word on the
+    not list; calc / forecast / assumption / web figures with no tag word on the
     page; lines that name an internal file or plan id instead of a source."""
     plan_path = project / "slide_plan.json"
     if not plan_path.exists():

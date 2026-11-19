@@ -342,7 +342,7 @@ warnings = verify_deck.figure_warnings(Path(sys.argv[1]).resolve())
 print("\n".join(warnings) or "B-figures: PASS")
 PY
 ```
-Fix each line: add the missing figure to the plan (kind + basis) or drop the number; add the missing `계산` / `전망` / `가정` tag or note; replace an internal path or plan id with a readable source. Years, dates, counters (`4분기`, `3단계`), identifiers (`HBM4`, `1Q25`), axis ticks and the page number are not figures.
+Fix each line: add the missing figure to the plan (kind + basis) or drop the number; add the missing `계산` / `전망` / `가정` / `보강` tag or note; replace an internal path or plan id with a readable source. Years, dates, counters (`4분기`, `3단계`), identifiers (`HBM4`, `1Q25`), axis ticks and the page number are not figures.
 
 Then read the deck's message line — one `NN | title | .gm` row per page:
 ```bash
