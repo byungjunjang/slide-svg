@@ -117,13 +117,18 @@ def process_svg(content: str, verbose: bool = False) -> Tuple[str, int]:
             return tag.split('}')[1]
         return tag
     
+    # Shapes a connector route binds to stay <rect>: as a path they would lose
+    # their connection sites (the exporter writes them as roundRect).
+    bound_ids = {v for el in root.iter() for k, v in el.attrib.items()
+                 if k in ('data-pptx-start', 'data-pptx-end')}
+
     def process_element(elem: ET.Element) -> None:
         """Process a single element."""
         nonlocal converted_count
         tag_name = get_tag_name(elem.tag)
-        
+
         # Process rounded rectangles
-        if tag_name == 'rect':
+        if tag_name == 'rect' and elem.get('id') not in bound_ids:
             rx = parse_float(elem.get('rx', '0'))
             ry = parse_float(elem.get('ry', '0'))
             

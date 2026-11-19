@@ -87,6 +87,13 @@ def convert_rect(elem: ET.Element, ctx: ConvertContext) -> ShapeResult | None:
             rot = int(float(r_match.group(1)) * ANGLE_UNIT)
 
     geom = '<a:prstGeom prst="rect"><a:avLst/></a:prstGeom>'
+    # A rounded rect reaching here (finalize keeps connector targets as
+    # <rect>) exports as roundRect, which keeps its connection sites.
+    radius = max(_f(elem.get('rx')), _f(elem.get('ry'))) * ctx.scale_x
+    if radius > 0:
+        adj = int(min(radius / (min(w, h) / 2), 1.0) * 50000)
+        geom = (f'<a:prstGeom prst="roundRect"><a:avLst>'
+                f'<a:gd name="adj" fmla="val {adj}"/></a:avLst></a:prstGeom>')
 
     shape_id = ctx.next_id()
     off_x = px_to_emu(x)

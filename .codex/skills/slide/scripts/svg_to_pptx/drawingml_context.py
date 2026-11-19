@@ -36,6 +36,9 @@ class ConvertContext:
     rel_id_counter: int = 2  # rId1 reserved for slideLayout
     svg_dir: Path | None = None
     inherited_styles: dict[str, str] = field(default_factory=dict)
+    # Connector binding (drawingml_connectors): shapes by SVG id, pending routes.
+    targets: dict[str, tuple] = field(default_factory=dict)
+    connectors: dict[str, dict] = field(default_factory=dict)
 
     def next_id(self) -> int:
         """Allocate the next shape ID."""
@@ -102,6 +105,8 @@ class ConvertContext:
             rel_id_counter=self.rel_id_counter,
             svg_dir=self.svg_dir,
             inherited_styles=merged,
+            targets=self.targets,
+            connectors=self.connectors,
         )
 
     def sync_from_child(self, child_ctx: ConvertContext) -> None:

@@ -12,6 +12,9 @@ from .drawingml_utils import (
     _extract_inheritable_styles, resolve_url_id,
 )
 from .drawingml_styles import build_effect_xml
+from .drawingml_connectors import (
+    TARGET_TAGS, defer_connector, is_bound_route, record_target, resolve_connectors,
+)
 from .drawingml_elements import (
     convert_rect, convert_circle, convert_ellipse,
     convert_line, convert_path,
@@ -180,13 +183,22 @@ def convert_element(elem: ET.Element, ctx: ConvertContext) -> ShapeResult | None
     """Dispatch an SVG element to the appropriate converter."""
     tag = elem.tag.replace(f'{{{SVG_NS}}}', '')
 
+    if is_bound_route(elem, tag):
+        try:
+            return defer_connector(elem, tag, ctx)
+        except ValueError as e:
+            print(f'  Warning: connector route not bound ({e}); exported as a plain line')
+
     converter = _CONVERTERS.get(tag)
     if converter:
         try:
-            return converter(elem, ctx)
+            result = converter(elem, ctx)
         except Exception as e:
             print(f'  Warning: Failed to convert <{tag}>: {e}')
             return None
+        if result and tag in TARGET_TAGS and elem.get('id'):
+            record_target(elem.get('id'), result.xml, ctx)
+        return result
 
     if tag in _NON_VISUAL_TAGS:
         return None
@@ -237,7 +249,7 @@ def convert_svg_to_slide_shapes(
     if verbose:
         print(f'  Converted {converted} elements, skipped {skipped}')
 
-    shapes_xml = '\n'.join(shapes)
+    shapes_xml = resolve_connectors('\n'.join(shapes), ctx)
 
     slide_xml = f'''<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <p:sld xmlns:a="http://schemas.openxmlformats.org/drawingml/2006/main"
