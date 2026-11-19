@@ -91,6 +91,18 @@ Checks include:
 
 Each file prints its first 2 warnings; `--all-warnings` lists them all.
 
+## `svg_copy.py`
+
+Guarded copy polish of the text in `svg_output/` (Step 6 deck sweep).
+
+```bash
+python3 scripts/svg_copy.py extract <project_path> -o <project_path>/copy_lines.json
+python3 scripts/svg_copy.py apply <project_path> <edits.json>
+```
+
+- `extract` writes every text line per page (`{"07": {"file": ..., "lines": [...]}}`).
+- `apply` takes `[{"page": "07", "old": "<exact line>", "new": "<line>"}]`. It refuses an edit that changes a number, a number+unit pair or a Latin word, or whose old line is not exactly one text node on the page; files keep their bytes (line endings) apart from the edit. Report: `<project_path>/copy_polish.json`.
+
 ## `svg_position_calculator.py`
 
 Analyze or pre-calculate chart coordinates.

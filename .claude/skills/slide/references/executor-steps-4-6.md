@@ -337,5 +337,15 @@ ${SKILL_DIR}/scripts/_py.sh ${SKILL_DIR}/scripts/svg_quality_checker.py <project
 ```
 Read it once as the audience would and fix, one row per issue: two pages making the same point, a missing link between neighbours, an order that breaks the argument, a `.gm` that restates its title.
 
+Last, polish the copy with the number guard:
+```bash
+${SKILL_DIR}/scripts/_py.sh ${SKILL_DIR}/scripts/svg_copy.py extract <project_path> -o <project_path>/copy_lines.json
+```
+Read every line and write an edits file — a JSON list of `{"page": "07", "old": "<exact line>", "new": "<line>"}` — only for lines that read better after the edit: concise, natural Korean, one term and one sentence ending style deck-wide, the active theme's voice (`anti-slop-theme.md`). Leave numbers, units and Latin words as they are. Then apply it:
+```bash
+${SKILL_DIR}/scripts/_py.sh ${SKILL_DIR}/scripts/svg_copy.py apply <project_path> <edits.json>
+```
+The script refuses an edit that changes a number, a number+unit pair or a Latin word, or whose old line is not exactly one text node on its page (a line split over styled runs is edited by hand), and lists each refusal. It writes `<project_path>/copy_polish.json`. Re-run the page check on every page it changed.
+
 **✅ Checkpoint** — all SVGs are in `svg_output/`, the deck sweep is settled, and `notes/total.md` is written → proceed directly to Step 7 post-processing.
 
