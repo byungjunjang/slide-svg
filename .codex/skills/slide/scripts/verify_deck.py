@@ -157,6 +157,122 @@ def deck_needs_plan(project: Path) -> bool:
     return page_count(project, "svg_output") >= SYSTEMATIC_MIN_PAGES
 
 
+# ---- figures: numbers on a page vs its slide_plan figures (WARN only) ----
+
+_NUM_RE = re.compile(r"\d{1,3}(?:,\d{3})+(?:\.\d+)?|\d+(?:\.\d+)?")
+_URL_RE = re.compile(r"https?://\S+|www\.\S+")
+_DATE_RE = re.compile(  # 2026-07-15 / 2025.09 / 2월 15일
+    r"(?<![\d.,])(?:19|20)\d\d[.\-/](?:0?[1-9]|1[0-2])(?:[.\-/](?:0?[1-9]|[12]\d|3[01]))?(?!\d)"
+    r"|(?<!\d)\d{1,2}\s?월\s?\d{1,2}\s?일")
+_COUNTER_RE = re.compile(r"\s?(?:분기|반기|년차|월|위|차|번째|단계|단|세대|종|유형|가지|쪽|페이지|장)")
+_CHAIN_RE = re.compile(r"\s?[·~∼–\-/]\s?\d+(?:\.\d+)?")  # '4–6장', '1~12월': one counter for all
+_WORD_PREFIX_RE = re.compile(r"(?<![A-Za-z])(?!vs\b)[A-Za-z]{2,}\.?\s$")  # 'Phase 1'
+_LETTER_UNIT_RE = re.compile(r"(?:x|pp|bp)(?![A-Za-z])")                 # 3.4x, 25pp
+_BARE_RE = re.compile(r"[+\-−]?(\d{1,3}(?:,\d{3})+(?:\.\d+)?|\d+(?:\.\d+)?)\s?(?:%|조|억|만|원|배|x)?")
+_PAGE_NO_RE = re.compile(r"(?:p\.?\s?|page\s)?0*(\d{1,3})(?:\s?/\s?\d{1,3})?", re.IGNORECASE)
+_INTERNAL_RE = re.compile(  # analysis/x.json, sources/a.md, src_01, web_03
+    r"(?<![\w.])(?:analysis|sources|svg_output|notes|images|exports)[/\\]"
+    r"|(?<=\w)\.(?:json|md|csv|xlsx|py)(?![A-Za-z0-9])|(?<![\w])(?:src|web)_\d+")
+FIGURE_TAGS = {"calc": "계산", "forecast": "전망", "assumption": "가정"}
+
+
+def figure_numbers(text: str) -> list[tuple[str, float]]:
+    """`(raw, value)` for each number in a line that needs a figure. Years,
+    dates, counters ('4분기', '3단계') and identifiers ('HBM4', '1Q25',
+    'Phase 1') need none."""
+    text = _DATE_RE.sub(" ", _URL_RE.sub(" ", text))
+    out = []
+    for m in _NUM_RE.finditer(text):
+        raw, before, after = m.group(), text[:m.start()], text[m.end():]
+        if before[-1:] in (".", ",") and before[-2:-1].isdigit():
+            continue  # tail of a dotted run such as 1.2.3
+        value = float(raw.replace(",", ""))
+        plain = "," not in raw and "." not in raw
+        chain = _CHAIN_RE.match(after)
+        if (re.search(r"[A-Za-z]$", before)
+                or (re.match(r"[A-Za-z]", after) and not _LETTER_UNIT_RE.match(after))
+                or (plain and len(raw) == 4 and 1900 <= value <= 2100)
+                or (value <= 20 and _WORD_PREFIX_RE.search(before))
+                or _COUNTER_RE.match(after)
+                or (chain and _COUNTER_RE.match(after[chain.end():]))):
+            continue
+        out.append((raw, value))
+    return out
+
+
+def _tick_texts(elements: list) -> set[int]:
+    """Indexes of axis-tick / list-marker labels: 3+ bare-number labels on one
+    x (or one y) whose values step evenly in position order — or just two
+    there when both are round tens (a short axis: '10조', '20조')."""
+    labels = []
+    for i, (x, y, _fs, _fw, _a, text, _r, _p) in enumerate(elements):
+        m = _BARE_RE.fullmatch(text)
+        if m:
+            labels.append((i, x, y, float(m.group(1).replace(",", ""))))
+    ticks: set[int] = set()
+    for axis in (1, 2):  # 1: shared x (a column), 2: shared y (a row)
+        runs: dict[int, list] = {}
+        for lab in labels:
+            runs.setdefault(round(lab[axis]), []).append(lab)
+        for run in runs.values():
+            run.sort(key=lambda lab: lab[3 - axis])
+            steps = [b[3] - a[3] for a, b in zip(run, run[1:])]
+            even = bool(steps) and steps[0] != 0 and all(abs(s - steps[0]) < 1e-9 for s in steps)
+            if even and (len(run) >= 3 or all(lab[3] % 10 == 0 for lab in run)):
+                ticks.update(lab[0] for lab in run)
+    return ticks
+
+
+def figure_warnings(project: Path) -> list[str]:
+    """Plan decks only: numbers a page shows that its slide_plan figures do
+    not list; calc / forecast / assumption figures with no tag word on the
+    page; lines that name an internal file or plan id instead of a source."""
+    plan_path = project / "slide_plan.json"
+    if not plan_path.exists():
+        return []
+    try:
+        slides = json.loads(plan_path.read_text(encoding="utf-8")).get("slides") or []
+    except (OSError, ValueError):
+        return []
+    slides = [s for s in slides if isinstance(s, dict)]
+    if not any("figures" in s for s in slides):
+        return []  # a plan written before figures[] existed
+    figures = {s.get("slide_number"): s.get("figures") or [] for s in slides}
+    from svg_quality_checker import parse_text_elements
+    out = []
+    for svg in _svgs(project / "svg_output"):
+        m = re.match(r"\d+", svg.stem)
+        if not m or int(m.group()) not in figures:
+            continue
+        page = int(m.group())
+        figs = [f for f in figures[page] if isinstance(f, dict)]
+        listed = {value for f in figs for _raw, value in figure_numbers(str(f.get("text", "")))}
+        elements = parse_text_elements(svg.read_text(encoding="utf-8", errors="replace"))
+        ticks = _tick_texts(elements)
+        texts = [e[5] for e in elements]
+        missing = []
+        for i, text in enumerate(texts):
+            page_no = _PAGE_NO_RE.fullmatch(text)
+            if i in ticks or (page_no and int(page_no.group(1)) == page):
+                continue
+            missing += [raw for raw, value in figure_numbers(text) if value not in listed]
+        label = svg.stem.split("_")[0]
+        if missing:
+            out.append(f"figures: page {label} shows {', '.join(dict.fromkeys(missing))} not listed "
+                       "in its slide_plan figures — add a figure (kind + basis) or drop the number")
+        page_text = " ".join(texts)
+        for kind, word in FIGURE_TAGS.items():
+            tagged = [str(f.get("text")) for f in figs if f.get("kind") == kind]
+            if tagged and word not in page_text:
+                out.append(f"figures: page {label} shows {kind} figures ({', '.join(tagged)}) "
+                           f"but no '{word}' tag or note on the page")
+        leaks = [t for t in texts if _INTERNAL_RE.search(t)]
+        if leaks:
+            out.append(f"figures: page {label} names an internal file or id ('{leaks[0][:40]}') "
+                       "— cite a readable source instead")
+    return out
+
+
 def pipeline_status_warnings(project: Path) -> list[str]:
     """Non-blocking check for the current-run stage log (SKILL.md Fresh-Build Entry Gate #7)."""
     status = project / "pipeline_status.json"
@@ -388,7 +504,7 @@ def main() -> int:
     failures = run_checks(project)
     cli_failures, cli_warnings = officecli_checks(project)
     failures.extend(cli_failures)
-    for w in pipeline_status_warnings(project) + cli_warnings:
+    for w in pipeline_status_warnings(project) + cli_warnings + figure_warnings(project):
         sys.stderr.write(f"  ! WARN {w}\n")
     if failures:
         sys.stderr.write(f"[verify_deck] FAIL ({len(failures)} issue(s)):\n")

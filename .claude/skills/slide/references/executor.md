@@ -356,6 +356,14 @@ Every **content** slide (page type `content`) MUST render a `.gm` line at the bo
 
 Title / chapter / ending slides do NOT carry `.gm`.
 
+### Numbers and Sources (plan decks)
+
+`slide_plan.json` lists every number a slide shows in its `figures[]`, each with a kind (`source` · `calc` · `forecast` · `assumption` · `web`). Show only those numbers; a number the page needs but the plan lacks goes into the plan first (with its kind and basis). Mark the kind on the page:
+
+- **계산 · 전망 · 가정** — in body text, put the tag in the same run right after the number: `49%(계산)`. On a chart or table, say it once per page in its note or source line. Never tag a title, a subtitle, or a hero / KPI number; say the kind in the KPI label, a footnote or the source line instead.
+- **source · web** — no tag; the source line names the publisher.
+- **Source line** — readable sources only: publisher, document, date (`출처: SK하이닉스 2025 실적 발표 · Counterpoint`). Never a file path, a plan id (`src_01`, `web_03`) or a model key.
+
 ---
 
 ## 7. Visualization Reference

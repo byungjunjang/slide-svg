@@ -331,6 +331,19 @@ ${SKILL_DIR}/scripts/_py.sh ${SKILL_DIR}/scripts/svg_quality_checker.py <project
 ```
 Fix every error, then settle every `[WARN] deck:` line. A `terms:` line names one term written several ways across pages — spacing (`DS부문` / `DS 부문`), source labels (`출처:` / `자료:`), or percentage-point notation (`%p` / `pp`): pick one form and apply it deck-wide.
 
+On a plan deck, check each page's numbers against its `figures[]` (verify_deck repeats this as a WARN):
+```bash
+${SKILL_DIR}/scripts/_py.sh - "<project_path>" "${SKILL_DIR}/scripts" <<'PY'
+import sys
+from pathlib import Path
+sys.path.insert(0, sys.argv[2])
+import verify_deck
+warnings = verify_deck.figure_warnings(Path(sys.argv[1]).resolve())
+print("\n".join(warnings) or "B-figures: PASS")
+PY
+```
+Fix each line: add the missing figure to the plan (kind + basis) or drop the number; add the missing `계산` / `전망` / `가정` tag or note; replace an internal path or plan id with a readable source. Years, dates, counters (`4분기`, `3단계`), identifiers (`HBM4`, `1Q25`), axis ticks and the page number are not figures.
+
 Then read the deck's message line — one `NN | title | .gm` row per page:
 ```bash
 ${SKILL_DIR}/scripts/_py.sh ${SKILL_DIR}/scripts/svg_quality_checker.py <project_path>/svg_output --outline

@@ -313,7 +313,7 @@ A. 네, 일반 `.pptx` 파일이라 PowerPoint/Keynote/Google Slides에서 자�
 A. 내보낸 PPTX에는 만든 PC에 설치된 Pretendard(정적 TTF)가 기본으로 내장됩니다. 그래서 Pretendard가 없는 PC에서도 글자 모양은 그대로입니다. 다만 Windows PowerPoint는 설치되지 않은 내장 한글 글꼴의 글자 간격을 조금 넓혀서 줄바꿈이 달라질 수 있습니다. 덱을 고치거나 발표할 PC에는 Pretendard를 설치하세요(`assets/fonts/`). 만든 PC에 정적 TTF가 없으면 내장을 건너뛰고, 이때는 폰트 체인에 따라 Apple SD Gothic Neo → Malgun Gothic → Arial 순으로 폴백됩니다.
 
 **Q. 기밀 데이터인데 안전한가요?**
-A. 파일은 모두 로컬에서 처리됩니다. 단, Claude와의 대화 내용은 AI 응답을 받기 위해 Anthropic 서버로 전달됩니다. 회사 보안 정책에 따라 판단하세요. AI 이미지 생성은 호스트별 승인 경로만 사용합니다: Claude Code는 `/codex-image`, Codex는 기본 `imagegen` / `image_gen`. 다른 백엔드(Gemini/DALL·E/Midjourney 등)는 사용하지 않습니다.
+A. 파일은 모두 로컬에서 처리됩니다. 단, Claude와의 대화 내용은 AI 응답을 받기 위해 Anthropic 서버로 전달됩니다. 체계적 덱의 사실 확인(slide-plan Step 5.5)과 원자료 공백 보강(Step 5.6)은 웹 검색을 쓰므로 검색어가 외부로 나갑니다. 공백 보강은 "원자료만"이라고 요청하면 끌 수 있습니다. 회사 보안 정책에 따라 판단하세요. AI 이미지 생성은 호스트별 승인 경로만 사용합니다: Claude Code는 `/codex-image`, Codex는 기본 `imagegen` / `image_gen`. 다른 백엔드(Gemini/DALL·E/Midjourney 등)는 사용하지 않습니다.
 
 **Q. 이전 슬라이드 덱을 삭제하지 않고 보존할 수 있나요?**
 A. 네. `output/<주제>/`는 주제별로 폴더가 분리되어 있어 그대로 두면 보존됩니다. 디스크가 무거워지면 `svg_output/` 같은 중간 산출물만 지워도 됩니다 (`.pptx`와 `svg_final/`만 남기면 충분).

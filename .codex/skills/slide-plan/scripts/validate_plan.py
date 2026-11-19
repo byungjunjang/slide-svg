@@ -381,6 +381,48 @@ def check_fact_check_log(plan: dict[str, Any], slides: list[dict[str, Any]], r: 
             )
 
 
+FIGURE_KINDS = {"source", "calc", "forecast", "assumption", "web"}
+_FORMULA_CHARS = set("+-−×*/÷=")
+
+
+def check_figures(plan: dict[str, Any], slides: list[dict[str, Any]], r: Report) -> None:
+    """figures[] audit (advisory) — every number a slide shows, with its kind
+    and basis: the content_inventory id for source and web figures (a web
+    source needs its url), the formula for a calc figure, the reason or
+    publisher for a forecast or assumption. One warning per bad figure."""
+    inventory = {c.get("source_id"): c for c in plan.get("content_inventory") or []
+                 if isinstance(c, dict) and isinstance(c.get("source_id"), str)}
+    for s in slides:
+        figures = s.get("figures")
+        if figures is None:
+            continue
+        label = slide_label(s)
+        if not isinstance(figures, list):
+            r.warn(f"figures — {label}: figures must be a list")
+            continue
+        for i, fig in enumerate(figures):
+            where = f"figures — {label}[{i}]"
+            if not isinstance(fig, dict):
+                r.warn(f"{where}: not an object")
+                continue
+            text, kind = str(fig.get("text", "")), fig.get("kind")
+            basis = str(fig.get("basis", "")).strip()
+            ids = [sid for sid in inventory if sid in basis]
+            if not any(ch.isdigit() for ch in text):
+                r.warn(f"{where}: {text!r} has no number — list only numbers the slide shows")
+            elif kind not in FIGURE_KINDS:
+                r.warn(f"{where}: kind {kind!r} is not one of {sorted(FIGURE_KINDS)}")
+            elif not basis:
+                r.warn(f"{where}: {text!r} has no basis")
+            elif kind == "calc" and not any(ch in _FORMULA_CHARS for ch in basis):
+                r.warn(f"{where}: calc figure {text!r} needs its formula as basis")
+            elif kind == "source" and not ids:
+                r.warn(f"{where}: source figure {text!r} must name a content_inventory id")
+            elif kind == "web" and not any(inventory[sid].get("source_type") == "web"
+                                           and inventory[sid].get("url") for sid in ids):
+                r.warn(f"{where}: web figure {text!r} must name a web source that has a url")
+
+
 def validate(plan_path: Path) -> Report:
     r = Report()
     try:
@@ -429,6 +471,7 @@ def validate(plan_path: Path) -> Report:
     check_r3_length(plan, slides, r)
     check_diagnostic_ratios(slides, r)
     check_fact_check_log(plan, slides, r)
+    check_figures(plan, slides, r)
 
     return r
 

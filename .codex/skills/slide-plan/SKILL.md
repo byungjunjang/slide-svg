@@ -168,6 +168,12 @@ If no sources provided, set `inference` mode:
 { "source_id": "inference", "source_type": "prompt", "summary": "User brief only", "relevance": "high", "usable_for": ["all"] }
 ```
 
+Sources found on the web (Step 5.5 fact-check, Step 5.6 gap fill) are `source_type: "web"` entries with a `url`:
+
+```json
+{ "source_id": "web_03", "source_type": "web", "url": "https://...", "summary": "삼성전자 2025 4분기 실적 발표", "relevance": "high", "usable_for": ["evidence"] }
+```
+
 ### Step 5: Write per-slide plans
 
 For each slide, populate (minimum):
@@ -197,9 +203,25 @@ For each slide, populate (minimum):
     "evidence_to_use": ["src_01:p7", "src_01:p12"]
   },
   "evidence_sources": ["src_01"],
+  "figures": [
+    { "text": "MAU 128만", "kind": "source", "basis": "src_01:p7" },
+    { "text": "+12%", "kind": "calc", "basis": "(128 - 114.3) / 114.3" }
+  ],
   "priority": "must"
 }
 ```
+
+**`figures[]`** — every number the slide will show, each with its kind and basis. `/slide` shows only these numbers and tags the computed, projected and assumed ones on the page.
+
+| `kind` | When | `basis` |
+|---|---|---|
+| `source` | the number is in a source file | the `content_inventory` id and where (`src_01:p7`) |
+| `calc` | computed from other figures | the formula (`47.2 / 97.1`) |
+| `forecast` | a published or own projection | who projects it, and for when |
+| `assumption` | a planning assumption or an illustrative example | why it is assumed |
+| `web` | filled from the web (Step 5.5 / 5.6) | the `web_NN` source id (that source has a `url`) |
+
+Years, dates, counters (`4분기`, `3단계`), identifiers (`HBM4`, `1Q25`), chart axis ticks and page numbers are not figures. `validate_plan.py` warns on a figure with no number, an unknown kind, an empty basis, a calc without a formula, a source without an inventory id, or a web figure whose source has no `url`.
 
 ### Step 5.5: Fact-check (web search-based claim verification)
 
@@ -232,7 +254,7 @@ Verify HIGH/MEDIUM only. Cap at 3 claims per slide to limit overhead.
 
 **Plan integration:**
 
-- **verified** → add `{"source_id": "web_NN", "source_type": "web", "summary": "<URL+summary>", "relevance": "high", "usable_for": ["evidence"]}` to `content_inventory`; append `web_NN` to slide's `evidence_sources`
+- **verified** → add `{"source_id": "web_NN", "source_type": "web", "url": "<URL>", "summary": "<summary>", "relevance": "high", "usable_for": ["evidence"]}` to `content_inventory`; append `web_NN` to slide's `evidence_sources`
 - **corrected** → fix the claim in-place; record before/after in `fact_check_log`
 - **unverified** → soften the claim ("≈X" → "estimated X–Y"); append `"inference-unverified"` to `evidence_sources`
 
@@ -265,6 +287,23 @@ corrected:
 
 > Design intent: Non-blocking. If a failed claim is critical, the user uses a Step 8 stop keyword to request plan edits. Internal / unpublished data legitimately can't be verified, so we never block on fact-check.
 
+### Step 5.6: Gap fill (web search for what the sources leave out)
+
+**Activation:** on by default when the user provided source files. Skip it when the brief says `원자료만`, `웹 보강 없이` or `web search off`.
+
+**What is a gap:**
+- a value the source marks missing — `—`, `미수집`, `미확인`, `미공개`, `N/A`;
+- a comparison the source gives for one side only (one company's net income, the other's left blank);
+- a number a slide's message needs that no source has.
+
+**Execution** (same tools and source rules as Step 5.5):
+1. List the gaps the slides depend on; ignore gaps no slide uses.
+2. Search each one; take 1–2 trustworthy sources (official IR, filings, government statistics, major outlets).
+3. **Filled** → add a `web_NN` source with its `url` to `content_inventory`, a `kind: "web"` figure on each slide that shows it, and a `fact_check_log` row with `"status": "filled"` and the `source` URL.
+4. **Not found** → keep it visibly missing on the slide (`미공개`, `확인 불가`) — never estimate silently. Record a `fact_check_log` row with `"status": "unverified"`.
+
+> Design intent: the site benchmark filled the source's `미수집` rows from the web with a cited source, and the comparison pages became complete. Web-filled numbers always carry a URL, so the deck never presents an unsourced number as fact.
+
 ### Step 6: Layer 1 (R1–R5)
 
 The Step 7 validator enforces R1–R5; no separate self-check pass.
@@ -292,6 +331,8 @@ Present a markdown summary (one line per slide):
 | 1 | cover | structure | ... | ... |
 | 2 | context | insight | ... | ... |
 ...
+
+- **figures**: N개 (source a · calc b · forecast c · assumption d · web e) · **gap fill**: 채움 k / 못 찾음 m
 
 체계적 모드 — Plan 작성 완료. 같은 턴 안에서 /slide로 진행합니다.
 수정이 필요하면 `다시` / `수정` / `멈춰` / `잠깐` / `wait` / `stop` 중 하나로 응답하세요.
@@ -337,7 +378,8 @@ Present a markdown summary (one line per slide):
   "content_inventory": [
     {
       "source_id": "string",
-      "source_type": "file | prompt | inference",
+      "source_type": "file | prompt | inference | web",
+      "url": "string (web sources only)",
       "summary": "string",
       "relevance": "high | medium | low",
       "usable_for": ["string"]
@@ -370,8 +412,14 @@ Present a markdown summary (one line per slide):
         "evidence_to_use": ["string"]
       },
       "evidence_sources": ["string"],
+      "figures": [
+        { "text": "string (as shown)", "kind": "source | calc | forecast | assumption | web", "basis": "string" }
+      ],
       "priority": "must | should | could"
     }
+  ],
+  "fact_check_log": [
+    { "claim": "string", "slide_number": 0, "priority": "HIGH | MEDIUM", "status": "verified | corrected | unverified | filled", "source": "string | null", "checked_at": "YYYY-MM-DD" }
   ],
   "ordering_notes": {
     "split_topics": ["string"],
