@@ -15,7 +15,7 @@ import sys
 import re
 from pathlib import Path
 from typing import List, Dict, Tuple
-from collections import defaultdict
+from collections import Counter, defaultdict
 
 try:
     from project_utils import CANVAS_FORMATS
@@ -654,6 +654,61 @@ def term_variants(pages: dict) -> list:
     if len(units) > 1:
         out.append(f"terms: percentage-point unit written {_listing(units)}"
                    " — use one notation deck-wide")
+    return out
+
+
+# ============================================================
+# Deck chrome drift (WARN-level, directory checks only)
+# Body pages share one headline and .gm form. A page authored apart from the
+# rest (a parallel fork) can drift to another frame; the deck's majority is the
+# reference, so nothing here is tied to one theme's coordinates.
+# ============================================================
+
+_HEADER_MAX_Y = 160  # headline band: baselines above the content area (y = 160)
+
+
+def _gm_line(content: str):
+    """`(y, font_size, fill)` of the centered .gm line in the footer band, or None."""
+    for m in _TEXT_ELEM_RE.finditer(content):
+        attrs = m.group(1)
+        y = _attr_num(attrs, "y")
+        if ('text-anchor="middle"' in attrs and y is not None
+                and _GM_Y_RANGE[0] <= y <= _GM_Y_RANGE[1]):
+            return (round(y), _font_attrs(attrs, 16.0, "400")[0],
+                    (_attr_str(attrs, "fill") or "").upper())
+    return None
+
+
+def _headline(content: str):
+    """`(x, y, font_size)` of the largest text line in the headline band, or None."""
+    best = None
+    for (x, y, fs, *_rest) in parse_text_elements(content):
+        if y < _HEADER_MAX_Y and (best is None or fs > best[2]):
+            best = (round(x), round(y), fs)
+    return best
+
+
+def chrome_drift(pages: dict) -> list:
+    """Body pages (those with a .gm line) whose headline or .gm form differs
+    from the deck's majority. `pages` maps a page label to its SVG content.
+    Needs 3+ body pages and a form shared by 2+ of them."""
+    body = {page: {"title": _headline(c), ".gm": _gm_line(c)}
+            for page, c in pages.items() if _gm_line(c) is not None}
+    if len(body) < 3:
+        return []
+    out = []
+    for part in ("title", ".gm"):
+        counts = Counter(f[part] for f in body.values() if f[part] is not None)
+        if not counts:
+            continue
+        norm, n = counts.most_common(1)[0]
+        if n < 2:
+            continue
+        for page in sorted(body):
+            value = body[page][part]
+            if value is not None and value != norm:
+                out.append(f"chrome: page {page} {part} {value} differs from the deck's "
+                           f"{norm} — match the anchor pages' chrome")
     return out
 
 
@@ -1355,11 +1410,12 @@ class SVGQualityChecker:
         if deck_warn:
             print(f"[WARN] deck: {deck_warn}\n")
 
-        # Deck-wide term spelling, page label = the file's number prefix.
-        pages = {f.stem.split('_')[0]: [line[5] for line in parse_text_elements(
-                     f.read_text(encoding='utf-8', errors='replace'))]
-                 for f in svg_files}
-        for warning in term_variants(pages):
+        # Deck-wide spelling and chrome, page label = the file's number prefix.
+        contents = {f.stem.split('_')[0]: f.read_text(encoding='utf-8', errors='replace')
+                    for f in svg_files}
+        lines = {page: [line[5] for line in parse_text_elements(c)]
+                 for page, c in contents.items()}
+        for warning in term_variants(lines) + chrome_drift(contents):
             print(f"[WARN] deck: {warning}\n")
 
         return self.results
