@@ -29,8 +29,8 @@ description: >
 > 3. **No cross-phase bundling** — Keep each phase's output in its own step. The Step 4 confirmation (Eight Confirmations in Standalone, the active-theme lock in Plan-Consuming) is ⛔ BLOCKING; once the user confirms, design spec output, SVG generation, speaker notes, and post-processing proceed without further confirmation.
 > 4. **Gate before entry** — Check the 🚧 GATE prerequisites listed at the top of each step before starting it.
 > 5. **No speculative execution** — Don't pre-prepare content for later steps (e.g., writing SVG during the Strategist phase); later steps depend on the confirmed output of earlier ones.
-> 6. **Main agent writes the SVGs** — Executor Step 6 stays with the current main agent end-to-end. Page design depends on the full upstream context (source content, design spec, template mapping, image decisions, cross-page consistency), which a general sub-agent does not have. One exception: the Step 6 parallel path hands pages to `fork` sub-agents, which inherit this whole context (`executor-steps-4-6.md` Step 6 *Parallel authoring*).
-> 7. **One page at a time, one pass** — Generate SVG pages sequentially in one continuous pass, not in grouped batches (e.g., 5 pages at a time) — cross-page rhythm (headline position, GM voice, primitive rotation) depends on seeing the previous page. One exception: the Step 6 parallel path — two anchor pages in order, then one page per fork, never several pages per fork; the anchors carry the rhythm and the merge sweep checks it.
+> 6. **Main agent writes the SVGs** — Executor Step 6 stays with the current main agent end-to-end. Page design depends on the full upstream context (source content, design spec, template mapping, image decisions, cross-page consistency), which a general sub-agent does not have. One exception: the opt-in Step 6 parallel path (only when the user asks for it) hands pages to `fork` sub-agents, which inherit this whole context (`executor-steps-4-6.md` Step 6 *Parallel authoring*).
+> 7. **One page at a time, one pass** — Generate SVG pages sequentially in one continuous pass, not in grouped batches (e.g., 5 pages at a time) — cross-page rhythm (headline position, GM voice, primitive rotation) depends on seeing the previous page. One exception: the opt-in Step 6 parallel path — two anchor pages in order, then one page per fork, never several pages per fork; the anchors carry the rhythm and the merge sweep checks it.
 
 > [!CAUTION]
 > ## 🚧 Fresh-Build Entry Gate (신규 제작 진입 게이트, MANDATORY)
@@ -39,7 +39,7 @@ description: >
 > 2. 신규 제작은 반드시 **새 project slug**에서 preflight와 project init부터 시작한다.
 > 3. `output/` 아래 같은 주제의 기존 폴더는 **참고만** 가능하다. 기존 `slide_plan.json`, `design_spec.md`, SVG, notes, images, charts, PPTX를 복사·수정·이름 변경·재사용하지 않는다.
 > 4. 기존 산출물 재사용은 사용자가 "기존 덱 수정", "이어서", "기존 덱 기반"이라고 명시한 경우에만 허용한다. 이 경우 `pipeline_status.json`에 **revision mode**로 기록하고, 신규 풀 파이프라인 제작으로 보고하지 않는다.
-> 5. 신규 제작은 이번 run에서 다음 단계의 **실행 증거**가 모두 있어야 완료·업로드할 수 있다: preflight → active-theme load → project init → source processing/import → slide-plan 생성·validate·fact-check(트리거 시) → Strategist/design_spec → confirmation gate 또는 원격 auto-proceed 기록 → 이미지/차트 생성(필요 시) → 메인 에이전트의 페이지별 순차 SVG 생성 → speaker notes → total_md_split → finalize_svg → svg_to_pptx -s final → verify_deck → exported PPTX render 눈검수 → unzip -t 무결성 검증 → 업로드.
+> 5. 신규 제작은 이번 run에서 다음 단계의 **실행 증거**가 모두 있어야 완료·업로드할 수 있다: preflight → active-theme load → project init → source processing/import → slide-plan 생성·validate·fact-check(트리거 시) → Strategist/design_spec → confirmation gate 또는 원격 auto-proceed 기록 → 이미지/차트 생성(필요 시) → 메인 에이전트의 페이지별 순차 SVG 생성(요청한 병렬 경로면 앵커 2장 + 1장당 fork 1개 + 합치기) → speaker notes → total_md_split → finalize_svg → svg_to_pptx -s final → verify_deck → exported PPTX render 눈검수 → unzip -t 무결성 검증 → 업로드.
 > 6. 기존 파일의 존재나 과거 timestamp는 이번 run의 실행 증거로 인정하지 않는다.
 > 7. 작업 시작 전에 `pipeline_status.json`을 만들고 각 stage에 `status`, `started_at`, `completed_at`, `artifacts`, command/result summary를 기록한다. 파일이 없거나 읽을 수 없으면 Step 7.4 `verify_deck.py`가 WARN을 낸다.
 > 8. "완료"·"풀 파이프라인 수행"은 모든 적용 단계가 통과한 뒤에만 보고한다. 진행 중에는 현재 단계를 알려도 된다.
@@ -218,7 +218,7 @@ cp ${SKILL_DIR}/templates/layouts/$THEME/design_spec.md <project_path>/templates
 - 첫 SVG 생성 전 **Design Parameter Confirmation 필수** — `executor.md` §2의 확인 블록 출력 (canvas 1280×720 영구 락 + 활성 테마 accent/font/baseline).
 - ⚠️ **메인 에이전트 단독 실행** — SVG 생성을 일반 sub-agent에 위임 금지 (Global Execution Discipline #6). 예외: 아래 병렬 경로의 `fork`.
 - ⚠️ **순차 페이지 생성** — 글로벌 디자인 컨텍스트 확정 후 한 번에 한 페이지씩 연속 생성. 그룹 배치(예: 5장씩) 금지 (#7). 예외: 아래 병렬 경로(앵커 2장 순서대로 → 1장당 fork 1개).
-- **병렬 경로 (기본: Agent 도구에 `fork` 가 있고 6장 이상)** — `executor-steps-4-6.md` Step 6 *Parallel authoring*. 토큰은 직렬의 약 1.2–1.7배. `fork` 가 없는 호스트(Codex, claude.ai), 6장 미만, 사용자가 한 장씩을 요청한 경우는 직렬.
+- **병렬 경로 (선택: 요청에 `병렬로`·`parallel` 이 있고, Agent 도구에 `fork` 가 있고, 6장 이상일 때만)** — `executor-steps-4-6.md` Step 6 *Parallel authoring*. 벤치(2026-11-19)에서 페이지 작성은 42–54% 줄었지만 전체 시간은 15–19%만 줄었고 토큰은 약 1.4배. 그 밖에는 직렬. `fork` 가 없는 호스트(Codex, claude.ai)는 요청이 있어도 직렬.
 
 ---
 
