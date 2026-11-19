@@ -331,5 +331,11 @@ ${SKILL_DIR}/scripts/_py.sh ${SKILL_DIR}/scripts/svg_quality_checker.py <project
 ```
 Fix every error, then settle every `[WARN] deck:` line. A `terms:` line names one term written several ways across pages — spacing (`DS부문` / `DS 부문`), source labels (`출처:` / `자료:`), or percentage-point notation (`%p` / `pp`): pick one form and apply it deck-wide.
 
+Then read the deck's message line — one `NN | title | .gm` row per page:
+```bash
+${SKILL_DIR}/scripts/_py.sh ${SKILL_DIR}/scripts/svg_quality_checker.py <project_path>/svg_output --outline
+```
+Read it once as the audience would and fix, one row per issue: two pages making the same point, a missing link between neighbours, an order that breaks the argument, a `.gm` that restates its title.
+
 **✅ Checkpoint** — all SVGs are in `svg_output/`, the deck sweep is settled, and `notes/total.md` is written → proceed directly to Step 7 post-processing.
 

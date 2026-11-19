@@ -667,16 +667,25 @@ def term_variants(pages: dict) -> list:
 _HEADER_MAX_Y = 160  # headline band: baselines above the content area (y = 160)
 
 
-def _gm_line(content: str):
-    """`(y, font_size, fill)` of the centered .gm line in the footer band, or None."""
+def _gm_element(content: str):
+    """`(attrs, inner)` of the centered .gm line in the footer band, or None."""
     for m in _TEXT_ELEM_RE.finditer(content):
         attrs = m.group(1)
         y = _attr_num(attrs, "y")
         if ('text-anchor="middle"' in attrs and y is not None
                 and _GM_Y_RANGE[0] <= y <= _GM_Y_RANGE[1]):
-            return (round(y), _font_attrs(attrs, 16.0, "400")[0],
-                    (_attr_str(attrs, "fill") or "").upper())
+            return attrs, m.group(2)
     return None
+
+
+def _gm_line(content: str):
+    """`(y, font_size, fill)` of the .gm line, or None."""
+    found = _gm_element(content)
+    if found is None:
+        return None
+    attrs = found[0]
+    return (round(_attr_num(attrs, "y")), _font_attrs(attrs, 16.0, "400")[0],
+            (_attr_str(attrs, "fill") or "").upper())
 
 
 def _headline(content: str):
@@ -709,6 +718,33 @@ def chrome_drift(pages: dict) -> list:
             if value is not None and value != norm:
                 out.append(f"chrome: page {page} {part} {value} differs from the deck's "
                            f"{norm} — match the anchor pages' chrome")
+    return out
+
+
+# ============================================================
+# Deck outline (review aid): one `NN | title | .gm` line per page
+# ============================================================
+
+_LETTER_RE = re.compile(r"[A-Za-z가-힣]")
+
+
+def _title_text(content: str) -> str:
+    """The page's title: the largest text line in the headline band with 4+
+    letters (a hero number is not a title); without one, the largest such
+    line anywhere (a cover or chapter title)."""
+    lines = [(fs, y, text) for (_x, y, fs, _fw, _a, text, _r, _p) in parse_text_elements(content)
+             if len(_LETTER_RE.findall(text)) >= 4]
+    pool = [line for line in lines if line[1] < _HEADER_MAX_Y] or lines
+    return max(pool, key=lambda line: line[0])[2] if pool else "—"
+
+
+def deck_outline(pages: dict) -> list:
+    """`NN | title | .gm` per page, in page order (`pages`: label -> SVG content)."""
+    out = []
+    for page, content in sorted(pages.items()):
+        found = _gm_element(content)
+        gm = re.sub(r"\s+", " ", re.sub(r"<[^>]+>", "", found[1])).strip() if found else "—"
+        out.append(f"{page} | {_title_text(content)} | {gm}")
     return out
 
 
@@ -1541,6 +1577,7 @@ def main() -> None:
         print("  --strict-theme   promote off-theme hex colors to errors (deck gate);")
         print(f"                   whitelist exceptions in <project>/{COLOR_ALLOW_FILENAME}")
         print("  --all-warnings   list every warning per file (default shows the first 2)")
+        print("  --outline        print 'NN | title | .gm' per page instead of checking")
         print("\nExamples:")
         print("  python3 scripts/svg_quality_checker.py examples/project/svg_output/slide_01.svg")
         print("  python3 scripts/svg_quality_checker.py examples/project/svg_output")
@@ -1553,6 +1590,16 @@ def main() -> None:
     all_warnings = '--all-warnings' in sys.argv
     if all_warnings:
         sys.argv.remove('--all-warnings')
+    if '--outline' in sys.argv:
+        sys.argv.remove('--outline')
+        folder = Path(sys.argv[1])
+        if (folder / 'svg_output').is_dir():
+            folder = folder / 'svg_output'
+        contents = {f.stem.split('_')[0]: f.read_text(encoding='utf-8', errors='replace')
+                    for f in sorted(folder.glob('*.svg'))}
+        for line in deck_outline(contents):
+            print(line)
+        sys.exit(0)
 
     checker = SVGQualityChecker(strict_theme=strict_theme, all_warnings=all_warnings)
 

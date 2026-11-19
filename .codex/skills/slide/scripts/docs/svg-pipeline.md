@@ -77,7 +77,10 @@ python3 scripts/svg_quality_checker.py examples/project --format ppt169
 python3 scripts/svg_quality_checker.py --all examples
 python3 scripts/svg_quality_checker.py examples/project --export
 python3 scripts/svg_quality_checker.py examples/project --all-warnings
+python3 scripts/svg_quality_checker.py examples/project --outline
 ```
+
+`--outline` prints one `NN | title | .gm` row per page instead of checking — the deck's message line for a flow review (the title is the largest headline-band line with 4+ letters, so a hero number is never the title).
 
 Checks include:
 - `viewBox`
