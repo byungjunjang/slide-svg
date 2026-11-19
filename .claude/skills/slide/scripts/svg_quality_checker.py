@@ -595,6 +595,68 @@ def text_stroke_crossings(content: str) -> list:
     return hits
 
 
+# ============================================================
+# Deck-wide term spelling (WARN-level, directory checks only)
+# ============================================================
+
+TERM_MAX_TOKENS = 3   # phrases up to this many words form spacing-variant keys
+TERM_MIN_KEY = 2      # shorter keys (spaces removed, numbers as '#') are noise
+_TERM_NUM_RE = re.compile(r"\d+(?:[.,]\d+)*")
+_TERM_YEAR_RE = re.compile(r"(?:19|20)\d\d")  # a year is not an amount: '2025 분기' ≠ '2분기'
+_TERM_EDGE = "()[]{}<>\"'“”‘’.,:;!?…「」『』《》"
+_SOURCE_LABEL_RE = re.compile(r"^\s*(출처|자료|Sources?|Data)\s*([:：]?)", re.IGNORECASE)
+_SOURCE_BARE_OK = {"출처", "source", "sources"}  # label words that need no colon
+_PCT_POINT_RE = re.compile(r"\d\s*(%\s*[pP]|pp|%pt|%포인트)(?![A-Za-z])")
+
+
+def _listing(forms: dict, examples: dict = None) -> str:
+    return ", ".join(f"'{(examples or {}).get(form, form)}' ({', '.join(sorted(pages))})"
+                     for form, pages in sorted(forms.items()))
+
+
+def term_variants(pages: dict) -> list:
+    """Deck-wide spelling drift: one term in several spacings, several source
+    labels, several percentage-point notations. `pages` maps a page label to
+    its text lines (lines are never joined, so a word broken across lines does
+    not fake a variant). A spaced list dot (' · ') reads as the bare '·', and
+    the multiple 'x' against '배' is a wording choice, not a variant."""
+    spellings, examples, labels, units = {}, {}, {}, {}
+    for page, lines in pages.items():
+        for line in lines:
+            line = re.sub(r"\s*·\s*", "·", line)
+            label = _SOURCE_LABEL_RE.match(line)
+            if label and (label.group(2) or label.group(1).lower() in _SOURCE_BARE_OK):
+                labels.setdefault(label.group(1) + label.group(2), set()).add(page)
+            for unit in _PCT_POINT_RE.findall(line):
+                units.setdefault(unit.replace(" ", ""), set()).add(page)
+            tokens = [t for t in (raw.strip(_TERM_EDGE) for raw in line.split()) if t]
+            for n in range(1, TERM_MAX_TOKENS + 1):
+                for i in range(len(tokens) - n + 1):
+                    phrase = " ".join(tokens[i:i + n])
+                    spelling = _TERM_NUM_RE.sub(
+                        lambda m: "§" if _TERM_YEAR_RE.fullmatch(m.group()) else "#", phrase)
+                    key = spelling.replace(" ", "")
+                    if len(key) < TERM_MIN_KEY or not any(
+                            ch.isalnum() or ch == "%" for ch in key.replace("#", "")):
+                        continue  # numbers / separators only ('#·#') are not terms
+                    spellings.setdefault(key, {}).setdefault(spelling, set()).add(page)
+                    examples.setdefault(spelling, phrase)
+
+    out, reported = [], []
+    for key in sorted((k for k, v in spellings.items() if len(v) > 1), key=len):
+        if any(shorter in key for shorter in reported):
+            continue  # the shorter variant already explains this phrase
+        reported.append(key)
+        out.append(f"terms: spacing variants {_listing(spellings[key], examples)}"
+                   " — pick one spelling deck-wide")
+    if len(labels) > 1:
+        out.append(f"terms: source labels differ {_listing(labels)} — use one label deck-wide")
+    if len(units) > 1:
+        out.append(f"terms: percentage-point unit written {_listing(units)}"
+                   " — use one notation deck-wide")
+    return out
+
+
 def _bbox_of_points(points: list):
     if not points:
         return None
@@ -1292,6 +1354,13 @@ class SVGQualityChecker:
         deck_warn = low_primitive_diversity(primitives)
         if deck_warn:
             print(f"[WARN] deck: {deck_warn}\n")
+
+        # Deck-wide term spelling, page label = the file's number prefix.
+        pages = {f.stem.split('_')[0]: [line[5] for line in parse_text_elements(
+                     f.read_text(encoding='utf-8', errors='replace'))]
+                 for f in svg_files}
+        for warning in term_variants(pages):
+            print(f"[WARN] deck: {warning}\n")
 
         return self.results
 

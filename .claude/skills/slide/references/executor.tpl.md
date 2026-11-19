@@ -118,10 +118,10 @@ Per content page, decide and record these judgments (one line each):
 💭 GM check: is the .gm an editorial so-what, not a title restatement? <yes/rewrite>
 ```
 
-Then run the mechanical gate on the page and fix every safe-area / text-overlap WARN before the next page:
+Then run the mechanical gate on the page and fix every safe-area / text-overlap / text-crossed-by-a-stroke WARN before the next page:
 
 ```bash
-${SKILL_DIR}/scripts/_py.sh ${SKILL_DIR}/scripts/svg_quality_checker.py <project_path>/svg_output/<page>.svg
+${SKILL_DIR}/scripts/_py.sh ${SKILL_DIR}/scripts/svg_quality_checker.py <project_path>/svg_output/<page>.svg --all-warnings
 ```
 
 The checker measures real glyph advances, so its bounds and overlap numbers are the SSOT — don't hand-compute them. The composition rules it does not count still hold on every page: ≤ 2 accent events ({{TOKEN:colors.accent}}/{{TOKEN:colors.accent-soft}}; a chart opacity ladder counts as 1), ≥ 3 distinct type-scale steps (display {{TOKEN:typography.display.size}} / headline {{TOKEN:typography.headline.size}} / title {{TOKEN:typography.title.size}} / body {{TOKEN:typography.body.size}} / caption {{TOKEN:typography.caption.size}}), and text left-edges on the §4 column grid.

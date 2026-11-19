@@ -309,5 +309,11 @@ Read references/executor.md
 **Logic Construction Phase**:
 - Generate speaker notes → `<project_path>/notes/total.md`
 
-**✅ Checkpoint** — all SVGs are in `svg_output/` and `notes/total.md` is written → proceed directly to Step 7 post-processing.
+**Deck sweep (before Step 7)** — run the checker once on the whole directory; it adds deck-level checks a single page cannot show:
+```bash
+${SKILL_DIR}/scripts/_py.sh ${SKILL_DIR}/scripts/svg_quality_checker.py <project_path>/svg_output --all-warnings
+```
+Fix every error, then settle every `[WARN] deck:` line. A `terms:` line names one term written several ways across pages — spacing (`DS부문` / `DS 부문`), source labels (`출처:` / `자료:`), or percentage-point notation (`%p` / `pp`): pick one form and apply it deck-wide.
+
+**✅ Checkpoint** — all SVGs are in `svg_output/`, the deck sweep is settled, and `notes/total.md` is written → proceed directly to Step 7 post-processing.
 
