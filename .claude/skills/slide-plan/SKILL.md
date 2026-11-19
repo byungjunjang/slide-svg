@@ -71,7 +71,7 @@ Five rules, hard-enforced by `validate_plan.py` and re-checked by `/slide` Execu
 Locate the active preset:
 
 ```bash
-python3 -c "import json; t=json.load(open('.claude/skills/slide/references/theme-active.json')); print(t['name'])"
+.claude/skills/slide/scripts/_py.sh -c "import json; t=json.load(open('.claude/skills/slide/references/theme-active.json')); print(t['name'])"
 ```
 
 Then read the preset's design vocabulary:
@@ -311,7 +311,7 @@ The Step 7 validator enforces R1–R5; no separate self-check pass.
 ### Step 7: Write `slide_plan.json` + run validator
 
 ```bash
-python3 .claude/skills/slide-plan/scripts/validate_plan.py output/<project>/slide_plan.json
+.claude/skills/slide/scripts/_py.sh .claude/skills/slide-plan/scripts/validate_plan.py output/<project>/slide_plan.json
 ```
 
 The validator enforces R1–R5 + chart_strategy enum + slide_role enum + diagnostic ratios. Fix any reported errors and re-run.

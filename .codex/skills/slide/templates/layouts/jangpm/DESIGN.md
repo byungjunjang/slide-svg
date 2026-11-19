@@ -45,7 +45,7 @@ Jangpm is a **monochrome + single accent** system. The ONLY hex values that may 
 
 ### 2.2 Contrast & accent budget
 
-- **≤ 2 accent events per content slide.** An "event" is any of: accent text fill, accent-soft container, accent-stroked emphasis rule. More than two cancels the pointer effect.
+- **≤ 2 accent events per content slide.** An "event" is any of: accent text fill, accent-soft container, accent-stroked emphasis rule. More than two cancels the pointer effect. The `03_content.svg` shell's accent rule under the headline is page chrome and does not count.
 - **Card differentiation rule:** in any card grid, at least one card must be visually distinct (accent-soft bg or highlighted metric). Equal-weight grids are a design smell.
 - **Semantic colors are data-only.** `--positive`/`--negative`/`--warning` are valid only when the color encodes a meaning the reader must decode (trend arrow, churn metric, status pill). Never decorative.
 - **Charts use single-accent opacity ladder:** `rgba(70, 51, 227, 0.85 / 0.60 / 0.40 / 0.25)`. Multi-hue palettes are forbidden (see §8).
@@ -363,7 +363,7 @@ ROW 2 LABEL    BODY TEXT
 ### 6.5 GM (governing message) line — non-negotiable
 
 - **Every content slide** has a single-line `.gm` at absolute bottom (~24px from bottom edge).
-- Style: 12.8px / `--text-secondary`, no decoration.
+- Style: 15.2px / 700 / `--text-secondary`, centered at y=680 (the `03_content.svg` shell line), no decoration.
 - **Voice:** declarative third-person institutional. Korean-first. ≤ 30 chars ideal.
 - **Forbidden:** restating the page title. The GM is the editorial *so-what*, not a label.
 - **Forbidden phrases:** 여러분, 우리는, 함께해요.
@@ -424,7 +424,7 @@ Jangpm honors the 9 rhetorical roles defined in `references/chart-rhetorical-rol
 ### 8.3 Table styling rules
 
 - **Header row:** `--surface-alt` background, `.label` typography (uppercase, 0.64 tracking).
-- **Recommended column:** `--accent-soft` background, accent left-border 2px (rule: comparison tables need a winner).
+- **Recommended column:** `--accent-soft` background, no left border — anti-slop Rule 7 bans decorative partial borders (rule: comparison tables need a winner).
 - **Cell text:** body 15.2 default; numerics tabular-nums and right-aligned.
 - **Verdict row:** at the bottom, summarizing the recommendation in one sentence.
 
@@ -452,15 +452,18 @@ A chart without a takeaway card fails Layer 1 R2 and is rejected at plan-time.
 ```xml
 <use data-icon="tabler-outline/<name>"
      x="..." y="..." width="..." height="..."
-     stroke="currentColor" stroke-width="2" />
+     fill="none" stroke="currentColor" color="#1A1A1A" stroke-width="2" />
 ```
 
-`finalize_svg.py` resolves the placeholder to the actual `<symbol>` at post-processing. **Do NOT inline the SVG content** — the placeholder is the contract.
+`finalize_svg.py` resolves the placeholder to the actual `<symbol>` at post-processing. **Do NOT inline the SVG content** — the placeholder is the contract. Always set `color` to a palette color (`#1A1A1A` text, `#6B7280` secondary, `#4633E3` accent) — without it the icon is embedded as `#000000`, off the palette.
 
 ### 9.3 Search before use
 
 ```bash
-ls .codex/skills/slide/templates/icons/tabler-outline/ | grep <keyword>
+# Claude Code (full library):
+grep '^tabler-outline/.*<keyword>' assets/icons/icons_index.txt
+# claude.ai mode (bundled essentials only):
+ls .codex/skills/slide/templates/icons/tabler-outline/
 ```
 
 Always cite the verified filename (without `.svg`) in `slide_plan.json` `content_blocks[].content_instruction`.

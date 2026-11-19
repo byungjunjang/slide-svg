@@ -89,7 +89,7 @@ Charts are pure functions of (spec, active theme). After
    truth for the numbers — SVGs are derived artifacts).
 2. Re-render every chart spec and re-paste fragments (or re-run the deck's
    build step if the project scripted it).
-3. Refresh skill examples: `python3 .claude/skills/chart-design/scripts/build_examples.py`
+3. Refresh skill examples: `.claude/skills/slide/scripts/_py.sh .claude/skills/chart-design/scripts/build_examples.py`
    (also the quickest smoke test that the new theme satisfies the contract).
 
 No chart-design file changes are ever needed for a theme swap — if a swap

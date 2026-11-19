@@ -195,6 +195,17 @@ def parse_use_element(use_match: str) -> dict[str, str | float]:
     return attrs
 
 
+USE_PATTERN = r'<use\s+[^>]*data-icon="[^"]*"[^>]*/>'
+
+
+def uncolored_icons(content: str) -> list[str]:
+    """Icons whose placeholder resolves no color — process_svg_file embeds them
+    as #000000 (an ancestor's `color` is not read)."""
+    return [str(a.get('icon')) for a in
+            (parse_use_element(m.group(0)) for m in re.finditer(USE_PATTERN, content))
+            if 'fill' not in a]
+
+
 def generate_icon_group(attrs: dict[str, str | float], elements: list[str], style: str, base_size: float) -> str:
     """
     Generate the icon's <g> element.
@@ -264,8 +275,7 @@ def process_svg_file(svg_path: Path, icons_dir: Path | None = None, dry_run: boo
     content = svg_path.read_text(encoding='utf-8')
 
     # Match <use data-icon="xxx" ... /> elements
-    use_pattern = r'<use\s+[^>]*data-icon="[^"]*"[^>]*/>'
-    matches = list(re.finditer(use_pattern, content))
+    matches = list(re.finditer(USE_PATTERN, content))
 
     if not matches:
         if verbose:

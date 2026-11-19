@@ -60,6 +60,7 @@ Project setup:
 ```bash
 ./scripts/_py.sh scripts/project_manager.py init <project_name> --format ppt169
 ./scripts/_py.sh scripts/project_manager.py import-sources <project_path> <source_files...> --move
+./scripts/_py.sh scripts/project_manager.py stage <project_path> <stage> done --summary "<command → result>"
 ./scripts/_py.sh scripts/project_manager.py validate <project_path>
 ```
 

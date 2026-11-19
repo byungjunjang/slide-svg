@@ -14,13 +14,14 @@ Free-text role labels drift across decks ("introduction", "intro", "opener", "ov
 
 ---
 
-## Structure: 8 universal roles + per-deck-type extensions
+## Structure: 9 universal roles + per-deck-type extensions
 
-### Universal 8 (always available, deck-type independent)
+### Universal 9 (always available, deck-type independent)
 
 | `slide_role` | Meaning | Default `recommended_layout_family` | Default `page_family` |
 |---|---|---|---|
 | `cover` | Opening slide — topic, presenter, date | `structure` | `title` |
+| `chapter` | Section divider between major divisions | `structure` | `chapter` |
 | `context` | Why this matters now / what set the stage | `breakdown` or `insight` | `body` |
 | `insight` | The single core argument or so-what | `insight` | `body` |
 | `evidence` | Data / case / source supporting an insight | `data` or `breakdown` | `body` |
@@ -31,7 +32,7 @@ Free-text role labels drift across decks ("introduction", "intro", "opener", "ov
 
 ### Extensions by `deck_type`
 
-`slide-plan` detects `deck_type` from the user brief; the matching extension set unlocks. Universal 8 are always available across all deck types.
+`slide-plan` detects `deck_type` from the user brief; the matching extension set unlocks. Universal 9 are always available across all deck types.
 
 #### `educational` (slide-svg primary use case)
 
@@ -40,9 +41,10 @@ Free-text role labels drift across decks ("introduction", "intro", "opener", "ov
 | `agenda` | Session topics list | `structure` (`agenda` pattern) | early-deck position |
 | `concept` | Definition / theory / principle introduction | `breakdown` or `insight` | core teaching unit |
 | `example` | Worked example illustrating a concept | `visual` or `data` | follows `concept` |
-| `exercise` | Practice problem / activity prompt | `breakdown` (`numbered-row`) | optional, mid-deck |
+| `exercise` | Practice problem / activity prompt | `breakdown` (`numbered-row`) | optional, mid-deck or last (a closing ask) |
 | `recap` | Lesson recap before next chapter | `summary`-equivalent for educational | end of chapter |
 | `qna` | Open Q&A slide | `structure` | optional, near end |
+| `roadmap` | Learning path / adoption steps after the lesson | `process` (`process-flow`) | near end |
 
 **Educational arc default:**
 ```
@@ -122,9 +124,9 @@ cover → executive_summary → context
 | Symptom | Diagnostic | Suggested fix |
 |---|---|---|
 | **research dump** | `evidence` count > 5× `insight` count | add insights between findings |
-| **assertion only** | `insight` count > `evidence` count and total > 8 slides | back insights with data |
+| **assertion only** | `insight` count > `evidence` + `example` count and total > 8 slides | back insights with data or a worked example |
 | **no opening punch** | no `insight` / `hook` / `executive_summary` in first 3 slides | add an early-deck so-what |
-| **buried CTA** | no `cta` in last 2 slides | add closing call-to-action |
+| **buried CTA** | no `cta` in last 2 slides (a lecture's `exercise` / `qna` counts) | add closing call-to-action |
 | **methodology bloat** | `methodology` > 20% of slides for `report` deck_type | move to appendix |
 
 These are heuristics, not rules. `slide-plan` may justify any distribution via the `slides[].why_here` field.
@@ -133,15 +135,15 @@ These are heuristics, not rules. `slide-plan` may justify any distribution via t
 
 ## When `deck_type == "unknown"`
 
-Use only the universal 8. Do not infer extension roles from brief text alone. Prompt the user to confirm `deck_type` before locking the plan.
+Use only the universal 9. Do not infer extension roles from brief text alone. Prompt the user to confirm `deck_type` before locking the plan.
 
 ---
 
 ## Mapping summary (cheat sheet)
 
 ```
-Universal:  cover · context · insight · evidence · solution · summary · cta · appendix
-educational: + agenda · concept · example · exercise · recap · qna
+Universal:  cover · chapter · context · insight · evidence · solution · summary · cta · appendix
+educational: + agenda · concept · example · exercise · recap · qna · roadmap
 report:     + executive_summary · findings · methodology
 consulting: + problem · comparison · roadmap
 sales:      + problem · proof · comparison · pricing · roadmap

@@ -63,39 +63,23 @@
 
 ### Font Plan
 
-> Strategist should select a font preset based on content characteristics, or customize the font combination
-> Preset descriptions: P1=Modern business/tech | P2=Government docs | P3=Culture/arts | P4=Traditional/conservative | P5=English-primary
+> **Theme lock**: the font chain and type scale come from the active theme (`references/design-system.md`, `references/executor.md` §2). Transcribe them — do not pick a font preset, a code font or a different body baseline. Code excerpts use the same chain (anti-slop Rule T3).
 
-**Recommended preset**: [Fill in preset code]
-
-| Role | Chinese | English | Fallback |
-| ---- | ------- | ------- | -------- |
-| **Title** | [font name] | [font name] | [font name] |
-| **Body** | [font name] | [font name] | [font name] |
-| **Code** | - | Consolas | Monaco |
-| **Emphasis** | [font name] | [font name] | [font name] |
-
-**Font stack**: `[Fill in CSS font-family string]`
+**Font stack**: `[active theme font-chain]`
 
 ### Font Size Hierarchy
 
-> **Design principle**: Use body font size as baseline (1x), derive other levels proportionally
-> **Unit convention**: Use px uniformly (SVG native unit) to avoid pt/px conversion errors
-> **Selection principle**: Font size is based on **content density**, not design style
+> **Unit convention**: px (SVG native unit)
 
-**Baseline**: Body font size = [fill in]px (choose 18-24px based on content density)
+**Baseline**: Body font size = [active theme body size]px (the theme's relaxed body size only for a low-density deck, as `executor.md` §2 allows)
 
-| Purpose | Ratio | 24px baseline (relaxed) | 18px baseline (dense) | Weight |
-| ------- | ----- | ---------------------- | -------------------- | ------ |
-| Cover title | 2.5-3x | 60-72px | 45-54px | Bold |
-| Chapter title | 2-2.5x | 48-60px | 36-45px | Bold |
-| Content title | 1.5-2x | 36-48px | 27-36px | Bold |
-| Subtitle | 1.2-1.5x | 29-36px | 22-27px | SemiBold |
-| **Body content** | **1x** | **24px** | **18px** | Regular |
-| Annotation | 0.75-0.85x | 18-20px | 14-15px | Regular |
-| Page number/date | 0.55-0.65x | 13-16px | 10-12px | Regular |
-
-> **Tip**: Dense content (6+ points per page) use 18px; relaxed content (3-5 points per page) use 24px
+| Purpose | Theme token | Size | Weight |
+| ------- | ----------- | ---- | ------ |
+| Cover / chapter title | display | [px] | [weight] |
+| Content title | headline | [px] | [weight] |
+| Card / section title | title | [px] | [weight] |
+| **Body content** | **body** | **[px]** | [weight] |
+| Annotation / page number | caption | [px] | [weight] |
 
 ---
 
@@ -139,14 +123,14 @@
 
 ### Source
 
-- **Built-in icon library**: `templates/icons/` (6700+ icons across three libraries)
-- **Usage method**: Placeholder format `{{icon:category/icon-name}}`
+- **Icon library**: the active theme's icon pack — search `assets/icons/icons_index.txt` (Claude Code, full library) or list `templates/icons/<pack>/` (claude.ai, bundled essentials)
+- **Usage method**: placeholder `<use data-icon="<pack>/<name>" x=".." y=".." width=".." height=".." fill="none" stroke="currentColor" color="<theme hex>" stroke-width="2"/>` — `finalize_svg.py` embeds the glyph (`executor.md` §5)
 
 ### Recommended Icon List (fill as needed)
 
-| Purpose | Icon Path | Page |
-| ------- | --------- | ---- |
-| [example] | `{{icon:interface/check-circle}}` | Slide XX |
+| Purpose | Icon | Page |
+| ------- | ---- | ---- |
+| [example] | `tabler-outline/circle-check` | Slide XX |
 
 ---
 

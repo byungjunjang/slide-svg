@@ -28,9 +28,11 @@ GM_Y_RANGE = (655, 705)
 IMAGE_SUFFIXES = {".png", ".jpg", ".jpeg", ".webp"}
 NATIVE_SHAPE_TAGS = ("sp", "grpSp", "cxnSp", "graphicFrame")
 NON_CONTENT_SLIDE_RE = re.compile(
-    r"(^|[_\-\s])(cover|title|chapter|ending|closing|close|thanks|thank_you|appendix)([_\-\s]|$)",
+    r"(^|[_\-\s])(cover|title|chapter|section|ending|closing|close|thanks|thank_you|appendix"
+    r"|표지|간지|챕터|섹션|마무리|엔딩|감사|부록)([_\-\s]|$)",
     re.IGNORECASE,
 )
+DENSITY_MIN_ELEMENTS = 30  # content-page floor; the 2026-11-19 bench decks' body pages held 46+
 
 
 # ---- pure helpers -------------------------------------------------------
@@ -43,14 +45,43 @@ def page_count(project: Path, sub: str) -> int:
     return len(_svgs(project / sub))
 
 
-def is_content_slide(svg_path: Path) -> bool:
-    """Infer whether a slide is content-bearing from the filename.
+def plan_page_families(project: Path) -> dict[int, str]:
+    """slide_number -> page_family (title / chapter / body / end) from
+    slide_plan.json; empty without a readable plan."""
+    try:
+        plan = json.loads((project / "slide_plan.json").read_text(encoding="utf-8"))
+    except (OSError, ValueError):
+        return {}
+    return {s["slide_number"]: s["page_family"] for s in plan.get("slides") or []
+            if isinstance(s, dict) and isinstance(s.get("slide_number"), int)
+            and isinstance(s.get("page_family"), str)}
 
-    Executor docs require .gm on content pages only. Cover/chapter/ending style
-    pages intentionally omit it, and generated files commonly encode that role
-    in the stem (for example 01_cover.svg or 04_ending.svg).
+
+def is_content_slide(svg_path: Path, families: dict[int, str] | None = None) -> bool:
+    """Whether a slide is content-bearing (needs a .gm, meets the density floor).
+
+    The plan's page_family decides when the page number is in the plan; else
+    the filename — a role word in the stem, English or Korean (01_cover.svg,
+    01_표지.svg, 04_간지_구조.svg) marks a cover / chapter / ending page.
     """
+    m = re.match(r"\d+", svg_path.stem)
+    if families and m and int(m.group()) in families:
+        return families[int(m.group())] == "body"
     return NON_CONTENT_SLIDE_RE.search(svg_path.stem) is None
+
+
+def density_failures(project: Path) -> list[str]:
+    """Content pages under DENSITY_MIN_ELEMENTS SVG elements (B-density). Counts
+    elements, not lines, so the verdict does not depend on markup style."""
+    families = plan_page_families(project)
+    out = []
+    for svg in _svgs(project / "svg_output"):
+        if not is_content_slide(svg, families):
+            continue
+        n = len(re.findall(r"<[A-Za-z]", svg.read_text(encoding="utf-8", errors="replace")))
+        if n < DENSITY_MIN_ELEMENTS:
+            out.append(f"{svg.name}: {n} elements < {DENSITY_MIN_ELEMENTS}")
+    return out
 
 
 def _pptx_files(project: Path) -> list[Path]:
@@ -414,6 +445,8 @@ def officecli_checks(project: Path) -> tuple[list[str], list[str]]:
         else:
             warnings.append("officecli screenshot failed (non-blocking): "
                             + " | ".join(errors))
+    # `view` leaves a `__resident-serve__` process holding the PPTX open; stop it.
+    _run_officecli([binary, "close", str(pptx)], timeout=60)
     return failures, warnings
 
 
@@ -479,7 +512,8 @@ def run_checks(project: Path) -> list[str]:
 
     # 5. governing-message discipline (svg_output, pre-flatten)
     if pages:
-        content_pages = [p for p in pages if is_content_slide(p)]
+        families = plan_page_families(project)
+        content_pages = [p for p in pages if is_content_slide(p, families)]
         gm = sum(1 for p in content_pages
                  if svg_has_gm(p.read_text(encoding="utf-8", errors="replace")))
         floor = len(content_pages)

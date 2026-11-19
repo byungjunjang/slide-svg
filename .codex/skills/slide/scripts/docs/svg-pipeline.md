@@ -7,9 +7,9 @@ These tools cover post-processing, SVG validation, speaker notes, and PPTX expor
 Run these steps in order:
 
 ```bash
-python3 scripts/total_md_split.py <project_path>
-python3 scripts/finalize_svg.py <project_path>
-python3 scripts/svg_to_pptx.py <project_path> -s final
+./scripts/_py.sh scripts/total_md_split.py <project_path>
+./scripts/_py.sh scripts/finalize_svg.py <project_path>
+./scripts/_py.sh scripts/svg_to_pptx.py <project_path> -s final
 ```
 
 ## `finalize_svg.py`
@@ -29,13 +29,13 @@ It aggregates:
 Convert project SVGs into PPTX.
 
 ```bash
-python3 scripts/svg_to_pptx.py <project_path> -s final
-python3 scripts/svg_to_pptx.py <project_path> -s final --only native
-python3 scripts/svg_to_pptx.py <project_path> -s final --only legacy
-python3 scripts/svg_to_pptx.py <project_path> -s final --no-notes
-python3 scripts/svg_to_pptx.py <project_path> -s final --no-embed-fonts
-python3 scripts/svg_to_pptx.py <project_path> -t none
-python3 scripts/svg_to_pptx.py <project_path> -s final --auto-advance 3
+./scripts/_py.sh scripts/svg_to_pptx.py <project_path> -s final
+./scripts/_py.sh scripts/svg_to_pptx.py <project_path> -s final --only native
+./scripts/_py.sh scripts/svg_to_pptx.py <project_path> -s final --only legacy
+./scripts/_py.sh scripts/svg_to_pptx.py <project_path> -s final --no-notes
+./scripts/_py.sh scripts/svg_to_pptx.py <project_path> -s final --no-embed-fonts
+./scripts/_py.sh scripts/svg_to_pptx.py <project_path> -t none
+./scripts/_py.sh scripts/svg_to_pptx.py <project_path> -s final --auto-advance 3
 ```
 
 Behavior:
@@ -55,9 +55,9 @@ pip install python-pptx
 Split `total.md` into per-slide note files.
 
 ```bash
-python3 scripts/total_md_split.py <project_path>
-python3 scripts/total_md_split.py <project_path> -o <output_directory>
-python3 scripts/total_md_split.py <project_path> -q
+./scripts/_py.sh scripts/total_md_split.py <project_path>
+./scripts/_py.sh scripts/total_md_split.py <project_path> -o <output_directory>
+./scripts/_py.sh scripts/total_md_split.py <project_path> -q
 ```
 
 Requirements:
@@ -70,14 +70,14 @@ Requirements:
 Validate SVG technical compliance.
 
 ```bash
-python3 scripts/svg_quality_checker.py examples/project/svg_output/01_cover.svg
-python3 scripts/svg_quality_checker.py examples/project/svg_output
-python3 scripts/svg_quality_checker.py examples/project
-python3 scripts/svg_quality_checker.py examples/project --format ppt169
-python3 scripts/svg_quality_checker.py --all examples
-python3 scripts/svg_quality_checker.py examples/project --export
-python3 scripts/svg_quality_checker.py examples/project --all-warnings
-python3 scripts/svg_quality_checker.py examples/project --outline
+./scripts/_py.sh scripts/svg_quality_checker.py examples/project/svg_output/01_cover.svg
+./scripts/_py.sh scripts/svg_quality_checker.py examples/project/svg_output
+./scripts/_py.sh scripts/svg_quality_checker.py examples/project
+./scripts/_py.sh scripts/svg_quality_checker.py examples/project --format ppt169
+./scripts/_py.sh scripts/svg_quality_checker.py --all examples
+./scripts/_py.sh scripts/svg_quality_checker.py examples/project --export
+./scripts/_py.sh scripts/svg_quality_checker.py examples/project --all-warnings
+./scripts/_py.sh scripts/svg_quality_checker.py examples/project --outline
 ```
 
 `--outline` prints one `NN | title | .gm` row per page instead of checking — the deck's message line for a flow review (the title is the largest headline-band line with 4+ letters, so a hero number is never the title).
@@ -96,8 +96,8 @@ Each file prints its first 2 warnings; `--all-warnings` lists them all.
 Guarded copy polish of the text in `svg_output/` (Step 6 deck sweep).
 
 ```bash
-python3 scripts/svg_copy.py extract <project_path> -o <project_path>/copy_lines.json
-python3 scripts/svg_copy.py apply <project_path> <edits.json>
+./scripts/_py.sh scripts/svg_copy.py extract <project_path> -o <project_path>/copy_lines.json
+./scripts/_py.sh scripts/svg_copy.py apply <project_path> <edits.json>
 ```
 
 - `extract` writes every text line per page (`{"07": {"file": ..., "lines": [...]}}`).
@@ -108,8 +108,8 @@ python3 scripts/svg_copy.py apply <project_path> <edits.json>
 Render one `svg_output` page to a PNG for the Executor's visual self-review (Step 6, after the page check).
 
 ```bash
-python3 scripts/render_page.py <project_path>/svg_output/<page>.svg
-python3 scripts/render_page.py <project_path>/svg_output/<page>.svg --width 1280 --out page.png
+./scripts/_py.sh scripts/render_page.py <project_path>/svg_output/<page>.svg
+./scripts/_py.sh scripts/render_page.py <project_path>/svg_output/<page>.svg --width 1280 --out page.png
 ```
 
 - Draws the page with a headless Chrome / Chromium / Edge (about 1 s per page), so Hangul uses the installed Pretendard; icons are embedded into a copy under `<project_path>/_render/` first. svglib is not used: it draws Hangul as tofu boxes and drops fill opacity.
@@ -122,11 +122,11 @@ Analyze or pre-calculate chart coordinates.
 Common commands:
 
 ```bash
-python3 scripts/svg_position_calculator.py analyze <svg_file>
-python3 scripts/svg_position_calculator.py interactive
-python3 scripts/svg_position_calculator.py calc bar --data "East:185,South:142"
-python3 scripts/svg_position_calculator.py calc pie --data "A:35,B:25,C:20"
-python3 scripts/svg_position_calculator.py from-json config.json
+./scripts/_py.sh scripts/svg_position_calculator.py analyze <svg_file>
+./scripts/_py.sh scripts/svg_position_calculator.py interactive
+./scripts/_py.sh scripts/svg_position_calculator.py calc bar --data "East:185,South:142"
+./scripts/_py.sh scripts/svg_position_calculator.py calc pie --data "A:35,B:25,C:20"
+./scripts/_py.sh scripts/svg_position_calculator.py from-json config.json
 ```
 
 Use this when chart geometry needs to be verified before or after AI generation.
@@ -136,16 +136,16 @@ Use this when chart geometry needs to be verified before or after AI generation.
 ### `flatten_tspan.py`
 
 ```bash
-python3 scripts/svg_finalize/flatten_tspan.py examples/<project>/svg_output
-python3 scripts/svg_finalize/flatten_tspan.py path/to/input.svg path/to/output.svg
+./scripts/_py.sh scripts/svg_finalize/flatten_tspan.py examples/<project>/svg_output
+./scripts/_py.sh scripts/svg_finalize/flatten_tspan.py path/to/input.svg path/to/output.svg
 ```
 
 ### `svg_rect_to_path.py`
 
 ```bash
-python3 scripts/svg_finalize/svg_rect_to_path.py <project_path>
-python3 scripts/svg_finalize/svg_rect_to_path.py <project_path> -s final
-python3 scripts/svg_finalize/svg_rect_to_path.py path/to/file.svg
+./scripts/_py.sh scripts/svg_finalize/svg_rect_to_path.py <project_path>
+./scripts/_py.sh scripts/svg_finalize/svg_rect_to_path.py <project_path> -s final
+./scripts/_py.sh scripts/svg_finalize/svg_rect_to_path.py path/to/file.svg
 ```
 
 Use when rounded corners must survive PowerPoint shape conversion.
@@ -153,9 +153,9 @@ Use when rounded corners must survive PowerPoint shape conversion.
 ### `fix_image_aspect.py`
 
 ```bash
-python3 scripts/svg_finalize/fix_image_aspect.py path/to/slide.svg
-python3 scripts/svg_finalize/fix_image_aspect.py 01_cover.svg 02_toc.svg
-python3 scripts/svg_finalize/fix_image_aspect.py --dry-run path/to/slide.svg
+./scripts/_py.sh scripts/svg_finalize/fix_image_aspect.py path/to/slide.svg
+./scripts/_py.sh scripts/svg_finalize/fix_image_aspect.py 01_cover.svg 02_toc.svg
+./scripts/_py.sh scripts/svg_finalize/fix_image_aspect.py --dry-run path/to/slide.svg
 ```
 
 Use when embedded images stretch after PowerPoint shape conversion.
@@ -163,9 +163,9 @@ Use when embedded images stretch after PowerPoint shape conversion.
 ### `embed_icons.py`
 
 ```bash
-python3 scripts/svg_finalize/embed_icons.py output.svg
-python3 scripts/svg_finalize/embed_icons.py svg_output/*.svg
-python3 scripts/svg_finalize/embed_icons.py --dry-run svg_output/*.svg
+./scripts/_py.sh scripts/svg_finalize/embed_icons.py output.svg
+./scripts/_py.sh scripts/svg_finalize/embed_icons.py svg_output/*.svg
+./scripts/_py.sh scripts/svg_finalize/embed_icons.py --dry-run svg_output/*.svg
 ```
 
 Replaces `<use data-icon="chunk/name" .../>`, `<use data-icon="tabler-filled/name" .../>` and `<use data-icon="tabler-outline/name" .../>` placeholders with actual SVG path elements. Use for manual icon embedding checks outside `finalize_svg.py`.

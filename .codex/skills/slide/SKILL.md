@@ -41,7 +41,7 @@ description: >
 > 4. 기존 산출물 재사용은 사용자가 "기존 덱 수정", "이어서", "기존 덱 기반"이라고 명시한 경우에만 허용한다. 이 경우 `pipeline_status.json`에 **revision mode**로 기록하고, 신규 풀 파이프라인 제작으로 보고하지 않는다.
 > 5. 신규 제작은 이번 run에서 다음 단계의 **실행 증거**가 모두 있어야 완료·업로드할 수 있다: preflight → active-theme load → project init → source processing/import → slide-plan 생성·validate·fact-check(트리거 시) → Strategist/design_spec → confirmation gate 또는 원격 auto-proceed 기록 → 이미지/차트 생성(필요 시) → 메인 에이전트의 페이지별 순차 SVG 생성(요청한 병렬 경로면 앵커 2장 + 1장당 fork 1개 + 합치기) → speaker notes → total_md_split → finalize_svg → svg_to_pptx -s final → verify_deck → exported PPTX render 눈검수 → unzip -t 무결성 검증 → 업로드.
 > 6. 기존 파일의 존재나 과거 timestamp는 이번 run의 실행 증거로 인정하지 않는다.
-> 7. 작업 시작 전에 `pipeline_status.json`을 만들고 각 stage에 `status`, `started_at`, `completed_at`, `artifacts`, command/result summary를 기록한다. 파일이 없거나 읽을 수 없으면 Step 7.4 `verify_deck.py`가 WARN을 낸다.
+> 7. Step 2 `project_manager.py init`이 `pipeline_status.json`을 만든다. init 전에 끝난 단계(preflight, active-theme load)부터 단계마다 `${SKILL_DIR}/scripts/_py.sh ${SKILL_DIR}/scripts/project_manager.py stage <project_path> <stage> running|done|skipped|failed [--summary "<명령과 결과>"] [--artifact <path>]...`로 기록한다. `started_at`·`completed_at`은 스크립트가 적는다. 파일이 없거나 읽을 수 없으면 Step 7.4 `verify_deck.py`가 WARN을 낸다.
 > 8. "완료"·"풀 파이프라인 수행"은 모든 적용 단계가 통과한 뒤에만 보고한다. 진행 중에는 현재 단계를 알려도 된다.
 
 > [!IMPORTANT]
@@ -103,14 +103,14 @@ Before any user-visible work, read `references/theme-active.json` and announce t
 > The schema this file conforms to (v1 token contract) lives at `.codex/skills/theme-init/references/token-contract.json`. Read that if you need to know which fields are required, what value formats are accepted, or how to validate a hand-edited theme.
 
 ```bash
-python3 .codex/skills/slide/scripts/announce_theme.py
+.codex/skills/slide/scripts/_py.sh .codex/skills/slide/scripts/announce_theme.py
 ```
 
 The script also performs catalog-drift detection: if the preset catalog pointer (`assets/design-systems/active.json`) disagrees with `theme-active.json`'s name, it prints a `[WARN] theme drift` line with the fix (`init_theme.py --activate <pointer>` to follow the catalog, or `--register-current` to adopt the working copy). A drift warning means a previous activate/bake was interrupted — resolve it before generating slides. A missing catalog (claude.ai essentials bundle) is silent and fine.
 
 **If `theme-active.json` is missing or fails to load**: stop. The user must run `/theme-init` first (see `.codex/skills/theme-init/SKILL.md`). Do NOT fall back to hard-coded Jangpm values — that would mask the configuration error and produce decks in an unintended language.
 
-**If the active theme is not what the user expects**: stop and redirect them. If the wanted theme is already in the catalog (`assets/design-systems/README.md`), `python3 .codex/skills/theme-init/scripts/init_theme.py --activate <preset>` switches in seconds; otherwise `/theme-init <design-guide.md>` bakes it first. Do NOT hand-patch literals in Strategist/Executor output to match a different theme — the render chain is the only supported way to change the active theme.
+**If the active theme is not what the user expects**: stop and redirect them. If the wanted theme is already in the catalog (`assets/design-systems/README.md`), `.codex/skills/slide/scripts/_py.sh .codex/skills/theme-init/scripts/init_theme.py --activate <preset>` switches in seconds; otherwise `/theme-init <design-guide.md>` bakes it first. Do NOT hand-patch literals in Strategist/Executor output to match a different theme — the render chain is the only supported way to change the active theme.
 
 This step is **read-only** — it never writes files. Subsequent steps inherit the active theme by reading the already-rendered `references/strategist.md`, `references/executor.md`, `references/design-system.md`, and `references/anti-slop-*.md`.
 
@@ -169,7 +169,7 @@ Import source content (choose based on the situation):
 This skill uses a single layout pack — the **active theme**'s (default: Jangpm). There is no branching prompt at this step. The pack lives at `templates/layouts/<active-theme>/`, where `<active-theme>` is `theme-active.json`'s `name` (`/theme-init` renames this directory on a swap). Resolve it, then copy automatically:
 
 ```bash
-THEME=$(python3 -c "import json; print(json.load(open('${SKILL_DIR}/references/theme-active.json'))['name'])")
+THEME=$(${SKILL_DIR}/scripts/_py.sh -c "import json; print(json.load(open('${SKILL_DIR}/references/theme-active.json'))['name'])")
 cp ${SKILL_DIR}/templates/layouts/$THEME/*.svg <project_path>/templates/
 cp ${SKILL_DIR}/templates/layouts/$THEME/design_spec.md <project_path>/templates/
 ```
@@ -192,7 +192,7 @@ cp ${SKILL_DIR}/templates/layouts/$THEME/design_spec.md <project_path>/templates
 - ⛔ **BLOCKING (사용자 확인 필수)**: Plan-Consuming은 active-theme lock 1화면 확인, Standalone은 Eight Confirmations 일괄 제시 — 명시적 사용자 확인 전 진행 금지. 예외: 요청에 `알아서`·`확인 없이`·`묻지 말고`가 있으면 확인 블록을 추천값으로 출력하고 바로 진행하며, `pipeline_status.json`과 design_spec §I에 `auto (<트리거>)`를 기록한다.
 - Plan-Consuming 필수 절차: `validate_plan.py` 재검증 → 슬라이드별 plan fingerprint 출력 (B-plan-fidelity 체크리스트).
 - 이미지가 제공된 경우 크기·비율 같은 레이아웃 정보는 `analyze_images.py` 출력(`image_analysis.csv`)에서 가져온다. 이미지를 Read 로 여는 것은 내용 확인용이다(내용이 배치를 정할 때, Step 5 생성 이미지 검수, Step 7 렌더 확인).
-- Step 4.5 Quality Floor (R2/R3/R4/R6 self-check + B-density / B-r2-simple / B-gm-simple / B-family-diversity / B-plan-count / B-plan-fidelity 검증 스크립트) 통과 후에만 다음 스텝 진행.
+- Step 4.5 Quality Floor (R2/R3/R4/R6 self-check) 통과 후에만 다음 스텝 진행. B-* 검증 스크립트(B-density / B-r2-simple / B-gm-simple / B-family-diversity / B-plan-count / B-plan-fidelity)는 SVG 를 읽으므로 Step 6 덱 스윕에서 돌린다.
 
 ---
 
@@ -302,5 +302,5 @@ Before acting in a role, read its reference file (`references/strategist.md` / `
 ## Notes
 
 - Do NOT add undocumented flags to the post-processing commands — run them as-is, except for the documented `--only native` / `--only legacy` (and `--no-embed-fonts` when the user asks) on the export step
-- Local preview: `python3 -m http.server -d <project_path>/svg_final 8000`
+- Local preview: `${SKILL_DIR}/scripts/_py.sh -m http.server -d <project_path>/svg_final 8000`
 - **Troubleshooting**: If the user encounters issues during generation (layout overflow, export errors, blank images, etc.), recommend checking the project's known-issues tracker (GitHub Issues) — it collects fixes from real user reports

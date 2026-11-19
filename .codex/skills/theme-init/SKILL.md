@@ -87,7 +87,7 @@ echo) as **SVG or PPTX**, extract its layout devices before authoring the theme
 JSON:
 
 ```bash
-python3 .codex/skills/theme-init/scripts/ingest_reference.py \
+.codex/skills/slide/scripts/_py.sh .codex/skills/theme-init/scripts/ingest_reference.py \
   --reference <deck-dir | deck.svg | deck.pptx> --quiet
 ```
 
@@ -140,7 +140,7 @@ Write your output to a scratch file, for example
 까지 한 번에 처리한다.
 
 ```bash
-python3 .codex/skills/theme-init/scripts/init_theme.py \
+.codex/skills/slide/scripts/_py.sh .codex/skills/theme-init/scripts/init_theme.py \
     --fill-from /tmp/theme-draft.json
 ```
 
@@ -205,9 +205,9 @@ decks inherit it.
 리브랜드는 건너뛴다. 5b/5c 전 래스터라이저 preflight(`pip install cairosvg`) 필수.
 
 ```bash
-python3 .codex/skills/theme-init/scripts/render_layouts.py     # now picks up _shell_src/
-python3 .codex/skills/theme-init/scripts/validate_shells.py    # FATAL lock check
-python3 .codex/skills/theme-init/scripts/preview_shells.py     # build _preview/index.html
+.codex/skills/slide/scripts/_py.sh .codex/skills/theme-init/scripts/render_layouts.py     # now picks up _shell_src/
+.codex/skills/slide/scripts/_py.sh .codex/skills/theme-init/scripts/validate_shells.py    # FATAL lock check
+.codex/skills/slide/scripts/_py.sh .codex/skills/theme-init/scripts/preview_shells.py     # build _preview/index.html
 ```
 
 핵심 게이트: content 셸(`03_content`)은 라이트 유지 + `{{GOVERNING_MESSAGE}}`
@@ -228,7 +228,7 @@ After the render completes:
    stay under the claude.ai 200-file upload limit):
    ```bash
    tar -xzf .codex/skills/slide/references/jangpm-patterns.tar.gz -C .codex/skills/slide/references/
-   python3 -m http.server -d .codex/skills/slide/references/jangpm-patterns 8000
+   .codex/skills/slide/scripts/_py.sh -m http.server -d .codex/skills/slide/references/jangpm-patterns 8000
    ```
    Open `http://localhost:8000/` — every page should reflect the new
    accent color and font chain.
@@ -261,7 +261,7 @@ tofu.
 
 1. Present the preview to the user. Point them at it:
    ```bash
-   python3 -m http.server -d .codex/skills/slide/templates/layouts/<name>/_preview 8000
+   .codex/skills/slide/scripts/_py.sh -m http.server -d .codex/skills/slide/templates/layouts/<name>/_preview 8000
    # then open http://localhost:8000/  (or open index.html directly)
    ```
 2. **Wait for explicit approval or feedback.** Do not declare `/theme-init`
@@ -282,7 +282,7 @@ Switch to a theme already in the catalog — copies its snapshot over
 chain. No design guide, no agent extraction, seconds not minutes:
 
 ```bash
-python3 .codex/skills/theme-init/scripts/init_theme.py --activate <preset>
+.codex/skills/slide/scripts/_py.sh .codex/skills/theme-init/scripts/init_theme.py --activate <preset>
 ```
 
 Available presets: `assets/design-systems/README.md` (auto-generated).
@@ -298,7 +298,7 @@ rendered. After the bake, the previous active preset is automatically
 re-activated (same render chain — expect a double render):
 
 ```bash
-python3 .codex/skills/theme-init/scripts/init_theme.py \
+.codex/skills/slide/scripts/_py.sh .codex/skills/theme-init/scripts/init_theme.py \
     --fill-from /tmp/draft.json --no-set-active
 ```
 
@@ -312,7 +312,7 @@ Snapshot the live `theme-active.json` into the catalog and point
 `active.json` at it. No rendering:
 
 ```bash
-python3 .codex/skills/theme-init/scripts/init_theme.py --register-current
+.codex/skills/slide/scripts/_py.sh .codex/skills/theme-init/scripts/init_theme.py --register-current
 ```
 
 Use after hand-editing `theme-active.json` (adopt the edit as the
@@ -329,7 +329,7 @@ If you edited `theme-active.json` directly (not a new extraction), just
 run without `--fill-from`:
 
 ```bash
-python3 .codex/skills/theme-init/scripts/init_theme.py
+.codex/skills/slide/scripts/_py.sh .codex/skills/theme-init/scripts/init_theme.py
 ```
 
 This skips fill, goes straight to validate → render. (Note: the bake
@@ -341,7 +341,7 @@ also refreshes the catalog snapshot of the theme and re-points
 Stop after validate, don't touch the render outputs:
 
 ```bash
-python3 .codex/skills/theme-init/scripts/init_theme.py \
+.codex/skills/slide/scripts/_py.sh .codex/skills/theme-init/scripts/init_theme.py \
     --fill-from /tmp/draft.json --dry-run
 ```
 
@@ -352,7 +352,7 @@ running the render chain — handy for local runs where you want to
 eyeball what's about to change:
 
 ```bash
-python3 .codex/skills/theme-init/scripts/init_theme.py \
+.codex/skills/slide/scripts/_py.sh .codex/skills/theme-init/scripts/init_theme.py \
     --fill-from /tmp/draft.json --confirm
 ```
 

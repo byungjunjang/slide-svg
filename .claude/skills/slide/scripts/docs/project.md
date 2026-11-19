@@ -7,13 +7,15 @@ Project tools create, validate, and inspect the standard PPT Master workspace.
 Main entry point for project setup and validation.
 
 ```bash
-python3 scripts/project_manager.py init <project_name> --format ppt169
-python3 scripts/project_manager.py import-sources <project_path> <source1> [<source2> ...]
-python3 scripts/project_manager.py validate <project_path>
-python3 scripts/project_manager.py info <project_path>
+./scripts/_py.sh scripts/project_manager.py init <project_name> --format ppt169
+./scripts/_py.sh scripts/project_manager.py import-sources <project_path> <source1> [<source2> ...]
+./scripts/_py.sh scripts/project_manager.py stage <project_path> <stage> running|done|skipped|failed [--summary S] [--artifact P]... [--confirmation C]
+./scripts/_py.sh scripts/project_manager.py validate <project_path>
+./scripts/_py.sh scripts/project_manager.py info <project_path>
 ```
 
 Notes:
+- `init` also writes `pipeline_status.json` (`project`, `mode`, empty `stages`); `stage` records one stage in it — `started_at` on its first record, `completed_at` on `done` / `skipped` / `failed`
 - Files outside the repo are copied into `sources/` by default
 - With `--move`, files outside the repo are moved into `sources/`
 - Files already inside the repo are moved into `sources/` by default (with a stderr
@@ -33,9 +35,9 @@ Common formats:
 Examples:
 
 ```bash
-python3 scripts/project_manager.py init my_presentation --format ppt169
-python3 scripts/project_manager.py validate projects/my_presentation_ppt169_20251116
-python3 scripts/project_manager.py info projects/my_presentation_ppt169_20251116
+./scripts/_py.sh scripts/project_manager.py init my_presentation --format ppt169
+./scripts/_py.sh scripts/project_manager.py validate projects/my_presentation_ppt169_20251116
+./scripts/_py.sh scripts/project_manager.py info projects/my_presentation_ppt169_20251116
 ```
 
 ## `project_utils.py`
@@ -51,7 +53,7 @@ from project_utils import get_project_info, validate_project_structure
 You can also run it directly for quick checks:
 
 ```bash
-python3 scripts/project_utils.py <project_path>
+./scripts/_py.sh scripts/project_utils.py <project_path>
 ```
 
 ## `batch_validate.py`
@@ -59,10 +61,10 @@ python3 scripts/project_utils.py <project_path>
 Batch-check project structure and compliance.
 
 ```bash
-python3 scripts/batch_validate.py examples
-python3 scripts/batch_validate.py examples projects
-python3 scripts/batch_validate.py --all
-python3 scripts/batch_validate.py examples --export
+./scripts/_py.sh scripts/batch_validate.py examples
+./scripts/_py.sh scripts/batch_validate.py examples projects
+./scripts/_py.sh scripts/batch_validate.py --all
+./scripts/_py.sh scripts/batch_validate.py examples --export
 ```
 
 Use this for repository-wide health checks before release or cleanup.
@@ -72,8 +74,8 @@ Use this for repository-wide health checks before release or cleanup.
 Rebuild `examples/README.md` automatically.
 
 ```bash
-python3 scripts/generate_examples_index.py
-python3 scripts/generate_examples_index.py examples
+./scripts/_py.sh scripts/generate_examples_index.py
+./scripts/_py.sh scripts/generate_examples_index.py examples
 ```
 
 ## `pptx_template_import.py`
@@ -81,11 +83,11 @@ python3 scripts/generate_examples_index.py examples
 Unified PPTX preparation entry point for `/create-template`.
 
 ```bash
-python3 scripts/pptx_template_import.py <template.pptx>
-python3 scripts/pptx_template_import.py <template.pptx> -o <output_dir>
-python3 scripts/pptx_template_import.py <template.pptx> --manifest-only
-python3 scripts/pptx_template_import.py <template.pptx> --keep-raw
-python3 scripts/pptx_template_import.py <template.pptx> --skip-manifest
+./scripts/_py.sh scripts/pptx_template_import.py <template.pptx>
+./scripts/_py.sh scripts/pptx_template_import.py <template.pptx> -o <output_dir>
+./scripts/_py.sh scripts/pptx_template_import.py <template.pptx> --manifest-only
+./scripts/_py.sh scripts/pptx_template_import.py <template.pptx> --keep-raw
+./scripts/_py.sh scripts/pptx_template_import.py <template.pptx> --skip-manifest
 ```
 
 Notes:
@@ -109,7 +111,7 @@ Implementation note:
 Show standardized fixes for common project errors.
 
 ```bash
-python3 scripts/error_helper.py
-python3 scripts/error_helper.py missing_readme
-python3 scripts/error_helper.py missing_readme project_path=my_project
+./scripts/_py.sh scripts/error_helper.py
+./scripts/_py.sh scripts/error_helper.py missing_readme
+./scripts/_py.sh scripts/error_helper.py missing_readme project_path=my_project
 ```

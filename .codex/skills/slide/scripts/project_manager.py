@@ -4,12 +4,14 @@
 Usage:
     python3 scripts/project_manager.py init <project_name> [--format ppt169] [--dir output]
     python3 scripts/project_manager.py import-sources <project_path> <source1> [<source2> ...] [--move | --copy]
+    python3 scripts/project_manager.py stage <project_path> <stage> running|done|skipped|failed [--summary S] [--artifact P]... [--confirmation C]
     python3 scripts/project_manager.py validate <project_path>
     python3 scripts/project_manager.py info <project_path>
 """
 
 from __future__ import annotations
 
+import json
 import re
 import shutil
 import subprocess
@@ -157,6 +159,11 @@ class ProjectManager:
                 "- `sources/`: source materials and normalized markdown\n"
                 "- `exports/`: generated PPTX files (timestamped history)\n"
             ),
+            encoding="utf-8",
+        )
+        (project_path / "pipeline_status.json").write_text(
+            json.dumps({"project": project_name, "mode": "fresh-build", "stages": {}},
+                       ensure_ascii=False, indent=2) + "\n",
             encoding="utf-8",
         )
 
@@ -574,6 +581,47 @@ class ProjectManager:
         }
 
 
+STAGE_STATUSES = ("running", "done", "skipped", "failed")
+
+
+def record_stage(project_path: str | Path, stage: str, status: str, **fields) -> dict:
+    """Record one stage in <project>/pipeline_status.json (SKILL.md gate #7).
+
+    started_at is set on the stage's first record, completed_at on a final
+    status; extra fields (summary, artifacts, confirmation) are stored as given.
+    """
+    if status not in STAGE_STATUSES:
+        raise ValueError(f"status must be one of {', '.join(STAGE_STATUSES)}: {status}")
+    path = Path(project_path) / "pipeline_status.json"
+    data = json.loads(path.read_text(encoding="utf-8")) if path.exists() else {"stages": {}}
+    entry = data.setdefault("stages", {}).setdefault(stage, {})
+    now = datetime.now().isoformat(timespec="seconds")
+    entry.setdefault("started_at", now)
+    entry["status"] = status
+    if status != "running":
+        entry["completed_at"] = now
+    entry.update(fields)
+    path.write_text(json.dumps(data, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
+    return entry
+
+
+def parse_stage_args(argv: list[str]) -> tuple[str, str, str, dict]:
+    """Parse `stage <project_path> <stage> <status> [--summary S] [--artifact P]... [--confirmation C]`."""
+    if len(argv) < 5:
+        raise ValueError("Project path, stage and status are required")
+    fields: dict = {}
+    i = 5
+    while i < len(argv):
+        if argv[i] == "--artifact" and i + 1 < len(argv):
+            fields.setdefault("artifacts", []).append(argv[i + 1])
+        elif argv[i] in ("--summary", "--confirmation") and i + 1 < len(argv):
+            fields[argv[i][2:]] = argv[i + 1]
+        else:
+            raise ValueError(f"Unknown stage option: {argv[i]}")
+        i += 2
+    return argv[2], argv[3], argv[4], fields
+
+
 def print_usage() -> None:
     """Print CLI usage information from the module docstring."""
     print(__doc__)
@@ -644,6 +692,12 @@ def main() -> None:
             print("1. Put source files into sources/ (or use import-sources)")
             print("2. Save your design spec to the project root")
             print("3. Generate SVG files into svg_output/")
+            return
+
+        if command == "stage":
+            project_path, stage, status, fields = parse_stage_args(sys.argv)
+            record_stage(project_path, stage, status, **fields)
+            print(f"[OK] {stage}: {status}")
             return
 
         if command == "import-sources":

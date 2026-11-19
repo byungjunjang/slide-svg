@@ -72,7 +72,7 @@ def render_readme(presets_root: Path) -> Path:
     ]
     body.extend(rows if rows else ["| | _(no presets found)_ |  |  |  |"])
     body.append("")
-    body.append("전환: `python3 .claude/skills/theme-init/scripts/init_theme.py --activate <preset>` "
+    body.append("전환: `.claude/skills/slide/scripts/_py.sh .claude/skills/theme-init/scripts/init_theme.py --activate <preset>` "
                 "(전역 참조 문서를 해당 테마로 결정적 재렌더 — LLM 불필요)")
     body.append("")
 

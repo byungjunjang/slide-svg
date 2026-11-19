@@ -52,7 +52,7 @@ ls -la "<reference_source_path>"
 If the reference source is a `.pptx` template file, use the unified preparation helper:
 
 ```bash
-python3 .claude/skills/slide/scripts/pptx_template_import.py "<reference_template.pptx>"
+.claude/skills/slide/scripts/_py.sh .claude/skills/slide/scripts/pptx_template_import.py "<reference_template.pptx>"
 ```
 
 This helper performs the full PPTX reference preparation in one workspace:
@@ -191,7 +191,7 @@ ls -la ".claude/skills/slide/templates/layouts/<template_id>"
 Run SVG validation on the template directory:
 
 ```bash
-python3 .claude/skills/slide/scripts/svg_quality_checker.py ".claude/skills/slide/templates/layouts/<template_id>" --format <canvas_format>
+.claude/skills/slide/scripts/_py.sh .claude/skills/slide/scripts/svg_quality_checker.py ".claude/skills/slide/templates/layouts/<template_id>" --format <canvas_format>
 ```
 
 **Checklist**:

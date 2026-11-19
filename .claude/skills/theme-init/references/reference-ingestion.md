@@ -15,7 +15,7 @@ re-running `/theme-init` — Phase 1 owns rendering.
 ## Run it
 
 ```bash
-python3 .claude/skills/theme-init/scripts/ingest_reference.py \
+.claude/skills/slide/scripts/_py.sh .claude/skills/theme-init/scripts/ingest_reference.py \
   --reference <deck-dir | deck.svg | deck.pptx> \
   [--out devices.json] [--design-md <theme>/DESIGN.md] [--no-seed] [--quiet]
 ```

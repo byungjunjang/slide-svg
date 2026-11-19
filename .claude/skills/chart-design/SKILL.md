@@ -112,13 +112,13 @@ Resist it — these rules are enforced by the renderer where possible
 
 ```bash
 # spec.json 작성 후 (schema: references/spec-format.md)
-python3 .claude/skills/chart-design/scripts/render_chart.py spec.json -o chart_frag.svg --pos 60,220
+.claude/skills/slide/scripts/_py.sh .claude/skills/chart-design/scripts/render_chart.py spec.json -o chart_frag.svg --pos 60,220
 
 # 미리보기 (테마 배경 포함 완전한 SVG)
-python3 .claude/skills/chart-design/scripts/render_chart.py spec.json -o preview.svg --standalone
+.claude/skills/slide/scripts/_py.sh .claude/skills/chart-design/scripts/render_chart.py spec.json -o preview.svg --standalone
 
 # 스펙/판단 게이트만 검사 (렌더 없이)
-python3 .claude/skills/chart-design/scripts/render_chart.py spec.json --validate-only
+.claude/skills/slide/scripts/_py.sh .claude/skills/chart-design/scripts/render_chart.py spec.json --validate-only
 ```
 
 Minimal spec — everything else is optional:
@@ -190,4 +190,4 @@ Read `references/integration.md` before embedding into a deck or when a
 Charts are artifacts of the theme that rendered them. After
 `init_theme.py --activate <preset>`, re-render every chart spec in the deck
 (specs are the source of truth; keep them next to the project) and refresh the
-skill examples: `python3 .claude/skills/chart-design/scripts/build_examples.py`.
+skill examples: `.claude/skills/slide/scripts/_py.sh .claude/skills/chart-design/scripts/build_examples.py`.

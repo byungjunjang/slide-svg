@@ -70,7 +70,7 @@ The Strategist's Design Spec (and, when present, `slide_plan.json`) may carry a 
 
 ## 1. Template Adherence
 
-The **{{TOKEN:display_name}}** template pack at `templates/layouts/{{TOKEN:name}}/` is the only layout pack this skill uses. These shells are the composed deck skeleton (see DESIGN.md §6.0) — inherit their geometry, decoration, and band exactly; only replace the named content placeholders:
+The **{{TOKEN:display_name}}** template pack at `templates/layouts/{{TOKEN:name}}/` is the only layout pack this skill uses. These shells are the composed deck skeleton (see DESIGN.md §6) — inherit their geometry, decoration, and band exactly; only replace the named content placeholders:
 
 | Page Type | Template | Adherence |
 |-----------|----------|-----------|
@@ -132,7 +132,7 @@ ${SKILL_DIR}/scripts/_py.sh ${SKILL_DIR}/scripts/render_page.py <project_path>/s
 
 Read the PNG it prints (960 px wide) and fix only visible defects — overflow, overlap, clipped or colliding text, a broken chart — then re-run the page check. If it prints `[skip]` (no browser on this host), continue without it.
 
-The checker measures real glyph advances, so its bounds and overlap numbers are the SSOT — don't hand-compute them. The composition rules it does not count still hold on every page: ≤ 2 accent events ({{TOKEN:colors.accent}}/{{TOKEN:colors.accent-soft}}; a chart opacity ladder counts as 1), ≥ 3 distinct type-scale steps (display {{TOKEN:typography.display.size}} / headline {{TOKEN:typography.headline.size}} / title {{TOKEN:typography.title.size}} / body {{TOKEN:typography.body.size}} / caption {{TOKEN:typography.caption.size}}), and text left-edges on the §4 column grid.
+The checker measures real glyph advances, so its bounds and overlap numbers are the SSOT — don't hand-compute them. The composition rules it does not count still hold on every page: ≤ 2 accent events ({{TOKEN:colors.accent}}/{{TOKEN:colors.accent-soft}}; a chart opacity ladder counts as 1; the content shell's accent rule under the headline is page chrome and does not count), ≥ 3 distinct type-scale steps (display {{TOKEN:typography.display.size}} / headline {{TOKEN:typography.headline.size}} / title {{TOKEN:typography.title.size}} / body {{TOKEN:typography.body.size}} / caption {{TOKEN:typography.caption.size}}), and text left-edges on the §4 column grid.
 
 > **Variation applied — purpose**: Body slides default to the anchor pattern unless the executor consciously selects one of the variation inspirations from `DESIGN.md §5.2`. Recording the chosen variation per slide breaks the "anchor copy" failure mode and forces intentional differentiation across the deck. **Target: ≥ 70% of body slides apply a non-`표준` variation across the full deck.** `표준` is allowed when the content genuinely needs the unembellished anchor (rare).
 
@@ -192,6 +192,8 @@ Format: `<number>_<page_name>.svg`. Two-digit prefix from `01`. Page name matche
 | Japanese | `01_表紙.svg`, `02_目次.svg` |
 
 Use underscores, not spaces. File names with special characters are allowed if the filesystem supports them (macOS/Linux: yes).
+
+Name a cover, chapter or ending page with a role word — `표지` / `간지` / `마무리` (or `cover` / `chapter` / `closing`), as in `01_표지.svg`, `04_간지_시장_구조.svg`. Without a plan, the deck checks (`verify_deck.py`, B-*) find non-content pages by that word; with a plan, `page_family` decides.
 
 ---
 
@@ -266,11 +268,11 @@ Missing icons emit `[WARN] Icon not found: ...` and are skipped silently. Pick n
 
 ```xml
 <use data-icon="tabler-outline/trending-up" x="100" y="200" width="32" height="32"
-     fill="none" stroke="currentColor" stroke-width="2"
+     fill="none" stroke="currentColor" color="{{TOKEN:colors.text}}" stroke-width="2"
      stroke-linecap="round" stroke-linejoin="round"/>
 ```
 
-`finalize_svg.py` embeds the actual glyph. No manual `embed_icons.py` needed.
+`finalize_svg.py` embeds the actual glyph. No manual `embed_icons.py` needed. Set `color` on every `<use data-icon>` to a theme color — finalize reads only the placeholder's own `color` / `fill` / `stroke`, so without it the icon becomes `#000000`, which `--strict-theme` rejects.
 
 ### Sizes
 
@@ -376,7 +378,7 @@ Title / chapter / ending slides do NOT carry `.gm`.
 When a slide needs a chart built from **actual data values** and the type is one of chart-design's 21 quantitative types (bar / horizontal_bar / grouped_bar / stacked_bar / stacked_bar_100 / line / multi_line / area / scatter / combo / waterfall / bullet / pie / donut / gauge / radar / kpi_cards / progress / funnel / heatmap / treemap), do NOT hand-draw the geometry. Write a data spec and render it:
 
 ```
-python3 .codex/skills/chart-design/scripts/render_chart.py <spec.json> -o <frag.svg> --pos X,Y
+.codex/skills/slide/scripts/_py.sh .codex/skills/chart-design/scripts/render_chart.py <spec.json> -o <frag.svg> --pos X,Y
 ```
 
 The engine computes scales/ticks/arcs from the numbers and resolves every color/font from the active theme tokens — hand-adapted geometry is where mis-scaled bars and wrong percentages come from. Keep each spec JSON next to the project (specs are the source of truth; re-render after a theme swap). Selection judgment, spec schema, and the embedding contract: `.codex/skills/chart-design/SKILL.md` + its `references/spec-format.md` / `references/integration.md` (includes the `chart_strategy` → type map for plan-consuming mode).

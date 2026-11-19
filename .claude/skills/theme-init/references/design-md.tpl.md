@@ -358,7 +358,10 @@ This preset honors the 9 rhetorical roles defined in `references/chart-rhetorica
 ### 9.3 Search before use
 
 ```bash
-ls .claude/skills/slide/templates/icons/{{TOKEN:assets.icon-pack-default}}/ | grep <keyword>
+# Claude Code (full library):
+grep '^{{TOKEN:assets.icon-pack-default}}/.*<keyword>' assets/icons/icons_index.txt
+# claude.ai mode (bundled essentials only):
+ls .claude/skills/slide/templates/icons/{{TOKEN:assets.icon-pack-default}}/
 ```
 
 ### 9.4 Sizing

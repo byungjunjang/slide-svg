@@ -220,9 +220,9 @@ In the Design Specification & Content Outline, the image resource list must incl
 ## Automation Tool
 
 ```bash
-python3 scripts/analyze_images.py <project_path>/images                    # Default: PPT 16:9
-python3 scripts/analyze_images.py <project_path>/images --canvas ppt43     # PPT 4:3
-python3 scripts/analyze_images.py <project_path>/images --canvas xiaohongshu  # Xiaohongshu
+./scripts/_py.sh scripts/analyze_images.py <project_path>/images                    # Default: PPT 16:9
+./scripts/_py.sh scripts/analyze_images.py <project_path>/images --canvas ppt43     # PPT 4:3
+./scripts/_py.sh scripts/analyze_images.py <project_path>/images --canvas xiaohongshu  # Xiaohongshu
 ```
 
 The `--canvas` parameter selects the target canvas format (default `ppt169`). The tool computes layout type (top-bottom / left-right), image display area, and text area dimensions based on the formulas in this spec. Output includes a Markdown table that can be directly pasted into the image resource list.

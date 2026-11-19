@@ -112,7 +112,7 @@
 .claude/skills/slide/scripts/_py.sh .claude/skills/slide/scripts/svg_to_pptx.py <project_path> -s final
 
 # 5. 로컬 프리뷰
-python3 -m http.server -d <project_path>/svg_final 8000
+.claude/skills/slide/scripts/_py.sh -m http.server -d <project_path>/svg_final 8000
 
 # 6. 아이콘 검색 (Claude Code: 풀 라이브러리)
 grep '^tabler-outline/.*<keyword>' assets/icons/icons_index.txt
@@ -128,8 +128,8 @@ ls assets/icons/tabler-outline/ | grep <keyword>
 .claude/skills/slide/scripts/_py.sh .claude/skills/slide/scripts/verify_deck.py output/<project>
 
 # 7. 테마 카탈로그 (보관된 프리셋 목록: assets/design-systems/README.md)
-python3 .claude/skills/theme-init/scripts/init_theme.py --activate <preset>   # 카탈로그 프리셋으로 빠른 전환
-python3 .claude/skills/theme-init/scripts/init_theme.py --register-current    # 현 활성 테마를 카탈로그에 등록
+.claude/skills/slide/scripts/_py.sh .claude/skills/theme-init/scripts/init_theme.py --activate <preset>   # 카탈로그 프리셋으로 빠른 전환
+.claude/skills/slide/scripts/_py.sh .claude/skills/theme-init/scripts/init_theme.py --register-current    # 현 활성 테마를 카탈로그에 등록
 ```
 
 ## Troubleshooting

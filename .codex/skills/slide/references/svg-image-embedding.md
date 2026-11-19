@@ -36,10 +36,10 @@ Defined in the Design Specification & Content Outline; each image has a status a
 3. Executor generates SVGs (svg_output/)
    ├── Existing/Pending → <image href="../images/xxx.png" .../>
    └── Placeholder → Dashed border + description text
-4. Preview: python3 -m http.server -d <project_path> 8000 → /svg_output/<filename>.svg
+4. Preview: .codex/skills/slide/scripts/_py.sh -m http.server -d <project_path> 8000 → /svg_output/<filename>.svg
 5. Post-processing & Export
-   ├── python3 scripts/finalize_svg.py <project_path>
-   └── python3 scripts/svg_to_pptx.py <project_path> -s final
+   ├── ./scripts/_py.sh scripts/finalize_svg.py <project_path>
+   └── ./scripts/_py.sh scripts/svg_to_pptx.py <project_path> -s final
 ```
 
 > Recommended: During generation, keep external references in `svg_output/`. Post-processing via `finalize_svg.py` auto-embeds images into `svg_final/`, then export PPTX from `svg_final/`.
@@ -86,7 +86,7 @@ Defined in the Design Specification & Content Outline; each image has a status a
 Browser security restrictions prevent loading external images from directly opened SVGs. Start an HTTP server from the project root:
 
 ```bash
-python3 -m http.server -d <project_path> 8000
+.codex/skills/slide/scripts/_py.sh -m http.server -d <project_path> 8000
 # Visit http://localhost:8000/svg_output/your_file.svg
 ```
 
@@ -117,8 +117,8 @@ python3 -m http.server -d <project_path> 8000
 ### Recommended: Use finalize_svg.py (Unified Pipeline)
 
 ```bash
-python3 scripts/finalize_svg.py <project_path>         # Icons, images, text, rounded rects — all in one pass
-python3 scripts/svg_to_pptx.py <project_path> -s final  # Export PPTX from final version
+./scripts/_py.sh scripts/finalize_svg.py <project_path>         # Icons, images, text, rounded rects — all in one pass
+./scripts/_py.sh scripts/svg_to_pptx.py <project_path> -s final  # Export PPTX from final version
 ```
 
 ### Standalone: embed_images.py (Advanced Usage)
@@ -126,9 +126,9 @@ python3 scripts/svg_to_pptx.py <project_path> -s final  # Export PPTX from final
 For processing specific SVGs without running the full pipeline:
 
 ```bash
-python3 scripts/svg_finalize/embed_images.py <svg_file>                         # Single file
-python3 scripts/svg_finalize/embed_images.py <project_path>/svg_output/*.svg    # Batch
-python3 scripts/svg_finalize/embed_images.py --dry-run <project_path>/svg_output/*.svg  # Preview
+./scripts/_py.sh scripts/svg_finalize/embed_images.py <svg_file>                         # Single file
+./scripts/_py.sh scripts/svg_finalize/embed_images.py <project_path>/svg_output/*.svg    # Batch
+./scripts/_py.sh scripts/svg_finalize/embed_images.py --dry-run <project_path>/svg_output/*.svg  # Preview
 ```
 
 ---

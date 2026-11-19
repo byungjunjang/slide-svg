@@ -247,7 +247,7 @@ cp templates/layouts/government_red/* projects/<project>/templates/
 3. Ensure `design_spec.md` follows the standard chapter structure
 4. All SVGs use `viewBox="0 0 1280 720"`
 5. Follow SVG technical constraints (see below)
-6. Validate the template directory with `python3 scripts/svg_quality_checker.py templates/layouts/<template_name> --format ppt169`
+6. Validate the template directory with `./scripts/_py.sh scripts/svg_quality_checker.py templates/layouts/<template_name> --format ppt169`
 7. Register the new template in `templates/layouts/layouts_index.json`
 
 `layouts_index.json` is the primary machine-readable source for template discovery. A template folder without an index entry is considered incomplete.

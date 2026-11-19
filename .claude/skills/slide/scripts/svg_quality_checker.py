@@ -17,6 +17,8 @@ from pathlib import Path
 from typing import List, Dict, Tuple
 from collections import Counter, defaultdict
 
+from svg_finalize.embed_icons import uncolored_icons
+
 try:
     from project_utils import CANVAS_FORMATS
     from error_helper import ErrorHelper
@@ -825,22 +827,16 @@ def _has_arc_path(content: str) -> bool:
 
 
 def _looks_like_bar_chart(content: str) -> bool:
-    """≥3 foreground rects sharing a left edge with varying widths (horizontal bars)
-    or a baseline with varying heights (vertical bars). Distinguishes a bar chart
-    — whose rects often have rounded corners — from a uniform card grid."""
-    from collections import Counter
-    rects = _foreground_rects(content)
-    if len(rects) < 3:
-        return False
-    lefts = Counter(round(r[0]) for r in rects)
-    edge, n = lefts.most_common(1)[0]
-    if n >= 3 and len({round(r[2]) for r in rects if round(r[0]) == edge}) >= 3:
-        return True
-    bases = Counter(round(r[1] + r[3]) for r in rects)
-    base, n = bases.most_common(1)[0]
-    if n >= 3 and len({round(r[3]) for r in rects if round(r[1] + r[3]) == base}) >= 3:
-        return True
-    return False
+    """≥3 foreground rects of one thickness sharing a left edge with varying
+    widths (horizontal bars) or a baseline with varying heights (vertical bars).
+    Distinguishes a bar chart — whose rects often have rounded corners — from a
+    uniform card grid; the shared thickness keeps a headline accent rule and
+    unequal panels on one column (x=56) from reading as bars."""
+    lengths = defaultdict(set)
+    for x, y, w, h in _foreground_rects(content):
+        lengths[("h", round(x), round(h))].add(round(w))
+        lengths[("v", round(y + h), round(w))].add(round(h))
+    return any(len(v) >= 3 for v in lengths.values())
 
 
 def _wide_hline_count(content: str) -> int:
@@ -1298,12 +1294,19 @@ class SVGQualityChecker:
             return  # theme unreadable — skip rather than flag everything
         if svg_path is not None:
             allowed = allowed | self._color_allowlist(svg_path)
+        msgs = []
         off = off_theme_hexes(content, allowed)
         if off:
             shown = ", ".join(sorted(off)[:5])
             more = "" if len(off) <= 5 else f" (+{len(off) - 5} more)"
-            msg = (f"Off-theme hex (not in active palette): {shown}{more} "
-                   f"— use theme tokens / single accent")
+            msgs.append(f"Off-theme hex (not in active palette): {shown}{more} "
+                        f"— use theme tokens / single accent")
+        black = [] if "#000000" in allowed else uncolored_icons(content)
+        if black:
+            msgs.append(f"Icon without a color ({', '.join(black[:3])}): finalize embeds "
+                        f"it as #000000, not in the active palette — add color=\"<theme hex>\" "
+                        f"to its <use data-icon>")
+        for msg in msgs:
             if self.strict_theme:
                 result['errors'].append(
                     msg + f" (or whitelist in <project>/{COLOR_ALLOW_FILENAME})")

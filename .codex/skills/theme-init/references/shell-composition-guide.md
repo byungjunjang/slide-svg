@@ -68,9 +68,9 @@ Rules for the templates:
 **5b. Render + validate.**
 
 ```bash
-python3 .codex/skills/theme-init/scripts/render_layouts.py     # now picks up _shell_src/
-python3 .codex/skills/theme-init/scripts/validate_shells.py    # FATAL lock check
-python3 .codex/skills/theme-init/scripts/preview_shells.py     # build _preview/index.html
+.codex/skills/slide/scripts/_py.sh .codex/skills/theme-init/scripts/render_layouts.py     # now picks up _shell_src/
+.codex/skills/slide/scripts/_py.sh .codex/skills/theme-init/scripts/validate_shells.py    # FATAL lock check
+.codex/skills/slide/scripts/_py.sh .codex/skills/theme-init/scripts/preview_shells.py     # build _preview/index.html
 ```
 
 Fix any `validate_shells` violation in `_shell_src/` and re-render — the

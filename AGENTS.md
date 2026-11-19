@@ -14,7 +14,7 @@ pipeline). Read it. These rules add Codex-side enforcement on top.
   byte-identical except `.claude/skills` paths are rewritten to `.codex/skills`
   and the mirror root has a generated-marker file.
 - **Never hand-edit `.codex/skills/`.** Edit `.claude/skills/`, then run
-  `python3 .claude/skills/slide/scripts/dev/sync_codex_mirror.py`.
+  `.claude/skills/slide/scripts/_py.sh .claude/skills/slide/scripts/dev/sync_codex_mirror.py`.
 
 ## Slide requests — MANDATORY procedure
 
@@ -39,7 +39,7 @@ When the user asks for slides ("슬라이드", "프레젠테이션", "생성PPT"
    (add `--needs-images` if the deck needs generated images). If it fails, STOP
    and fix the environment. Do not proceed with a broken toolchain.
    First-time setup: run
-   `python3 -m pip install -r .claude/skills/slide/requirements.txt`.
+   `.claude/skills/slide/scripts/_py.sh -m pip install -r .claude/skills/slide/requirements.txt`.
 2. **Execute `.codex/skills/slide/SKILL.md` step by step.** Do NOT summarize it
    and improvise. **Forbidden:** reimplementing the pipeline yourself (hand-built
    PPTX, ad-hoc React/HTML, placeholder images). If a step's tool is unavailable,
@@ -64,7 +64,7 @@ When the user asks for slides ("슬라이드", "프레젠테이션", "생성PPT"
 5b. **Data charts:** when a slide needs a chart built from real numbers and the
    type is one of chart-design's 21 quantitative types, do NOT hand-draw the
    geometry — write a data spec JSON and render it with
-   `python3 .codex/skills/chart-design/scripts/render_chart.py <spec.json> -o <frag.svg> --pos X,Y`.
+   `.codex/skills/slide/scripts/_py.sh .codex/skills/chart-design/scripts/render_chart.py <spec.json> -o <frag.svg> --pos X,Y`.
    Selection rules + spec schema + embedding contract:
    `.codex/skills/chart-design/SKILL.md` and its `references/`. Static
    `templates/charts/` remain the path for types outside the 21.

@@ -123,7 +123,7 @@ When the user's request hands the confirmation over in words — `알아서`, `�
 
 1. Print the confirmation block (active-theme lock or Eight Confirmations) with the recommended values, as usual.
 2. Treat the recommended values as confirmed and continue.
-3. Record the skip: `"confirmation": "auto (<trigger word>)"` on the Step 4 stage in `pipeline_status.json`, and a `| **Confirmation** | auto — "<trigger word>" |` row in `design_spec.md` §I.
+3. Record the skip: `"confirmation": "auto (<trigger word>)"` on the Step 4 stage in `pipeline_status.json` (`project_manager.py stage <project_path> strategist done --confirmation "auto (<trigger word>)"`), and a `| **Confirmation** | auto — "<trigger word>" |` row in `design_spec.md` §I.
 
 Without a trigger word the confirmation waits as described above. A trigger word changes only this confirmation, not the plan's own review (already auto-proceed) or any choice the user stated.
 
@@ -136,134 +136,16 @@ Before leaving Step 4, perform a self-check against Layer 1 quality rules. This 
 | **R2** (chart/table needs takeaway) | Every chart slide in design_spec.md §IX has a takeaway sentence next to the chart spec. Every table slide has a verdict / takeaway row. |
 | **R3** (length pressure) | If slide count > 20, document split / merge / defer candidates in §IX or in `slide_plan.json` `ordering_notes`. |
 | **R4** (no lazy repetition) | No 3+ consecutive slides use the same layout family without a written justification. Min 3 distinct layout families in the deck. |
-| **R6 density** | Every content slide in §IX carries a dominant visual as evidence plus its supporting context and takeaway (`anti-slop-core.md` Rule 21 — density means a dominant visual, not dense text or stacked cards). The B-density script below checks a floor after Step 6. |
+| **R6 density** | Every content slide in §IX carries a dominant visual as evidence plus its supporting context and takeaway (`anti-slop-core.md` Rule 21 — density means a dominant visual, not dense text or stacked cards). B-density checks a floor once the SVGs exist. |
 
 If any check fails, fix `design_spec.md` (Standalone) or roll back to `/slide-plan` (Plan-Consuming) and re-validate. **Plan-Consuming mode users:** `validate_plan.py` already enforced this — re-running it after any post-plan hand edit is recommended:
 ```bash
 .claude/skills/slide/scripts/_py.sh .claude/skills/slide-plan/scripts/validate_plan.py <project_path>/slide_plan.json
 ```
 
-**B-density verification (both modes; run after Step 6 SVGs exist):**
-```bash
-${SKILL_DIR}/scripts/_py.sh - "<project_path>" <<'PY'
-import re,glob,json,sys
-from pathlib import Path
-project = Path(sys.argv[1] if len(sys.argv)>1 else '.').resolve()
-plan_files = list(project.glob('slide_plan.json'))
-plan = {}
-if plan_files:
-    data = json.loads(plan_files[0].read_text())
-    plan = {s.get('slide_number'): s for s in data.get('slides', [])}
-fails = []
-for f in sorted(project.glob('svg_output/*.svg')):
-    txt = f.read_text(); lines = txt.count('\n') + 1
-    m = re.search(r'(\d+)', f.stem); n = int(m.group(1)) if m else None
-    if n and n in plan and isinstance(plan[n].get('min_lines_estimate'), (int, float)):
-        thr = int(plan[n]['min_lines_estimate']); src = 'plan'
-    elif re.search(r'<(line|polyline|circle|rect)[^>]*data-(role|series)|<g[^>]*chart|<text[^>]*tbl-', txt):
-        thr = 120; src = 'simple-chart/dense'
-    elif re.search(r'(cover|section|closing)', f.stem, re.I):
-        thr = 40; src = 'simple-section/cover/closing'
-    else:
-        thr = 80; src = 'simple-general'
-    if lines < thr:
-        fails.append(f'{f.name}:lines={lines}<{thr}({src})')
-print('B-density FAIL:', fails) if fails else print('B-density: PASS')
-PY
-```
+The B-* scripts (B-density, B-r2-simple, B-gm-simple, B-family-diversity-simple, B-plan-count, B-plan-fidelity) read `svg_output/`, so they run in the Step 6 deck sweep, not here.
 
-The line count is a floor that flags a thin page, not a target. A FAIL means the page is missing its dominant visual or supporting context — add that block; do not split elements or pad markup to raise the count.
-
-**B-r2-simple + B-gm-simple + B-family-diversity-simple (Standalone mode hardening — plan 부재 시에도 활성):**
-```bash
-${SKILL_DIR}/scripts/_py.sh - "<project_path>" <<'PY'
-import re,glob,json,sys
-from pathlib import Path
-project = Path(sys.argv[1] if len(sys.argv)>1 else '.').resolve()
-plan_files = list(project.glob('slide_plan.json'))
-if plan_files:
-    print('B-r2-simple: SKIP (plan-mode 활성)')
-    print('B-gm-simple: SKIP (plan-mode 활성)')
-    print('B-family-diversity-simple: SKIP (plan-mode 활성)')
-else:
-    svgs = sorted(project.glob('svg_output/*.svg'))
-    # B-r2-simple: chart/dense visual 가진 SVG 옆에 takeaway 텍스트 (≥30자 텍스트 노드) 있어야 함
-    r2_fails = []
-    for f in svgs:
-        txt = f.read_text()
-        has_visual = bool(re.search(r'<polyline|<line[^>]*data-(role|series)|<g[^>]*chart|<text[^>]*tbl-', txt))
-        text_nodes = re.findall(r'<text[^>]*>([^<]+)</text>', txt)
-        has_takeaway = any(len(t.strip()) >= 30 for t in text_nodes)
-        if has_visual and not has_takeaway:
-            r2_fails.append(f'{f.name}: visual but no takeaway text (≥30 chars)')
-    print('B-r2-simple FAIL:', r2_fails) if r2_fails else print('B-r2-simple: PASS')
-    # B-gm-simple: 콘텐츠 SVG (cover/section/closing 제외)에 .gm 클래스 또는 governing message 텍스트 존재
-    gm_fails = []
-    for f in svgs:
-        stem = f.stem.lower()
-        if any(k in stem for k in ('cover', 'section', 'closing')):
-            continue
-        txt = f.read_text()
-        if not re.search(r'class="[^"]*gm[^"]*"|data-role="gm"', txt):
-            gm_fails.append(f'{f.name}: missing .gm marker')
-    print('B-gm-simple FAIL:', gm_fails) if gm_fails else print('B-gm-simple: PASS')
-    # B-family-diversity-simple: ≥6 SVG 데크는 distinct filename slug ≥ 3
-    if len(svgs) >= 6:
-        slugs = set()
-        for f in svgs:
-            m = re.match(r'\d+[-_]([a-z-]+)', f.stem)
-            if m: slugs.add(m.group(1))
-        if len(slugs) < 3:
-            print(f'B-family-diversity-simple FAIL: only {len(slugs)} distinct SVG slugs in {len(svgs)} files — possible lazy repetition')
-        else:
-            print(f'B-family-diversity-simple: PASS ({len(slugs)} distinct slugs)')
-    else:
-        print('B-family-diversity-simple: SKIP (< 6 slides)')
-PY
-```
-
-**B-plan-count + B-plan-fidelity (plan-consuming mode only; auto-SKIPs in Standalone):**
-```bash
-${SKILL_DIR}/scripts/_py.sh - "<project_path>" <<'PY'
-import re,glob,json,sys
-from pathlib import Path
-project = Path(sys.argv[1] if len(sys.argv)>1 else '.').resolve()
-plan_files = list(project.glob('slide_plan.json'))
-if not plan_files:
-    print('B-plan-count: SKIP (standalone mode)')
-    print('B-plan-fidelity: SKIP (standalone mode)')
-else:
-    data = json.loads(plan_files[0].read_text())
-    plan_slides = data.get('slides', [])
-    svg_files = sorted(project.glob('svg_output/*.svg'))
-    # B-plan-count: 슬라이드 수 일치
-    if len(plan_slides) != len(svg_files):
-        print(f'B-plan-count FAIL: plan={len(plan_slides)} vs SVG={len(svg_files)}')
-    else:
-        print(f'B-plan-count: PASS ({len(plan_slides)})')
-    # B-plan-fidelity: 슬라이드별 core_message 키워드가 SVG <text> 안에 존재 (heuristic)
-    fails = []
-    stopwords = {'있다','없다','한다','하는','되는','된다','대한','위한','수','것','이','그','저','등','및','또는',
-                 'that','this','with','from','have','will','they','your','their','about'}
-    for s in plan_slides:
-        n = s.get('slide_number')
-        matching = [f for f in svg_files if re.search(rf'(^|[^0-9])0*{n}([^0-9]|$)', f.stem)]
-        if not matching:
-            fails.append(f'slide #{n}: no matching SVG'); continue
-        svg = matching[0].read_text()
-        # Extract <text> content for keyword check
-        text_content = ' '.join(re.findall(r'<text[^>]*>(.*?)</text>', svg, re.DOTALL))
-        core = s.get('core_message', '')
-        keywords = set(re.findall(r'[가-힣]{2,}|[A-Za-z]{4,}', core)) - stopwords
-        if not keywords:
-            continue
-        if not any(k in text_content for k in keywords):
-            fails.append(f'slide #{n}: core_message keywords {sorted(keywords)[:5]} NOT in SVG text')
-    print('B-plan-fidelity FAIL:', fails) if fails else print('B-plan-fidelity: PASS')
-PY
-```
-
-**✅ Checkpoint** — confirmation done, `design_spec.md` written, quality floor verified → auto-proceed to Image_Generator (if AI images are pending) or Executor.
+**✅ Checkpoint** — confirmation done, `design_spec.md` written, self-check above passed → auto-proceed to Image_Generator (if AI images are pending) or Executor.
 
 ---
 
@@ -320,7 +202,7 @@ Read references/executor.md
 1. **Anchors (you, in order)**: write the cover and one representative body page — the first page that carries the standard headline, `.gm` line and page number. Run the page check on both and fix them as on the sequential path.
 2. **Fan-out**: start one fork per remaining page — all of them in one message, up to 16. A fork's time is its own page's thinking and writing, so starting them together shortens the fan-out to about the slowest page. Past 16 pages, start the next page whenever a fork reports; if your host returns only after every fork in the message has finished, send the rest as the next wave. If several pages share a recurring block (a name row, a legend), add its place to each fork prompt so the pages agree. Fork prompt (fill the brackets; keep it this short):
    > Fork for page <NN> only. Write `svg_output/<NN>_<name>.svg` from `slide_plan.json` slide <NN> (plan mode) or `design_spec.md` §IX page <NN> (Standalone), with the anchor pages' chrome — headline position and size, `.gm` line, page number, footer — and grid. Compose this page's own visual from its plan entry (layout family, content blocks); do not copy an anchor's composition. Write the `.gm` as an editorial so-what in the anchors' voice. Follow every Step 6 rule you already hold. Then run `.claude/skills/slide/scripts/_py.sh .claude/skills/slide/scripts/svg_quality_checker.py <project_path>/svg_output/<file> --all-warnings` and fix every error and every safe-area / text-overlap / text-crossed-by-a-stroke WARN; then render the page once (`.claude/skills/slide/scripts/_py.sh .claude/skills/slide/scripts/render_page.py <project_path>/svg_output/<file>`), Read the PNG and fix visible defects. Change no other project file — no plan, spec, notes or other page (scratch files go outside the project); if the page needs a plan change, stop and report it. Reply with the file name and the checker summary.
-3. **Merge (you)**: when every page exists, run the deck sweep below — its `chrome:` lines flag a page that drifted from the anchors' headline or `.gm` form, its primitive-diversity line flags lazy repetition — plus the Step 4.5 B-* checks, and fix what they report. Finish yourself any page whose fork failed, stopped for a plan change, or left an error. Then write the speaker notes (Logic Construction Phase).
+3. **Merge (you)**: when every page exists, run the deck sweep below — its `chrome:` lines flag a page that drifted from the anchors' headline or `.gm` form, its primitive-diversity line flags lazy repetition, and its B-* checks — and fix what they report. Finish yourself any page whose fork failed, stopped for a plan change, or left an error. Then write the speaker notes (Logic Construction Phase).
 
 **Logic Construction Phase**:
 - Generate speaker notes → `<project_path>/notes/total.md` — after the deck sweep below, so the notes follow the polished page text.
@@ -330,6 +212,107 @@ Read references/executor.md
 ${SKILL_DIR}/scripts/_py.sh ${SKILL_DIR}/scripts/svg_quality_checker.py <project_path>/svg_output --all-warnings
 ```
 Fix every error, then settle every `[WARN] deck:` line. A `terms:` line names one term written several ways across pages — spacing (`DS부문` / `DS 부문`), source labels (`출처:` / `자료:`), or percentage-point notation (`%p` / `pp`): pick one form and apply it deck-wide.
+
+Then run the B-* checks (the Step 4.5 quality floor, measured on the SVGs). A page's role comes from `slide_plan.json` `page_family` (plan mode) or, without a plan, from a role word in its file name — `cover` / `chapter` / `section` / `ending` / `closing` / `appendix` or `표지` / `간지` / `챕터` / `섹션` / `마무리` / `엔딩` / `감사` / `부록` (`01_표지.svg`, `04_간지_시장_구조.svg`). Content pages need a `.gm` and the density floor; the others do not.
+
+**B-density (both modes):**
+```bash
+${SKILL_DIR}/scripts/_py.sh - "<project_path>" "${SKILL_DIR}/scripts" <<'PY'
+import sys
+from pathlib import Path
+sys.path.insert(0, sys.argv[2])
+import verify_deck
+fails = verify_deck.density_failures(Path(sys.argv[1]).resolve())
+print('B-density FAIL:', fails) if fails else print('B-density: PASS')
+PY
+```
+
+A content page with fewer than 30 SVG elements fails. It counts elements, not lines, so markup style does not change the verdict. The count is a floor that flags a thin page, not a target. A FAIL means the page is missing its dominant visual or supporting context — add that block; do not split elements or pad markup to raise the count.
+
+**B-r2-simple + B-gm-simple + B-family-diversity-simple (Standalone mode hardening — plan 부재 시에도 활성):**
+```bash
+${SKILL_DIR}/scripts/_py.sh - "<project_path>" "${SKILL_DIR}/scripts" <<'PY'
+import re,glob,json,sys
+from pathlib import Path
+sys.path.insert(0, sys.argv[2])
+import verify_deck
+project = Path(sys.argv[1] if len(sys.argv)>1 else '.').resolve()
+plan_files = list(project.glob('slide_plan.json'))
+if plan_files:
+    print('B-r2-simple: SKIP (plan-mode 활성)')
+    print('B-gm-simple: SKIP (plan-mode 활성)')
+    print('B-family-diversity-simple: SKIP (plan-mode 활성)')
+else:
+    svgs = sorted(project.glob('svg_output/*.svg'))
+    # B-r2-simple: chart/dense visual 가진 SVG 옆에 takeaway 텍스트 (≥30자 텍스트 노드) 있어야 함
+    r2_fails = []
+    for f in svgs:
+        txt = f.read_text(encoding='utf-8')
+        has_visual = bool(re.search(r'<polyline|<line[^>]*data-(role|series)|<g[^>]*chart|<text[^>]*tbl-', txt))
+        text_nodes = re.findall(r'<text[^>]*>([^<]+)</text>', txt)
+        has_takeaway = any(len(t.strip()) >= 30 for t in text_nodes)
+        if has_visual and not has_takeaway:
+            r2_fails.append(f'{f.name}: visual but no takeaway text (≥30 chars)')
+    print('B-r2-simple FAIL:', r2_fails) if r2_fails else print('B-r2-simple: PASS')
+    # B-gm-simple: 콘텐츠 SVG (표지·간지·마무리 제외)에 governing message 줄 존재 — verify_deck 과 같은 판정
+    gm_fails = [f'{f.name}: missing .gm line' for f in svgs if verify_deck.is_content_slide(f)
+                and not verify_deck.svg_has_gm(f.read_text(encoding='utf-8'))]
+    print('B-gm-simple FAIL:', gm_fails) if gm_fails else print('B-gm-simple: PASS')
+    # B-family-diversity-simple: ≥6 SVG 데크는 distinct filename slug ≥ 3
+    if len(svgs) >= 6:
+        slugs = set()
+        for f in svgs:
+            m = re.match(r'\d+[-_]([^\W\d_]+)', f.stem)
+            if m: slugs.add(m.group(1))
+        if len(slugs) < 3:
+            print(f'B-family-diversity-simple FAIL: only {len(slugs)} distinct SVG slugs in {len(svgs)} files — possible lazy repetition')
+        else:
+            print(f'B-family-diversity-simple: PASS ({len(slugs)} distinct slugs)')
+    else:
+        print('B-family-diversity-simple: SKIP (< 6 slides)')
+PY
+```
+
+**B-plan-count + B-plan-fidelity (plan-consuming mode only; auto-SKIPs in Standalone):**
+```bash
+${SKILL_DIR}/scripts/_py.sh - "<project_path>" <<'PY'
+import re,glob,json,sys
+from pathlib import Path
+project = Path(sys.argv[1] if len(sys.argv)>1 else '.').resolve()
+plan_files = list(project.glob('slide_plan.json'))
+if not plan_files:
+    print('B-plan-count: SKIP (standalone mode)')
+    print('B-plan-fidelity: SKIP (standalone mode)')
+else:
+    data = json.loads(plan_files[0].read_text())
+    plan_slides = data.get('slides', [])
+    svg_files = sorted(project.glob('svg_output/*.svg'))
+    # B-plan-count: 슬라이드 수 일치
+    if len(plan_slides) != len(svg_files):
+        print(f'B-plan-count FAIL: plan={len(plan_slides)} vs SVG={len(svg_files)}')
+    else:
+        print(f'B-plan-count: PASS ({len(plan_slides)})')
+    # B-plan-fidelity: 슬라이드별 core_message 키워드가 SVG <text> 안에 존재 (heuristic)
+    fails = []
+    stopwords = {'있다','없다','한다','하는','되는','된다','대한','위한','수','것','이','그','저','등','및','또는',
+                 'that','this','with','from','have','will','they','your','their','about'}
+    for s in plan_slides:
+        n = s.get('slide_number')
+        matching = [f for f in svg_files if re.search(rf'(^|[^0-9])0*{n}([^0-9]|$)', f.stem)]
+        if not matching:
+            fails.append(f'slide #{n}: no matching SVG'); continue
+        svg = matching[0].read_text()
+        # Extract <text> content for keyword check
+        text_content = ' '.join(re.findall(r'<text[^>]*>(.*?)</text>', svg, re.DOTALL))
+        core = s.get('core_message', '')
+        keywords = set(re.findall(r'[가-힣]{2,}|[A-Za-z]{4,}', core)) - stopwords
+        if not keywords:
+            continue
+        if not any(k in text_content for k in keywords):
+            fails.append(f'slide #{n}: core_message keywords {sorted(keywords)[:5]} NOT in SVG text')
+    print('B-plan-fidelity FAIL:', fails) if fails else print('B-plan-fidelity: PASS')
+PY
+```
 
 On a plan deck, check each page's numbers against its `figures[]` (verify_deck repeats this as a WARN):
 ```bash

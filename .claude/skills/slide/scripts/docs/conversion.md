@@ -7,10 +7,10 @@ Source conversion tools turn PDFs, documents, slide decks, and web pages into Ma
 Recommended first choice for native PDFs.
 
 ```bash
-python3 scripts/source_to_md/pdf_to_md.py book.pdf
-python3 scripts/source_to_md/pdf_to_md.py book.pdf -o output.md
-python3 scripts/source_to_md/pdf_to_md.py ./pdfs
-python3 scripts/source_to_md/pdf_to_md.py ./pdfs -o ./markdown
+./scripts/_py.sh scripts/source_to_md/pdf_to_md.py book.pdf
+./scripts/_py.sh scripts/source_to_md/pdf_to_md.py book.pdf -o output.md
+./scripts/_py.sh scripts/source_to_md/pdf_to_md.py ./pdfs
+./scripts/_py.sh scripts/source_to_md/pdf_to_md.py ./pdfs -o ./markdown
 ```
 
 Use cases:
@@ -43,10 +43,10 @@ Pandoc fallback (only if you need these):
 - `.doc`, `.odt`, `.rtf`, `.tex`/`.latex`, `.rst`, `.org`, `.typ`
 
 ```bash
-python3 scripts/source_to_md/doc_to_md.py lecture.docx
-python3 scripts/source_to_md/doc_to_md.py lecture.docx -o output.md
-python3 scripts/source_to_md/doc_to_md.py notes.epub
-python3 scripts/source_to_md/doc_to_md.py paper.tex -o paper.md  # uses pandoc
+./scripts/_py.sh scripts/source_to_md/doc_to_md.py lecture.docx
+./scripts/_py.sh scripts/source_to_md/doc_to_md.py lecture.docx -o output.md
+./scripts/_py.sh scripts/source_to_md/doc_to_md.py notes.epub
+./scripts/_py.sh scripts/source_to_md/doc_to_md.py paper.tex -o paper.md  # uses pandoc
 ```
 
 Dependencies:
@@ -73,11 +73,11 @@ Supported formats include:
 - `.potx`, `.potm`
 
 ```bash
-python3 scripts/source_to_md/ppt_to_md.py sales_deck.pptx
-python3 scripts/source_to_md/ppt_to_md.py sales_deck.pptx -o output.md
-python3 scripts/source_to_md/ppt_to_md.py ./decks
-python3 scripts/source_to_md/ppt_to_md.py ./decks -o ./markdown
-python3 scripts/source_to_md/ppt_to_md.py template.ppsx -o notes/template.md
+./scripts/_py.sh scripts/source_to_md/ppt_to_md.py sales_deck.pptx
+./scripts/_py.sh scripts/source_to_md/ppt_to_md.py sales_deck.pptx -o output.md
+./scripts/_py.sh scripts/source_to_md/ppt_to_md.py ./decks
+./scripts/_py.sh scripts/source_to_md/ppt_to_md.py ./decks -o ./markdown
+./scripts/_py.sh scripts/source_to_md/ppt_to_md.py template.ppsx -o notes/template.md
 ```
 
 Behavior:
@@ -101,10 +101,10 @@ Convert web pages to Markdown and download images locally.
 ### Python version (preferred)
 
 ```bash
-python3 scripts/source_to_md/web_to_md.py https://example.com/article
-python3 scripts/source_to_md/web_to_md.py https://url1.com https://url2.com
-python3 scripts/source_to_md/web_to_md.py -f urls.txt
-python3 scripts/source_to_md/web_to_md.py https://example.com -o output.md
+./scripts/_py.sh scripts/source_to_md/web_to_md.py https://example.com/article
+./scripts/_py.sh scripts/source_to_md/web_to_md.py https://url1.com https://url2.com
+./scripts/_py.sh scripts/source_to_md/web_to_md.py -f urls.txt
+./scripts/_py.sh scripts/source_to_md/web_to_md.py https://example.com -o output.md
 ```
 
 When `curl_cffi` is installed (included in `requirements.txt`), this script
@@ -131,9 +131,9 @@ required for WeChat coverage.
 Fix image EXIF orientation in downloaded or imported assets.
 
 ```bash
-python3 scripts/rotate_images.py auto projects/xxx_files
-python3 scripts/rotate_images.py gen projects/xxx_files
-python3 scripts/rotate_images.py fix fixes.json
+./scripts/_py.sh scripts/rotate_images.py auto projects/xxx_files
+./scripts/_py.sh scripts/rotate_images.py gen projects/xxx_files
+./scripts/_py.sh scripts/rotate_images.py fix fixes.json
 ```
 
 Use this when extracted photos appear sideways after conversion or import.

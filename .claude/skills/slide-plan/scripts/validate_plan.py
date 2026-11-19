@@ -37,12 +37,12 @@ CHART_STRATEGIES = {
 }
 
 UNIVERSAL_ROLES = {
-    "cover", "context", "insight", "evidence",
+    "cover", "chapter", "context", "insight", "evidence",
     "solution", "summary", "cta", "appendix",
 }
 
 ROLE_EXTENSIONS = {
-    "educational": {"agenda", "concept", "example", "exercise", "recap", "qna"},
+    "educational": {"agenda", "concept", "example", "exercise", "recap", "qna", "roadmap"},
     "report": {"executive_summary", "findings", "methodology"},
     "consulting": {"problem", "comparison", "roadmap"},
     "sales": {"problem", "proof", "comparison", "pricing", "roadmap"},
@@ -314,7 +314,8 @@ def check_diagnostic_ratios(slides: list[dict[str, Any]], r: Report) -> None:
     if n == 0:
         return
 
-    evidence_count = sum(1 for x in roles if x in ("evidence", "findings", "proof", "progress"))
+    # a lecture's worked example backs its insight; its exercise / Q&A is the closing ask
+    evidence_count = sum(1 for x in roles if x in ("evidence", "findings", "proof", "progress", "example"))
     insight_count = sum(1 for x in roles if x in ("insight", "executive_summary", "hook", "vision"))
 
     if insight_count > 0 and evidence_count > 5 * insight_count:
@@ -337,8 +338,9 @@ def check_diagnostic_ratios(slides: list[dict[str, Any]], r: Report) -> None:
         )
 
     last_two = roles[-2:] if n >= 2 else roles
-    if "cta" not in last_two:
-        r.warn("diagnostic — buried CTA: last 2 slides do not include a `cta` role.")
+    if not {"cta", "exercise", "qna"} & set(last_two):
+        r.warn("diagnostic — buried CTA: last 2 slides do not include a `cta` "
+               "(or, in a lecture, `exercise` / `qna`) role.")
 
 
 def check_fact_check_log(plan: dict[str, Any], slides: list[dict[str, Any]], r: Report) -> None:

@@ -19,7 +19,7 @@ svg_output/  ─►  [7.1 split notes]  ─►  notes/*.md
 ## Step 7.1 — Split Speaker Notes
 
 ```bash
-python3 ${SKILL_DIR}/scripts/total_md_split.py <project_path>
+${SKILL_DIR}/scripts/_py.sh ${SKILL_DIR}/scripts/total_md_split.py <project_path>
 ```
 
 Reads `notes/total.md` and writes per-page files into `notes/` (e.g., `01_표지.md`, `02_목차.md`). Each filename matches the corresponding SVG.
@@ -29,7 +29,7 @@ Reads `notes/total.md` and writes per-page files into `notes/` (e.g., `01_표지
 ## Step 7.2 — Finalize SVGs
 
 ```bash
-python3 ${SKILL_DIR}/scripts/finalize_svg.py <project_path>
+${SKILL_DIR}/scripts/_py.sh ${SKILL_DIR}/scripts/finalize_svg.py <project_path>
 ```
 
 Runs all SVG post-processing in one pass:
@@ -46,7 +46,7 @@ Output: `<project_path>/svg_final/*.svg`. **Never** use `cp` as a substitute; it
 ## Step 7.3 — Export PPTX
 
 ```bash
-python3 ${SKILL_DIR}/scripts/svg_to_pptx.py <project_path> -s final
+${SKILL_DIR}/scripts/_py.sh ${SKILL_DIR}/scripts/svg_to_pptx.py <project_path> -s final
 ```
 
 Produces two files in `exports/`:
@@ -118,7 +118,7 @@ Not bundled. Use the `gws-drive-upload` skill (already installed globally) with 
 Before export, verify SVG rendering:
 
 ```bash
-python3 -m http.server -d <project_path>/svg_final 8000
+.codex/skills/slide/scripts/_py.sh -m http.server -d <project_path>/svg_final 8000
 # then open http://localhost:8000 in a browser
 ```
 

@@ -5,7 +5,7 @@
 ### 3. Fill + validate + render (one command)
 
 ```bash
-python3 .claude/skills/theme-init/scripts/init_theme.py \
+.claude/skills/slide/scripts/_py.sh .claude/skills/theme-init/scripts/init_theme.py \
     --fill-from /tmp/theme-draft.json
 ```
 
@@ -59,7 +59,7 @@ theme that supplies its own font files just needs them dropped into
 `assets/fonts/` before re-running.
 
 If the new theme changes the **primary font family**, also re-run
-`python3 .claude/skills/slide/scripts/dev/build_font_metrics.py` (after
+`.claude/skills/slide/scripts/_py.sh .claude/skills/slide/scripts/dev/build_font_metrics.py` (after
 updating its `FONT_FAMILY`/`WEIGHT_FILES` for the new OTFs) so the PPTX
 exporter's glyph-advance cache (`svg_to_pptx/font_metrics.json`) matches.
 Until it is rebuilt the exporter detects the mismatch and falls back to
