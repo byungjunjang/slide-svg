@@ -25,8 +25,8 @@
 - **이모지 금지** — 아이콘은 활성 테마 `assets.icon-pack-default`의 2px 라인아트만 (현재: `tabler-outline`)
 - **네이티브 SVG→PPTX 파이프라인** — 이미지 플래튼 금지, 편집 가능한 도형 유지
 - **직렬 실행** — strategist → [image_generator] → executor → post-processing → export. 교차 병합 금지
-- **메인 에이전트 단독 SVG 생성** — Executor Step 6은 sub-agent에 위임 금지 (SKILL.md §Global Execution Discipline #6)
-- **순차 페이지 생성** — 한 번에 한 페이지씩, 그룹 배치 금지 (#7)
+- **메인 에이전트 단독 SVG 생성** — Executor Step 6은 일반 sub-agent에 위임 금지 (SKILL.md §Global Execution Discipline #6). 예외: 병렬 경로의 `fork`(대화 문맥을 그대로 물려받음) — 2026-11-19 사용자 결정(mazisoft 벤치 이식 ⑭)
+- **순차 페이지 생성** — 한 번에 한 페이지씩, 그룹 배치 금지 (#7). 예외: 병렬 경로 — 앵커 2장을 순서대로 쓴 뒤 1장당 fork 1개. `fork` 가 있고 6장 이상이면 기본, 없으면(Codex·claude.ai) 직렬
 - **활성 테마 = 단일 시각언어** — PPTX가 export 시점에 토큰을 DrawingML로 굽기 때문에 런타임 멀티 테마(덱별 다른 테마 동시 사용)는 불가능. 대신 검증된 테마는 프리셋 카탈로그에 보관되고 `--activate`로 빠르게 전환한다 — 전환도 "한 시점에 하나"의 원칙은 유지 (`.claude/skills/theme-init/SKILL.md`)
 - **plan/render 분리 (선택적)** — 체계적인 데크는 `/slide-plan`이 `slide_plan.json`을 먼저 만들고 `/slide`가 그 plan을 소비. 간단한 데크는 `/slide`만으로도 동작 (Standalone 모드 — 기존 Eight Confirmations 흐름 그대로). 두 모드는 같은 `/slide` 파이프라인 안에서 자동 분기.
 

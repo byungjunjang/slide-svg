@@ -54,6 +54,8 @@ When the user asks for slides ("슬라이드", "프레젠테이션", "생성PPT"
 4. **Serial pipeline, no shortcuts:** strategist → [image_generator] → executor →
    post-processing → export. No cross-merge. Main agent writes SVG itself
    (no sub-agent delegation for Executor Step 6). Generate pages one at a time.
+   (The skill docs' parallel path needs Claude Code's `fork` sub-agent; Codex
+   stays on this sequential path.)
 5. **Images:** if a slot needs a generated image, use Codex's default
    `imagegen` skill / built-in `image_gen` tool and save the selected output to
    the requested `images/<slot>.png` path. If `imagegen` / `image_gen` is not

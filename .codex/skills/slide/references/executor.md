@@ -160,8 +160,8 @@ This audit applies to **content slides only**. Cover / chapter / ending pages ar
 
 ## 3. Execution Guidelines
 
-- **Main-agent ownership** — SVG generation MUST remain with the current main agent. Do NOT delegate page generation to sub-agents. Each page's design depends on shared upstream context (source content, design spec, cross-page consistency). This is a hard rule from SKILL.md §Global Execution Discipline #6.
-- **Sequential pages** — after the Design Parameter Confirmation above, generate pages one at a time in one continuous pass. Do NOT batch (e.g., "5 pages at once"). SKILL.md #7.
+- **Main-agent ownership** — SVG generation MUST remain with the current main agent. Do NOT delegate page generation to general sub-agents. Each page's design depends on shared upstream context (source content, design spec, cross-page consistency). This is a hard rule from SKILL.md §Global Execution Discipline #6. The one exception is the Step 6 parallel path: `fork` sub-agents inherit that context (`executor-steps-4-6.md` Step 6 *Parallel authoring*).
+- **Sequential pages** — after the Design Parameter Confirmation above, generate pages one at a time in one continuous pass. Do NOT batch (e.g., "5 pages at once"). SKILL.md #7. On the parallel path: two anchor pages in order, then one page per fork.
 - **Phased batch at the file level** (allowed):
   1. **Visual Construction Phase** — all SVG pages in sequential page order, ensuring consistent headline placement, body rhythm, GM voice
   2. **Logic Construction Phase** — after all SVGs are finalized, batch-write speaker notes for narrative coherence
