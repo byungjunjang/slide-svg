@@ -62,8 +62,8 @@ When the user asks for slides ("슬라이드", "프레젠테이션", "생성PPT"
    available, **HALT** — no PIL/solid-color/placeholder fallback and no
    `/codex-image` dependency in the Codex package.
 5b. **Data charts:** for any chart built from real numbers, follow
-   `.codex/skills/slide/references/executor.md` §7 — its order of chart paths
-   (default → fallback → static `templates/charts/`) is the SSOT. Never
+   `.codex/skills/slide/references/executor.md` §7 — its chart paths and their
+   order are the SSOT. Never
    hand-draw chart geometry; compute it from the data (script or renderer).
 6. **Post-processing discipline:** run, as three separate calls,
    `total_md_split.py` → `finalize_svg.py` → `svg_to_pptx.py <project> -s final`.
