@@ -5,7 +5,7 @@ This repo is **dual-host**: Claude Code and Codex (cloud/web). Claude Code loads
 file makes Codex execute the same procedures instead of improvising.
 
 `CLAUDE.md` is the project SSOT for design constraints (1280×720, single accent
-`#4633E3`, `.gm` line on every content slide, no emoji, native DrawingML
+from the active theme's `colors.accent`, `.gm` line on every content slide, no emoji, native DrawingML
 pipeline). Read it. These rules add Codex-side enforcement on top.
 
 ## Skill source (generated mirror)
@@ -61,13 +61,10 @@ When the user asks for slides ("슬라이드", "프레젠테이션", "생성PPT"
    the requested `images/<slot>.png` path. If `imagegen` / `image_gen` is not
    available, **HALT** — no PIL/solid-color/placeholder fallback and no
    `/codex-image` dependency in the Codex package.
-5b. **Data charts:** when a slide needs a chart built from real numbers and the
-   type is one of chart-design's 21 quantitative types, do NOT hand-draw the
-   geometry — write a data spec JSON and render it with
-   `.codex/skills/slide/scripts/_py.sh .codex/skills/chart-design/scripts/render_chart.py <spec.json> -o <frag.svg> --pos X,Y`.
-   Selection rules + spec schema + embedding contract:
-   `.codex/skills/chart-design/SKILL.md` and its `references/`. Static
-   `templates/charts/` remain the path for types outside the 21.
+5b. **Data charts:** for any chart built from real numbers, follow
+   `.codex/skills/slide/references/executor.md` §7 — its order of chart paths
+   (default → fallback → static `templates/charts/`) is the SSOT. Never
+   hand-draw chart geometry; compute it from the data (script or renderer).
 6. **Post-processing discipline:** run, as three separate calls,
    `total_md_split.py` → `finalize_svg.py` → `svg_to_pptx.py <project> -s final`.
    Never `cp`. Never add undocumented flags. `-s final` is required.
